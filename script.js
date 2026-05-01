@@ -179,7 +179,7 @@
             total += item.price * item.qty;
         });
         
-        return `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsList}\n━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n\n📍 *Даставка дареги:* ${address}\n\n  `;
+        return `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsList}\n━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n\n📍 *Дoставка дареги:* ${address}\n\n  `;
     }
 
     function sendOrder(platform) {
