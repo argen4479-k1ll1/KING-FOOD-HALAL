@@ -3,94 +3,673 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>KING FOOD HALAL - Шаурма & Бургерлер</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>KING FOOD HALAL - Портал</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <!-- Бардык стилдер бир жерге топтолгон -->
+    <style>
+        /* === НЕГИЗГИ СТИЛДЕР (Main & Admin) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0a0a0a;
+            color: #f5f3e8;
+        }
+        /* --- Учурдагы бетти көрсөтүү үчүн контейнерлер --- */
+        #main-app, #admin-app {
+            display: none;
+        }
+        body.main-mode #main-app {
+            display: block;
+        }
+        body.admin-mode #admin-app {
+            display: block;
+        }
+        /* --- Жалпы компоненттер (Негизги беттин стилдери) --- */
+        .top-bar {
+            background: #000000cc;
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #d4af3744;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo h1 { font-size: 1.7rem; letter-spacing: 1px; }
+        .logo h1 span { color: #d4af37; font-weight: 700; }
+        .logo p { font-size: 0.7rem; color: #d4af37; }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            background: #2a2a2a;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.2s;
+            border: 1px solid #d4af3766;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cart-icon:hover { background: #d4af37; color: #000; }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff3b3b;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #d62976;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .instagram-link:hover { background: #c13584; }
+        .hero {
+            background: linear-gradient(95deg, #0f0f0f 0%, #1a120b 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        .combo-showcase {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .combo-card {
+            background: #1f1b15;
+            border-radius: 28px;
+            padding: 1rem;
+            width: 260px;
+            border-left: 4px solid #d4af37;
+        }
+        .combo-card h3 { color: #d4af37; }
+        .delivery-badge {
+            background: #1e2a1e;
+            padding: 8px 20px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        .delivery-badge i { color: #25d366; }
+        .menu-section { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .category { margin-bottom: 3rem; }
+        .category h2 {
+            font-size: 1.9rem;
+            border-left: 5px solid #d4af37;
+            padding-left: 18px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .menu-item {
+            background: #14100e;
+            border-radius: 28px;
+            padding: 1rem;
+            border: 1px solid #2f2a24;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .menu-item:hover { border-color: #d4af37; transform: translateY(-3px); }
+        .item-name { font-weight: bold; font-size: 1.1rem; }
+        .item-price { color: #f5c542; font-size: 1.2rem; margin-top: 5px; }
+        .add-btn {
+            background: #d4af37;
+            border: none;
+            color: #1e1a14;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+        .add-btn:hover { background: #f5c542; transform: scale(0.96); }
+        footer {
+            background: #070605;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .phone-numbers { margin-top: 10px; }
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d4af37;
+            color: #1e1a14;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 1100;
+            animation: fadeOut 2s ease forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        @media (max-width: 650px) {
+            .top-bar { padding: 0.8rem 1rem; }
+            .menu-section { padding: 1rem; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        /* === АДМИН ПАНЕЛИНИН СТИЛДЕРИ (Кирүү формасы жана башкаруу панели) === */
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a120b 100%);
+            padding: 20px;
+        }
+        .login-card {
+            background: #0f0e0c;
+            padding: 2rem;
+            border-radius: 32px;
+            border: 2px solid #d4af37;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .login-card h2 { color: #d4af37; margin-bottom: 25px; }
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 40px;
+            background: #2a2722;
+            border: 1px solid #d4af37;
+            color: white;
+            font-size: 1rem;
+        }
+        .login-card button {
+            background: #d4af37;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        .login-card button:hover { background: #f5c542; }
+        .error-msg {
+            color: #ff6666;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Админ панелинин ички стилдери */
+        .admin-wrapper {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 1rem;
+        }
+        .admin-header h1 { color: #d4af37; }
+        .logout-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .admin-stats {
+            background: #1a1815;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .admin-category {
+            background: #1a1815;
+            padding: 1rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+        .admin-category h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+        .admin-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .admin-item input {
+            flex: 2;
+            padding: 8px;
+            border-radius: 12px;
+            background: #2a2722;
+            border: none;
+            color: white;
+        }
+        .admin-item input.price-input { flex: 1; }
+        .admin-item button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .admin-item button.edit-btn { background: #d4af37; color: #1e1a14; }
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .add-item-form input {
+            flex: 2;
+            padding: 8px;
+            border-radius: 12px;
+            background: #2a2722;
+            border: none;
+            color: white;
+        }
+        .add-item-form button {
+            background: #4caf50;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+        }
+        @media (max-width: 650px) {
+            .admin-wrapper { padding: 1rem; }
+            .admin-item { flex-direction: column; align-items: stretch; }
+            .add-item-form { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
-
-<header>
-    <div class="top-bar">
-        <div class="logo">
-            <h1>KING <span>FOOD HALAL</span></h1>
-            <p>КИНГ ФУД ХАЛАЛ | ХАЛАЛ</p>
-        </div>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link">
-                <i class="fab fa-instagram"></i> Instagram
-            </a>
-            <div class="cart-icon" id="cartIcon">
-                <i class="fas fa-shopping-basket"></i>
-                <span id="cartCounter">0</span>
-                <span class="cart-count" id="cartCountBadge">0</span>
+    <!-- ===================== НЕГИЗГИ САЙТ (КАДИМКИ КОЛДОНУУЧУЛАР ҮЧҮН) ===================== -->
+    <div id="main-app">
+        <header>
+            <div class="top-bar">
+                <div class="logo">
+                    <h1>KING <span>FOOD HALAL</span></h1>
+                    <p>КИНГ ФУД ХАЛАЛ | АШТИЗМЕ</p>
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <div class="cart-icon" id="cartIconMain">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span id="cartCounterMain">0</span>
+                        <span class="cart-count" id="cartCountBadgeMain">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero">
+                <div class="combo-showcase">
+                    <div class="combo-card"><h3>🍔 KING KOMBO 600 сом</h3><p>Шаурма уй этинен + Кинг Бургер + Фри S + Султан Чай</p></div>
+                    <div class="combo-card"><h3>🔥 03 KOMBO 500 сом</h3><p>Шаурма тоок этинен + Хот-Дог + Нагреты + Султан Чай</p></div>
+                </div>
+                <div class="delivery-badge"><i class="fas fa-motorcycle"></i> Иштөө убактысы 09:00 /02:00</div>
+            </div>
+        </header>
+        <main class="menu-section">
+            <div class="category"><h2><i class="fas fa-utensils"></i> ШАУРМА</h2><div class="menu-grid" id="shaurma-grid-main"></div></div>
+            <div class="category"><h2><i class="fas fa-burger"></i> БУРГЕР</h2><div class="menu-grid" id="burger-grid-main"></div></div>
+            <div class="category"><h2><i class="fas fa-hotdog"></i> ХОТ-ДОГ</h2><div class="menu-grid" id="hotdog-grid-main"></div></div>
+            <div class="category"><h2><i class="fas fa-box"></i> КОМБО</h2><div class="menu-grid" id="combo-grid-main"></div></div>
+            <div class="category"><h2><i class="fas fa-glass-cheers"></i> СУУСУНДУКТАР</h2><div class="menu-grid" id="drinks-grid-main"></div></div>
+            <div class="category"><h2><i class="fas fa-french-fries"></i> ЖЕНИЛ ТАМАКТАР</h2><div class="menu-grid" id="snacks-grid-main"></div></div>
+        </main>
+        <footer>
+            <p>©KING.FOOD.HALAL — Халяль даам</p>
+            <div class="phone-numbers"><i class="fas fa-phone"></i> +996 778 03 12 03 &nbsp;&nbsp; <i class="fas fa-phone"></i> +996 558 45 46 51</div>
+            <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/king.food.halal" target="_blank" style="color:#d4af37;">king.food.halal</a></p>
+        </footer>
+        <!-- Карзина модалы -->
+        <div id="cartOverlayMain" class="cart-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background:#000000cc; backdrop-filter:blur(4px); z-index:1000;
+         display:flex; justify-content:flex-end; visibility:hidden; opacity:0; transition:0.2s;">
+            <div class="cart-panel" style="width:100%; max-width:450px; background:#0f0e0c; height:100vh; overflow-y:auto; padding:1.5rem; border-left:2px solid #d4af37;">
+                <div class="cart-header" style="display:flex; justify-content:space-between; border-bottom:1px solid #d4af37; padding-bottom:12px; font-size:1.5rem;">
+                    <span><i class="fas fa-shopping-cart"></i> Корзина</span>
+                    <i class="fas fa-times" id="closeCartMain" style="cursor:pointer;"></i>
+                </div>
+                <div id="cartItemsListMain" class="cart-items" style="margin:20px 0; max-height:45vh; overflow-y:auto;">🛒 Корзина бош</div>
+                <div class="cart-total" id="cartTotalMain" style="font-size:1.3rem; font-weight:bold; border-top:2px solid #d4af37; padding-top:15px; text-align:right;">Жалпы сумма: 0 сом</div>
+                <div class="address-section" style="margin:15px 0; background:#1a1815; padding:12px; border-radius:16px;">
+                    <label style="color:#d4af37;"><i class="fas fa-location-dot"></i> Доставка дарегиңиз:</label>
+                    <textarea id="deliveryAddressMain" rows="2" placeholder="Мисалы:Тургунбая Садыкова " style="width:100%; padding:10px; border-radius:12px; background:#2a2722; border:1px solid #d4af3766; color:white;"></textarea>
+                </div>
+                <button id="whatsappOrderMain" class="whatsapp-btn" style="background:#25D366; color:#121212; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ берүү</button>
+                <button id="telegramOrderMain" class="telegram-btn" style="background:#0088cc; color:white; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-telegram"></i> Telegram аркылуу заказ берүү</button>
+                <div id="closeCartFooterMain" style="background:#333; color:white; padding:10px; border-radius:40px; text-align:center; cursor:pointer; margin-top:15px;">Жабуу</div>
             </div>
         </div>
     </div>
-    <div class="hero">
-        <div class="combo-showcase">
-            <div class="combo-card">
-                <h3>🍔 KING KOMBO 600 сом</h3>
-                <p>Шаурма уй этинен + Кинг Бургер + Фри S + Султан Чай</p>
-            </div>
-            <div class="combo-card">
-                <h3>🔥 03 KOMBO 500 сом</h3>
-                <p>Шаурма тоок этинен + Класс. хот-дог + Наггетсы + Султан Чай</p>
-            </div>
-        </div>
-        <!-- <div class="delivery-badge">
-            <i class="fas fa-motorcycle"></i> Самовывоз & Доставка | +996 778 03 12 03
-        </div> -->
-    </div>
-</header>
 
-<main class="menu-section">
-    <div class="category">
-        <h2><i class="fas fa-utensils"></i> ШАУРМА</h2>
-        <div class="menu-grid" id="shaurma-grid"></div>
+    <!-- ===================== АДМИН ПАНЕЛИ (КИРҮҮ ФОРМАСЫ + БАШКАРУУ) ===================== -->
+    <div id="admin-app">
+        <div id="admin-login-area"></div>
+        <div id="admin-dashboard-area" style="display: none;"></div>
     </div>
-    <div class="category">
-        <h2><i class="fas fa-hotdog"></i> ХОТ-ДОГ</h2>
-        <div class="menu-grid" id="hotdog-grid"></div>
-    </div>
-    <div class="category">
-        <h2><i class="fas fa-burger"></i> БУРГЕР</h2>
-        <div class="menu-grid" id="burger-grid"></div>
-    </div>
-    <div class="category">
-        <h2><i class="fas fa-box"></i> КОМБО</h2>
-        <div class="menu-grid" id="combo-grid"></div>
-    </div>
-    <div class="category">
-        <h2><i class="fas fa-glass-cheers"></i> СУУСУНДУКТАР & фрилер</h2>
-        <div class="menu-grid" id="drinks-grid"></div>
-    </div>
-</main>
 
-<footer>
-    <p>©KING.FOOD.HALAL — Халяль даам | Доставка: +996 778 03 12 03</p>
-    <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/king.food.halal" target="_blank" style="color:#d4af37;">@king.food.halal</a></p>
-</footer>
+    <script>
+        // ----------------------------- 1. ЖАЛПЫ МААЛЫМАТТАР ЖАНА ФУНКЦИЯЛАР ---------------------------------
+        // Баштапкы меню
+        let globalMenu = {
+            shaurma: [
+                { id: "sh1", name: "Шаурма тоок этинен", price: 220 },
+                { id: "sh2", name: "Шаурма уй этинен", price: 230 },
+                { id: "sh3", name: "Бышырылган Шаурма", price: 240 }
+            ],
+            burger: [
+                { id: "bg1", name: "Кинг Бургер", price: 210 },
+                { id: "bg2", name: "Кош Кинг Бургер", price: 240 },
+                { id: "bg3", name: "Чизбургер", price: 210 },
+                { id: "bg4", name: "Кош Чизбургер", price: 240 },
+                { id: "bg5", name: "Чикен бургер", price: 190 },
+                { id: "bg6", name: "Кош Чикен бургер", price: 220 }
+            ],
+            hotdog: [
+                { id: "hd1", name: "Классика Хот-Дог", price: 140 },
+                { id: "hd2", name: "Острый Хот-Дог", price: 150 },
+                { id: "hd3", name: "Чиз Хот-Дог", price: 160 }
+            ],
+            combo: [
+                { id: "cb1", name: "Кинг комбо", price: 600 },
+                { id: "cb2", name: "03 комбо", price: 500 }
+            ],
+            drinks: [
+                { id: "dr1", name: "Султан чай 1л", price: 65 },
+                { id: "dr2", name: "Мохито 0.5л", price: 85 },
+                { id: "dr3", name: "Нитро 0.5л", price: 85 },
+                { id: "dr4", name: "Летс гоу 1.25л", price: 100 },
+                { id: "dr5", name: "Летс гоу (груша) 0.5л", price: 60 },
+                { id: "dr6", name: "Кола/Фанта/Пепси 1л", price: 100 },
+                { id: "dr7", name: "Кофе 3/1", price: 40 },
+                { id: "dr8", name: "Чай", price: 20 }
+            ],
+            snacks: [
+                { id: "sn1", name: "Фри S 150гр", price: 130 },
+                { id: "sn2", name: "Фри M 220гр", price: 150 },
+                { id: "sn3", name: "Чили Чиз-Фрайс", price: 200 },
+                { id: "sn4", name: "Нагреты", price: 150 }
+            ]
+        };
+        let globalCart = []; // { id, name, price, qty }
+        let orderCounter = 0;
+        let completedOrders = [];
 
-<div id="cartOverlay" class="cart-overlay">
-    <div class="cart-panel">
-        <div class="cart-header">
-            <span><i class="fas fa-shopping-cart"></i> Корзина</span>
-            <i class="fas fa-times" id="closeCartBtn" style="cursor:pointer;"></i>
-        </div>
-        <div id="cartItemsList" class="cart-items">🛒 Корзина бош</div>
-        <div class="cart-total" id="cartTotalPrice">Жалпы сумма: 0 сом</div>
-        <div class="address-section">
-            <label><i class="fas fa-location-dot"></i> Даставка дарегиңиз:</label>
-            <textarea id="deliveryAddress" rows="2" placeholder="Мисалы: Улица Тургунбая Садыкова, 1/1"></textarea>
-        </div>
-        <button id="whatsappOrderBtn" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ кылуу</button>
-        <button id="telegramOrderBtn" class="telegram-btn"><i class="fab fa-telegram"></i> Telegram аркылуу заказ кылуу</button>
-        <div class="close-cart" id="closeCartFooter">Жабуу</div>
-    </div>
-</div>
+        // Жергиликтүү сактоо
+        function loadData() {
+            let savedMenu = localStorage.getItem('king_food_menu');
+            if (savedMenu) globalMenu = JSON.parse(savedMenu);
+            let savedCart = localStorage.getItem('king_food_cart');
+            if (savedCart) globalCart = JSON.parse(savedCart);
+            let savedStats = localStorage.getItem('king_food_orders');
+            if (savedStats) { let data = JSON.parse(savedStats); orderCounter = data.orderCounter || 0; completedOrders = data.completedOrders || []; }
+        }
+        function saveMenu() { localStorage.setItem('king_food_menu', JSON.stringify(globalMenu)); }
+        function saveCart() { localStorage.setItem('king_food_cart', JSON.stringify(globalCart)); }
+        function saveStats() { localStorage.setItem('king_food_orders', JSON.stringify({ orderCounter, completedOrders })); }
 
+        // Утилиталар
+        function showToast(msg, containerId = 'main-app') {
+            let toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        function updateCartDisplayFor(target) {
+            const count = globalCart.reduce((s, i) => s + i.qty, 0);
+            const total = globalCart.reduce((s, i) => s + (i.price * i.qty), 0);
+            if (target === 'main') {
+                document.getElementById('cartCounterMain').innerText = count;
+                document.getElementById('cartCountBadgeMain').innerText = count;
+                document.getElementById('cartTotalMain').innerHTML = `Жалпы сумма: ${total} сом`;
+                const container = document.getElementById('cartItemsListMain');
+                if (globalCart.length === 0) container.innerHTML = '<div style="text-align:center; color:gray;">🛒 Корзина бош</div>';
+                else {
+                    let html = '';
+                    globalCart.forEach(item => { html += `<div class="cart-item" style="background:#1e1b17; margin-bottom:12px; padding:12px;
+                     border-radius:18px; display:flex; justify-content:space-between;"><div><strong>${escapeHtml(item.name)}</strong><br>${item.price}
+                         сом</div><div class="cart-qty" style="display:flex; gap:10px;"><button onclick="window.changeQty('${item.id}', -1)">-</button>
+                            <span>${item.qty}</span><button onclick="window.changeQty('${item.id}', 1)">+</button><button onclick="window.removeItem('${item.id}')">✕</button></div></div>`; });
+                    container.innerHTML = html;
+                }
+            }
+        }
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+        function changeQty(id, delta) {
+            let idx = globalCart.findIndex(i => i.id === id);
+            if (idx !== -1) {
+                let newQty = globalCart[idx].qty + delta;
+                if (newQty <= 0) globalCart.splice(idx,1);
+                else globalCart[idx].qty = newQty;
+                updateCartDisplayFor('main');
+                saveCart();
+            }
+        }
+        function removeItem(id) { globalCart = globalCart.filter(i => i.id !== id); updateCartDisplayFor('main'); saveCart(); }
+        function addToCart(item) {
+            let existing = globalCart.find(i => i.id === item.id);
+            if (existing) existing.qty++;
+            else globalCart.push({ ...item, qty: 1 });
+            updateCartDisplayFor('main');
+            saveCart();
+            showToast(`${item.name} корзинага кошулду`, 'main');
+        }
+        // Негизги менюну рендерлөө
+        function renderMainMenu() {
+            const categories = [
+                { key: "shaurma", gridId: "shaurma-grid-main" }, { key: "burger", gridId: "burger-grid-main" },
+                { key: "hotdog", gridId: "hotdog-grid-main" }, { key: "combo", gridId: "combo-grid-main" },
+                { key: "drinks", gridId: "drinks-grid-main" }, { key: "snacks", gridId: "snacks-grid-main" }
+            ];
+            for (let cat of categories) {
+                const container = document.getElementById(cat.gridId);
+                if (container) {
+                    container.innerHTML = '';
+                    globalMenu[cat.key].forEach(item => {
+                        const card = document.createElement('div'); card.className = 'menu-item';
+                        card.innerHTML = `<div><div class="item-name">${escapeHtml(item.name)}</div><div class="item-price">${item.price} сом</div>
+                        </div><button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`;
+                        container.appendChild(card);
+                    });
+                    container.querySelectorAll('.add-btn').forEach(btn => {
+                        btn.addEventListener('click', () => { addToCart({ id: btn.dataset.id, name: btn.dataset.name, price: parseInt(btn.dataset.price) }); });
+                    });
+                }
+            }
+        }
+        // Заказ жөнөтүү (негизги бет)
+        function sendOrderMain(platform) {
+            if (globalCart.length === 0) { alert("Корзина бош!"); return; }
+            const address = document.getElementById('deliveryAddressMain').value.trim() || "Адрес жок";
+            let itemsText = "", total = 0;
+            globalCart.forEach(i => { itemsText += `${i.name} x${i.qty} = ${i.price * i.qty} сом\n`; total += i.price * i.qty; });
+            const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n\n📍 *Дсотавка дареги:* ${address}\n\n`;
+            const url = platform === 'whatsapp' ? `https://wa.me/996778031203?text=${encodeURIComponent(msg)}` : `https://t.me/share/url?url=${encodeURIComponent("Заказ")}&text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+            orderCounter++; saveStats();
+            globalCart = []; updateCartDisplayFor('main'); saveCart();
+            showToast("Заказ жөнөтүлдү! Корзина тазаланды.", 'main');
+        }
+        // Админ панелин рендерлөө (Dashboard)
+        function renderAdminDashboard() {
+            const container = document.getElementById('admin-dashboard-area');
+            if (!container) return;
+            let html = `<div class="admin-wrapper"><div class="admin-header"><h1><i class="fas fa-cog"></i> Меню башкаруу</h1><button id="adminLogoutBtn" 
+                class="logout-btn"><i class="fas fa-sign-out-alt"></i> Чыгуу</button></div>
+            <div class="admin-stats"><i class="fas fa-chart-line"></i> Жалпы заказдар: ${orderCounter}</div>`;
+            const categoriesAd = [
+                { key: "shaurma", title: "ШАУРМА", icon: "utensils" }, { key: "burger", title: "БУРГЕР", icon: "burger" },
+                { key: "hotdog", title: "ХОТ-ДОГ", icon: "hotdog" }, { key: "combo", title: "КОМБО", icon: "box" },
+                { key: "drinks", title: "СУУСУНДУКТАР", icon: "glass-cheers" }, { key: "snacks", title: "ЖЕНИЛ ТАМАКТАР", icon: "french-fries" }
+            ];
+            for (let cat of categoriesAd) {
+                html += `<div class="admin-category"><h3><i class="fas fa-${cat.icon}"></i> ${cat.title}</h3><div id="admin-items-${cat.key}"></div><div class="add-item-form">
+                    <input type="text" id="newName_${cat.key}" placeholder="Жаңы тамак аты"><input type="number" id="newPrice_${cat.key}" placeholder="Баасы">
+                    <button onclick="addAdminItem('${cat.key}')">Кошуу</button></div></div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+            for (let cat of categoriesAd) {
+                const itemsContainer = document.getElementById(`admin-items-${cat.key}`);
+                if (itemsContainer) {
+                    itemsContainer.innerHTML = '';
+                    globalMenu[cat.key].forEach((item, idx) => {
+                        const div = document.createElement('div'); div.className = 'admin-item';
+                        div.innerHTML = `<input type="text" value="${escapeHtml(item.name)}" id="name_${cat.key}_${idx}" 
+                        style="flex:2;"><input type="number" value="${item.price}" id="price_${cat.key}_${idx}" class="price-input"><button class="edit-btn"
+                         onclick="updateAdminItem('${cat.key}', ${idx})"><i class="fas fa-save"></i></button><button onclick="deleteAdminItem('${cat.key}',
+                          ${idx})"><i class="fas fa-trash"></i></button>`;
+                        itemsContainer.appendChild(div);
+                    });
+                }
+            }
+            document.getElementById('adminLogoutBtn')?.addEventListener('click', () => { sessionStorage.removeItem('admin_logged'); showAdminLogin(); });
+        }
+        window.addAdminItem = (catKey) => {
+            const nameInput = document.getElementById(`newName_${catKey}`);
+            const priceInput = document.getElementById(`newPrice_${catKey}`);
+            const newName = nameInput?.value.trim();
+            const newPrice = parseInt(priceInput?.value);
+            if (!newName || isNaN(newPrice)) { alert("Аты жана баасы туура эмес"); return; }
+            const newId = `${catKey}_${Date.now()}_${Math.random()}`;
+            globalMenu[catKey].push({ id: newId, name: newName, price: newPrice });
+            saveMenu(); renderMainMenu(); renderAdminDashboard();
+            showToast(`✅ "${newName}" кошулду`, 'admin');
+            if(nameInput) nameInput.value = ''; if(priceInput) priceInput.value = '';
+        };
+        window.updateAdminItem = (catKey, idx) => {
+            const nameInp = document.getElementById(`name_${catKey}_${idx}`);
+            const priceInp = document.getElementById(`price_${catKey}_${idx}`);
+            if (nameInp && priceInp) {
+                globalMenu[catKey][idx].name = nameInp.value.trim();
+                globalMenu[catKey][idx].price = parseInt(priceInp.value);
+                saveMenu(); renderMainMenu(); renderAdminDashboard();
+                showToast("Өзгөртүлдү", 'admin');
+            }
+        };
+        window.deleteAdminItem = (catKey, idx) => {
+            const name = globalMenu[catKey][idx].name;
+            if (confirm(`"${name}" өчүрүлсүнбү?`)) {
+                globalMenu[catKey].splice(idx,1);
+                saveMenu(); renderMainMenu(); renderAdminDashboard();
+                showToast(`"${name}" өчүрүлдү`, 'admin');
+            }
+        };
+        // Админ кирүү формасы
+        function showAdminLogin() {
+            const loginArea = document.getElementById('admin-login-area');
+            const dashboardArea = document.getElementById('admin-dashboard-area');
+            if (loginArea && dashboardArea) {
+                loginArea.style.display = 'block';
+                dashboardArea.style.display = 'none';
+                loginArea.innerHTML = `<div class="admin-login-container"><div class="login-card"><h2><i class="fas fa-lock"></i>
+                     Админге кирүү</h2><input type="text" id="adminUsername" placeholder="Логин (king)"><input type="password" id="adminPassword" 
+                     placeholder="Пароль (halal2025)"><button id="doLoginBtn">Кирүү</button><div id="loginError" class="error-msg"></div></div></div>`;
+                document.getElementById('doLoginBtn')?.addEventListener('click', () => {
+                    const user = document.getElementById('adminUsername')?.value;
+                    const pass = document.getElementById('adminPassword')?.value;
+                    if (user === 'Arstanbek' && pass === 'ArsBek.2003') {
+                        sessionStorage.setItem('admin_logged', 'true');
+                        loginArea.style.display = 'none';
+                        dashboardArea.style.display = 'block';
+                        renderAdminDashboard();
+                    } else { document.getElementById('loginError').innerText = 'Логин же пароль туура эмес!'; }
+                });
+            }
+        }
 
-<script src="./script.js"></script>
+        // ----------------------------- 2. МАРШРУТТАШТЫРУУ (Path Routing) ---------------------------------
+        function route() {
+            const path = window.location.pathname;
+            const isAdminPath = path === '/Admin' || path === '/Admin/' || path === '/admin' || path === '/admin/';
+            document.body.classList.remove('main-mode', 'admin-mode');
+            if (isAdminPath) {
+                document.body.classList.add('admin-mode');
+                const logged = sessionStorage.getItem('admin_logged');
+                if (logged === 'true') { 
+                    document.getElementById('admin-login-area').style.display = 'none';
+                    document.getElementById('admin-dashboard-area').style.display = 'block';
+                    renderAdminDashboard();
+                } else { showAdminLogin(); }
+            } else {
+                document.body.classList.add('main-mode');
+                renderMainMenu();
+                updateCartDisplayFor('main');
+            }
+        }
+
+        // ----------------------------- 3. ИШКЕ КИРГИЗҮҮ --------------------------------------------------
+        window.changeQty = changeQty;
+        window.removeItem = removeItem;
+        window.addToCart = addToCart;
+        window.sendOrderMain = sendOrderMain;
+        loadData();
+        // Негизги бет үчүн карзина окуяларын байланыштыруу
+        setTimeout(() => {
+            const cartIcon = document.getElementById('cartIconMain');
+            const overlay = document.getElementById('cartOverlayMain');
+            const closeBtn = document.getElementById('closeCartMain');
+            const closeFooter = document.getElementById('closeCartFooterMain');
+            if (cartIcon) cartIcon.onclick = () => { if(overlay) overlay.style.visibility = 'visible', overlay.style.opacity = 1; };
+            if (closeBtn) closeBtn.onclick = () => { if(overlay) overlay.style.visibility = 'hidden', overlay.style.opacity = 0; };
+            if (closeFooter) closeFooter.onclick = () => { if(overlay) overlay.style.visibility = 'hidden', overlay.style.opacity = 0; };
+            if(overlay) overlay.onclick = (e) => { if(e.target === overlay) overlay.style.visibility = 'hidden', overlay.style.opacity = 0; };
+            const whatsBtn = document.getElementById('whatsappOrderMain');
+            const teleBtn = document.getElementById('telegramOrderMain');
+            if(whatsBtn) whatsBtn.onclick = () => sendOrderMain('whatsapp');
+            if(teleBtn) teleBtn.onclick = () => sendOrderMain('telegram');
+        }, 100);
+        window.addEventListener('popstate', route);
+        route();
+    </script>
 </body>
-</html> 
+</html>
