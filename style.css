@@ -1,1 +1,321 @@
+ 
+        /* === НЕГИЗГИ СТИЛДЕР (Main & Admin) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0a0a0a;
+            color: #f5f3e8;
+        }
+        /* --- Учурдагы бетти көрсөтүү үчүн контейнерлер --- */
+        #main-app, #admin-app {
+            display: none;
+        }
+        body.main-mode #main-app {
+            display: block;
+        }
+        body.admin-mode #admin-app {
+            display: block;
+        }
+        /* --- Жалпы компоненттер (Негизги беттин стилдери) --- */
+        .top-bar {
+            background: #000000cc;
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #d4af3744;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo h1 { font-size: 1.7rem; letter-spacing: 1px; }
+        .logo h1 span { color: #d4af37; font-weight: 700; }
+        .logo p { font-size: 0.7rem; color: #d4af37; }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            background: #2a2a2a;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.2s;
+            border: 1px solid #d4af3766;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cart-icon:hover { background: #d4af37; color: #000; }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff3b3b;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #d62976;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .instagram-link:hover { background: #c13584; }
+        .hero {
+            background: linear-gradient(95deg, #0f0f0f 0%, #1a120b 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        .combo-showcase {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .combo-card {
+            background: #1f1b15;
+            border-radius: 28px;
+            padding: 1rem;
+            width: 260px;
+            border-left: 4px solid #d4af37;
+        }
+        .combo-card h3 { color: #d4af37; }
+        .delivery-badge {
+            background: #1e2a1e;
+            padding: 8px 20px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        .delivery-badge i { color: #25d366; }
+        .menu-section { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .category { margin-bottom: 3rem; }
+        .category h2 {
+            font-size: 1.9rem;
+            border-left: 5px solid #d4af37;
+            padding-left: 18px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .menu-item {
+            background: #14100e;
+            border-radius: 28px;
+            padding: 1rem;
+            border: 1px solid #2f2a24;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .menu-item:hover { border-color: #d4af37; transform: translateY(-3px); }
+        .item-name { font-weight: bold; font-size: 1.1rem; }
+        .item-price { color: #f5c542; font-size: 1.2rem; margin-top: 5px; }
+        .add-btn {
+            background: #d4af37;
+            border: none;
+            color: #1e1a14;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+        .add-btn:hover { background: #f5c542; transform: scale(0.96); }
+        footer {
+            background: #070605;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .phone-numbers { margin-top: 10px; }
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d4af37;
+            color: #1e1a14;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 1100;
+            animation: fadeOut 2s ease forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        @media (max-width: 650px) {
+            .top-bar { padding: 0.8rem 1rem; }
+            .menu-section { padding: 1rem; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
 
+        /* === АДМИН ПАНЕЛИНИН СТИЛДЕРИ (Кирүү формасы жана башкаруу панели) === */
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a120b 100%);
+            padding: 20px;
+        }
+        .login-card {
+            background: #0f0e0c;
+            padding: 2rem;
+            border-radius: 32px;
+            border: 2px solid #d4af37;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .login-card h2 { color: #d4af37; margin-bottom: 25px; }
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 40px;
+            background: #2a2722;
+            border: 1px solid #d4af37;
+            color: white;
+            font-size: 1rem;
+        }
+        .login-card button {
+            background: #d4af37;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        .login-card button:hover { background: #f5c542; }
+        .error-msg {
+            color: #ff6666;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Админ панелинин ички стилдери */
+        .admin-wrapper {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 1rem;
+        }
+        .admin-header h1 { color: #d4af37; }
+        .logout-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .admin-stats {
+            background: #1a1815;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .admin-category {
+            background: #1a1815;
+            padding: 1rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+        .admin-category h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+        .admin-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .admin-item input {
+            flex: 2;
+            padding: 8px;
+            border-radius: 12px;
+            background: #2a2722;
+            border: none;
+            color: white;
+        }
+        .admin-item input.price-input { flex: 1; }
+        .admin-item button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .admin-item button.edit-btn { background: #d4af37; color: #1e1a14; }
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .add-item-form input {
+            flex: 2;
+            padding: 8px;
+            border-radius: 12px;
+            background: #2a2722;
+            border: none;
+            color: white;
+        }
+        .add-item-form button {
+            background: #4caf50;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+        }
+        @media (max-width: 650px) {
+            .admin-wrapper { padding: 1rem; }
+            .admin-item { flex-direction: column; align-items: stretch; }
+            .add-item-form { flex-direction: column; }
+        }
+  
