@@ -339,7 +339,7 @@
                 </div>
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link">
-                        <i class="fab fa-instagram"></i> Instagram
+                        <i class="fab fa-instagram">Иштөө убактысы 09:00 /02:00</i> Instagram
                     </a>
                     <div class="cart-icon" id="cartIconMain">
                         <i class="fas fa-shopping-basket"></i>
@@ -353,7 +353,7 @@
                     <div class="combo-card"><h3>🍔 KING KOMBO 600 сом</h3><p>Шаурма уй этинен + Кинг Бургер + Фри S + Султан Чай</p></div>
                     <div class="combo-card"><h3>🔥 03 KOMBO 500 сом</h3><p>Шаурма тоок этинен + Хот-Дог + Нагреты + Султан Чай</p></div>
                 </div>
-                <div class="delivery-badge"><i class="fas fa-motorcycle"></i> Иштөө убактысы 09:00 /02:00</div>
+                <div class="delivery-badge"><i class="fas fa-motorcycle"></i> </div>
             </div>
         </header>
         <main class="menu-section">
@@ -370,8 +370,7 @@
             <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/king.food.halal" target="_blank" style="color:#d4af37;">king.food.halal</a></p>
         </footer>
         <!-- Карзина модалы -->
-        <div id="cartOverlayMain" class="cart-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background:#000000cc; backdrop-filter:blur(4px); z-index:1000;
-         display:flex; justify-content:flex-end; visibility:hidden; opacity:0; transition:0.2s;">
+        <div id="cartOverlayMain" class="cart-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background:#000000cc; backdrop-filter:blur(4px); z-index:1000; display:flex; justify-content:flex-end; visibility:hidden; opacity:0; transition:0.2s;">
             <div class="cart-panel" style="width:100%; max-width:450px; background:#0f0e0c; height:100vh; overflow-y:auto; padding:1.5rem; border-left:2px solid #d4af37;">
                 <div class="cart-header" style="display:flex; justify-content:space-between; border-bottom:1px solid #d4af37; padding-bottom:12px; font-size:1.5rem;">
                     <span><i class="fas fa-shopping-cart"></i> Корзина</span>
@@ -381,10 +380,10 @@
                 <div class="cart-total" id="cartTotalMain" style="font-size:1.3rem; font-weight:bold; border-top:2px solid #d4af37; padding-top:15px; text-align:right;">Жалпы сумма: 0 сом</div>
                 <div class="address-section" style="margin:15px 0; background:#1a1815; padding:12px; border-radius:16px;">
                     <label style="color:#d4af37;"><i class="fas fa-location-dot"></i> Доставка дарегиңиз:</label>
-                    <textarea id="deliveryAddressMain" rows="2" placeholder="Мисалы:Тургунбая Садыкова " style="width:100%; padding:10px; border-radius:12px; background:#2a2722; border:1px solid #d4af3766; color:white;"></textarea>
+                    <textarea id="deliveryAddressMain" rows="2" placeholder="Мисалы: Тургунбая Садыкова" style="width:100%; padding:10px; border-radius:12px; background:#2a2722; border:1px solid #d4af3766; color:white;"></textarea>
                 </div>
-                <button id="whatsappOrderMain" class="whatsapp-btn" style="background:#25D366; color:#121212; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ берүү</button>
-                <button id="telegramOrderMain" class="telegram-btn" style="background:#0088cc; color:white; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-telegram"></i> Telegram аркылуу заказ берүү</button>
+                <button id="whatsappOrderMain" class="whatsapp-btn" style="background:#25D366; color:#121212; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button>
+                <button id="telegramOrderMain" class="telegram-btn" style="background:#0088cc; color:white; padding:12px; border-radius:50px; font-weight:bold; width:100%; margin-top:10px;"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button>
                 <div id="closeCartFooterMain" style="background:#333; color:white; padding:10px; border-radius:40px; text-align:center; cursor:pointer; margin-top:15px;">Жабуу</div>
             </div>
         </div>
@@ -475,10 +474,7 @@
                 if (globalCart.length === 0) container.innerHTML = '<div style="text-align:center; color:gray;">🛒 Корзина бош</div>';
                 else {
                     let html = '';
-                    globalCart.forEach(item => { html += `<div class="cart-item" style="background:#1e1b17; margin-bottom:12px; padding:12px;
-                     border-radius:18px; display:flex; justify-content:space-between;"><div><strong>${escapeHtml(item.name)}</strong><br>${item.price}
-                         сом</div><div class="cart-qty" style="display:flex; gap:10px;"><button onclick="window.changeQty('${item.id}', -1)">-</button>
-                            <span>${item.qty}</span><button onclick="window.changeQty('${item.id}', 1)">+</button><button onclick="window.removeItem('${item.id}')">✕</button></div></div>`; });
+                    globalCart.forEach(item => { html += `<div class="cart-item" style="background:#1e1b17; margin-bottom:12px; padding:12px; border-radius:18px; display:flex; justify-content:space-between;"><div><strong>${escapeHtml(item.name)}</strong><br>${item.price} сом</div><div class="cart-qty" style="display:flex; gap:10px;"><button onclick="window.changeQty('${item.id}', -1)">-</button><span>${item.qty}</span><button onclick="window.changeQty('${item.id}', 1)">+</button><button onclick="window.removeItem('${item.id}')">✕</button></div></div>`; });
                     container.innerHTML = html;
                 }
             }
@@ -516,8 +512,7 @@
                     container.innerHTML = '';
                     globalMenu[cat.key].forEach(item => {
                         const card = document.createElement('div'); card.className = 'menu-item';
-                        card.innerHTML = `<div><div class="item-name">${escapeHtml(item.name)}</div><div class="item-price">${item.price} сом</div>
-                        </div><button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`;
+                        card.innerHTML = `<div><div class="item-name">${escapeHtml(item.name)}</div><div class="item-price">${item.price} сом</div></div><button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`;
                         container.appendChild(card);
                     });
                     container.querySelectorAll('.add-btn').forEach(btn => {
@@ -532,7 +527,7 @@
             const address = document.getElementById('deliveryAddressMain').value.trim() || "Адрес жок";
             let itemsText = "", total = 0;
             globalCart.forEach(i => { itemsText += `${i.name} x${i.qty} = ${i.price * i.qty} сом\n`; total += i.price * i.qty; });
-            const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n\n📍 *Дсотавка дареги:* ${address}\n\n`;
+            const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n\n📍 *Доставка дареги:* ${address}\n\n`;
             const url = platform === 'whatsapp' ? `https://wa.me/996778031203?text=${encodeURIComponent(msg)}` : `https://t.me/share/url?url=${encodeURIComponent("Заказ")}&text=${encodeURIComponent(msg)}`;
             window.open(url, '_blank');
             orderCounter++; saveStats();
@@ -543,8 +538,7 @@
         function renderAdminDashboard() {
             const container = document.getElementById('admin-dashboard-area');
             if (!container) return;
-            let html = `<div class="admin-wrapper"><div class="admin-header"><h1><i class="fas fa-cog"></i> Меню башкаруу</h1><button id="adminLogoutBtn" 
-                class="logout-btn"><i class="fas fa-sign-out-alt"></i> Чыгуу</button></div>
+            let html = `<div class="admin-wrapper"><div class="admin-header"><h1><i class="fas fa-cog"></i> Меню башкаруу</h1><button id="adminLogoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Чыгуу</button></div>
             <div class="admin-stats"><i class="fas fa-chart-line"></i> Жалпы заказдар: ${orderCounter}</div>`;
             const categoriesAd = [
                 { key: "shaurma", title: "ШАУРМА", icon: "utensils" }, { key: "burger", title: "БУРГЕР", icon: "burger" },
@@ -552,9 +546,7 @@
                 { key: "drinks", title: "СУУСУНДУКТАР", icon: "glass-cheers" }, { key: "snacks", title: "ЖЕНИЛ ТАМАКТАР", icon: "french-fries" }
             ];
             for (let cat of categoriesAd) {
-                html += `<div class="admin-category"><h3><i class="fas fa-${cat.icon}"></i> ${cat.title}</h3><div id="admin-items-${cat.key}"></div><div class="add-item-form">
-                    <input type="text" id="newName_${cat.key}" placeholder="Жаңы тамак аты"><input type="number" id="newPrice_${cat.key}" placeholder="Баасы">
-                    <button onclick="addAdminItem('${cat.key}')">Кошуу</button></div></div>`;
+                html += `<div class="admin-category"><h3><i class="fas fa-${cat.icon}"></i> ${cat.title}</h3><div id="admin-items-${cat.key}"></div><div class="add-item-form"><input type="text" id="newName_${cat.key}" placeholder="Жаңы тамак аты"><input type="number" id="newPrice_${cat.key}" placeholder="Баасы"><button onclick="addAdminItem('${cat.key}')">Кошуу</button></div></div>`;
             }
             html += `</div>`;
             container.innerHTML = html;
@@ -564,10 +556,7 @@
                     itemsContainer.innerHTML = '';
                     globalMenu[cat.key].forEach((item, idx) => {
                         const div = document.createElement('div'); div.className = 'admin-item';
-                        div.innerHTML = `<input type="text" value="${escapeHtml(item.name)}" id="name_${cat.key}_${idx}" 
-                        style="flex:2;"><input type="number" value="${item.price}" id="price_${cat.key}_${idx}" class="price-input"><button class="edit-btn"
-                         onclick="updateAdminItem('${cat.key}', ${idx})"><i class="fas fa-save"></i></button><button onclick="deleteAdminItem('${cat.key}',
-                          ${idx})"><i class="fas fa-trash"></i></button>`;
+                        div.innerHTML = `<input type="text" value="${escapeHtml(item.name)}" id="name_${cat.key}_${idx}" style="flex:2;"><input type="number" value="${item.price}" id="price_${cat.key}_${idx}" class="price-input"><button class="edit-btn" onclick="updateAdminItem('${cat.key}', ${idx})"><i class="fas fa-save"></i></button><button onclick="deleteAdminItem('${cat.key}', ${idx})"><i class="fas fa-trash"></i></button>`;
                         itemsContainer.appendChild(div);
                     });
                 }
@@ -583,7 +572,7 @@
             const newId = `${catKey}_${Date.now()}_${Math.random()}`;
             globalMenu[catKey].push({ id: newId, name: newName, price: newPrice });
             saveMenu(); renderMainMenu(); renderAdminDashboard();
-            showToast(`✅ "${newName}" кошулду`, 'admin');
+            showToast(`✅ "${newName}" кошулды`, 'admin');
             if(nameInput) nameInput.value = ''; if(priceInput) priceInput.value = '';
         };
         window.updateAdminItem = (catKey, idx) => {
@@ -611,13 +600,11 @@
             if (loginArea && dashboardArea) {
                 loginArea.style.display = 'block';
                 dashboardArea.style.display = 'none';
-                loginArea.innerHTML = `<div class="admin-login-container"><div class="login-card"><h2><i class="fas fa-lock"></i>
-                     Админге кирүү</h2><input type="text" id="adminUsername" placeholder="Логин (king)"><input type="password" id="adminPassword" 
-                     placeholder="Пароль (halal2025)"><button id="doLoginBtn">Кирүү</button><div id="loginError" class="error-msg"></div></div></div>`;
+                loginArea.innerHTML = `<div class="admin-login-container"><div class="login-card"><h2><i class="fas fa-lock"></i> Админге кирүү</h2><input type="text" id="adminUsername" placeholder="Логин (king)"><input type="password" id="adminPassword" placeholder="Пароль (halal2025)"><button id="doLoginBtn">Кирүү</button><div id="loginError" class="error-msg"></div></div></div>`;
                 document.getElementById('doLoginBtn')?.addEventListener('click', () => {
                     const user = document.getElementById('adminUsername')?.value;
                     const pass = document.getElementById('adminPassword')?.value;
-                    if (user === 'Arstanbek' && pass === 'ArsBek.2003') {
+                    if (user === 'ARSTANBEK' && pass === 'ArsBek.2003') {
                         sessionStorage.setItem('admin_logged', 'true');
                         loginArea.style.display = 'none';
                         dashboardArea.style.display = 'block';
