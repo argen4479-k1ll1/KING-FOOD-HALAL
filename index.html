@@ -657,6 +657,14 @@
         }, 100);
         window.addEventListener('popstate', route);
         route();
+
+        {
+  "rewrites": [
+    { "source": "/Admin", "destination": "/index.html" },
+    { "source": "/Admin/", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
     </script>
 </body>
 </html>
