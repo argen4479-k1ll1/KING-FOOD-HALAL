@@ -2,143 +2,363 @@
 <html lang="ky">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KING FOOD HALAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KING FOOD HALAL - Шаурма & Бургерлер</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-        body{background:#0a0a0a;color:#f5f3e8;}
-        .top-bar{background:#000000cc;backdrop-filter:blur(12px);position:sticky;top:0;padding:0.8rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-        .logo h1{font-size:1.7rem;}.logo h1 span{color:#d4af37;}
-        .cart-icon{position:relative;cursor:pointer;background:#2a2a2a;padding:10px 18px;border-radius:50px;display:flex;gap:8px;}
-        .cart-count{position:absolute;top:-8px;right:-8px;background:#ff3b3b;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;}
-        .instagram-link{background:#d62976;padding:8px 20px;border-radius:40px;text-decoration:none;color:white;}
-        .hero{background:linear-gradient(95deg,#0f0f0f,#1a120b);padding:2rem;text-align:center;}
-        .combo-card{background:#1f1b15;border-radius:28px;padding:1rem;width:260px;border-left:4px solid #d4af37;display:inline-block;margin:0.5rem;}
-        .delivery-badge{background:#1e2a1e;padding:8px 20px;border-radius:40px;display:inline-block;margin-top:15px;}
-        .menu-section{padding:2rem;max-width:1400px;margin:0 auto;}
-        .category{margin-bottom:3rem;}
-        .category h2{font-size:1.9rem;border-left:5px solid #d4af37;padding-left:18px;margin-bottom:1.5rem;}
-        .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
-        .menu-item{background:#14100e;border-radius:28px;padding:1rem;border:1px solid #2f2a24;display:flex;justify-content:space-between;align-items:center;}
-        .item-name{font-weight:bold;}.item-price{color:#f5c542;font-size:1.2rem;}
-        .add-btn{background:#d4af37;border:none;color:#1e1a14;padding:8px 16px;border-radius:40px;cursor:pointer;display:flex;gap:5px;}
-        .cart-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000000cc;z-index:1000;display:flex;justify-content:flex-end;visibility:hidden;opacity:0;transition:0.2s;}
-        .cart-overlay.open{visibility:visible;opacity:1;}
-        .cart-panel{width:100%;max-width:450px;background:#0f0e0c;height:100vh;overflow-y:auto;padding:1.5rem;border-left:2px solid #d4af37;}
-        .cart-header{display:flex;justify-content:space-between;border-bottom:1px solid #d4af37;padding-bottom:12px;font-size:1.5rem;}
-        .cart-items{margin:20px 0;max-height:45vh;overflow-y:auto;}
-        .cart-item{background:#1e1b17;margin-bottom:12px;padding:12px;border-radius:18px;display:flex;justify-content:space-between;}
-        .cart-qty{display:flex;gap:10px;align-items:center;}
-        .cart-qty button{background:#d4af37;border:none;width:28px;height:28px;border-radius:30px;cursor:pointer;}
-        .cart-qty button:last-child{background:#ff4444;color:white;}
-        .cart-total{font-size:1.3rem;font-weight:bold;border-top:2px solid #d4af37;padding-top:15px;text-align:right;}
-        .address-section{margin:15px 0;background:#1a1815;padding:12px;border-radius:16px;}
-        .address-section textarea{width:100%;padding:10px;border-radius:12px;background:#2a2722;border:1px solid #d4af3766;color:white;}
-        .whatsapp-btn,.telegram-btn{padding:12px;border-radius:50px;font-weight:bold;border:none;cursor:pointer;width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:10px;}
-        .whatsapp-btn{background:#25D366;color:#121212;}
-        .telegram-btn{background:#0088cc;color:white;}
-        .close-cart{background:#333;color:white;padding:10px;border-radius:40px;text-align:center;cursor:pointer;margin-top:15px;}
-        footer{background:#070605;text-align:center;padding:2rem;margin-top:2rem;}
-        .toast-msg{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#d4af37;color:#1e1a14;padding:10px 20px;border-radius:50px;z-index:1100;animation:fadeOut 2s forwards;}
-        @keyframes fadeOut{0%{opacity:1;}100%{opacity:0;visibility:hidden;}}
-        @media(max-width:650px){.top-bar{padding:0.8rem 1rem;}.menu-section{padding:1rem;}.menu-grid{grid-template-columns:1fr;}}
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #b8960c;
+            --primary-light: #e8c84a;
+            --dark: #0a0a0a;
+            --dark2: #14100e;
+            --dark3: #1f1b15;
+            --dark4: #2a2520;
+            --white: #f5f3e8;
+            --gray: #bcae7a;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --whatsapp: #25D366;
+            --telegram: #0088cc;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark2); }
+        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         
-        /* АДМИН ПАНЕЛЬ СТИЛДЕРИ */
-        .admin-toggle{position:fixed;bottom:20px;right:20px;background:#d4af37;width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200;font-size:1.5rem;}
-        .admin-panel{position:fixed;top:0;left:-400px;width:100%;max-width:400px;height:100vh;background:#0f0e0c;z-index:1001;padding:1.5rem;overflow-y:auto;transition:0.3s;border-right:2px solid #d4af37;}
-        .admin-panel.open{left:0;}
-        .admin-category{background:#1a1815;padding:1rem;border-radius:16px;margin-bottom:1.5rem;}
-        .admin-item{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
-        .admin-item input{flex:1;padding:8px;border-radius:8px;background:#2a2722;border:none;color:white;}
-        .admin-item button{padding:6px 12px;border-radius:8px;border:none;cursor:pointer;}
-        .admin-item .edit-btn{background:#d4af37;color:#1e1a14;}
-        .admin-item .del-btn{background:#ff4444;color:white;}
-        .add-item-form{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
-        .add-item-form input{flex:1;padding:8px;border-radius:8px;background:#2a2722;border:none;color:white;}
-        .add-item-form button{background:#4caf50;color:white;padding:8px 15px;border-radius:8px;border:none;cursor:pointer;}
-        .close-admin{background:#333;color:white;padding:10px;border-radius:40px;text-align:center;cursor:pointer;margin-top:20px;}
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 3rem;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem; font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+        .nav-logo span { color: var(--white); }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--white); text-decoration: none;
+            font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase;
+            opacity: 0.7; transition: opacity 0.2s, color 0.2s; cursor: pointer;
+        }
+        .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--primary); }
+        .nav-icons { display: flex; gap: 1rem; align-items: center; }
+        .cart-icon {
+            position: relative; cursor: pointer;
+            background: rgba(212,175,55,0.15);
+            padding: 0.5rem 1rem; border-radius: 30px;
+            display: flex; align-items: center; gap: 8px;
+            transition: background 0.2s;
+        }
+        .cart-icon:hover { background: rgba(212,175,55,0.3); }
+        .cart-count {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--primary); color: var(--dark);
+            border-radius: 50%; width: 20px; height: 20px;
+            font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
+            font-weight: bold;
+        }
+        .instagram-link {
+            background: #d62976; padding: 0.5rem 1rem; border-radius: 30px;
+            text-decoration: none; color: white; font-size: 0.75rem;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .instagram-link:hover { background: #c13584; }
         
-        /* Пароль модалы */
-        .password-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:#000000dd;backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:0.2s;}
-        .password-modal.open{visibility:visible;opacity:1;}
-        .password-box{background:#0f0e0c;padding:2rem;border-radius:32px;border:2px solid #d4af37;width:350px;text-align:center;}
-        .password-box h3{color:#d4af37;margin-bottom:20px;}
-        .password-box input{width:100%;padding:12px;border-radius:40px;background:#2a2722;border:1px solid #d4af37;color:white;font-size:1rem;margin-bottom:15px;}
-        .password-box button{background:#d4af37;border:none;padding:10px;border-radius:40px;font-weight:bold;cursor:pointer;width:100%;}
-        .password-box button:hover{background:#f5c542;}
-        .pwd-error{color:#ff6666;margin-top:10px;font-size:0.85rem;}
+        .hero {
+            position: relative; min-height: 85vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a120b 100%);
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; margin-top: 68px;
+        }
+        .hero-content { padding: 3rem; max-width: 800px; }
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--primary); border: 1px solid var(--primary);
+            padding: 0.4rem 1rem; margin-bottom: 1.5rem;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900; line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title span { color: var(--primary); font-style: italic; }
+        .hero-desc {
+            font-size: 1rem; color: rgba(245,243,232,0.7);
+            max-width: 550px; margin: 0 auto 2rem; line-height: 1.6;
+        }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            background: var(--primary); color: var(--dark);
+            border: none; padding: 0.9rem 2rem;
+            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+            border-radius: 40px;
+        }
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-outline {
+            background: transparent; color: var(--white);
+            border: 1px solid rgba(212,175,55,0.5);
+            padding: 0.9rem 2rem; font-size: 0.8rem;
+            letter-spacing: 2px; text-transform: uppercase;
+            cursor: pointer; transition: border-color 0.2s;
+            border-radius: 40px;
+        }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .combo-section {
+            padding: 4rem 3rem;
+            background: var(--dark2);
+            text-align: center;
+        }
+        .section-tag {
+            font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--primary); margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; font-weight: 700; margin-bottom: 2.5rem;
+        }
+        .combo-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem; max-width: 1000px; margin: 0 auto;
+        }
+        .combo-card {
+            background: var(--dark3); border: 1px solid rgba(212,175,55,0.15);
+            padding: 2rem; border-radius: 20px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .combo-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .combo-card h3 { color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .combo-card p { color: var(--gray); font-size: 0.85rem; line-height: 1.5; }
+        
+        .menu-section { padding: 4rem 3rem; max-width: 1400px; margin: 0 auto; }
+        .category { margin-bottom: 3rem; }
+        .category h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem; border-left: 4px solid var(--primary);
+            padding-left: 1rem; margin-bottom: 1.5rem;
+        }
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .menu-item {
+            background: var(--dark3); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px; padding: 1.2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .menu-item:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .item-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem; }
+        .item-price { color: var(--primary); font-size: 1.2rem; font-weight: bold; }
+        .add-btn {
+            background: var(--primary); border: none; color: var(--dark);
+            padding: 0.5rem 1rem; border-radius: 30px; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; font-weight: 600;
+            transition: background 0.2s;
+        }
+        .add-btn:hover { background: var(--primary-light); transform: scale(0.96); }
+        
+        .cart-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+            z-index: 2000; display: flex; justify-content: flex-end;
+            visibility: hidden; opacity: 0; transition: 0.2s;
+        }
+        .cart-modal.open { visibility: visible; opacity: 1; }
+        .cart-panel {
+            width: 100%; max-width: 450px; background: var(--dark3);
+            height: 100vh; overflow-y: auto; padding: 1.5rem;
+            border-left: 2px solid var(--primary);
+        }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--primary); padding-bottom: 1rem; font-size: 1.3rem; }
+        .cart-items { margin: 1.5rem 0; max-height: 45vh; overflow-y: auto; }
+        .cart-item { background: var(--dark4); margin-bottom: 0.8rem; padding: 1rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .cart-qty { display: flex; gap: 10px; align-items: center; }
+        .cart-qty button { background: var(--primary); border: none; width: 28px; height: 28px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        .cart-qty button:last-child { background: var(--error); color: white; }
+        .cart-total { font-size: 1.3rem; font-weight: bold; border-top: 1px solid var(--primary); padding-top: 1rem; text-align: right; }
+        .address-section { margin: 1rem 0; background: var(--dark4); padding: 1rem; border-radius: 16px; }
+        .address-section textarea { width: 100%; padding: 0.8rem; border-radius: 12px; background: var(--dark2); border: 1px solid rgba(212,175,55,0.3); color: var(--white); resize: vertical; }
+        .order-buttons { display: flex; gap: 1rem; margin-top: 1rem; flex-direction: column; }
+        .btn-whatsapp { background: var(--whatsapp); color: #121212; padding: 0.8rem; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-telegram { background: var(--telegram); color: white; padding: 0.8rem; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .close-cart { background: #333; color: white; padding: 0.8rem; border-radius: 40px; text-align: center; cursor: pointer; margin-top: 1rem; }
+        
+        .admin-toggle {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--primary); color: var(--dark);
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 150; font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s;
+        }
+        .admin-toggle:hover { transform: scale(1.1); background: var(--primary-light); }
+        .admin-panel {
+            position: fixed; top: 0; left: -400px; width: 100%; max-width: 400px;
+            height: 100vh; background: var(--dark3); z-index: 2001;
+            padding: 1.5rem; overflow-y: auto; transition: 0.3s;
+            border-right: 2px solid var(--primary);
+        }
+        .admin-panel.open { left: 0; }
+        .admin-category { background: var(--dark4); padding: 1rem; border-radius: 16px; margin-bottom: 1.5rem; }
+        .admin-item { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+        .admin-item input { flex: 1; padding: 6px; border-radius: 8px; background: var(--dark2); border: none; color: white; }
+        .admin-item button { padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; }
+        .edit-btn { background: var(--primary); color: var(--dark); }
+        .del-btn { background: var(--error); color: white; }
+        .add-item-form { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .add-item-form input { flex: 1; padding: 6px; border-radius: 8px; background: var(--dark2); border: none; color: white; }
+        .add-item-form button { background: var(--success); color: white; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; }
+        .close-admin { background: #333; color: white; padding: 10px; border-radius: 40px; text-align: center; cursor: pointer; margin-top: 20px; }
+        .password-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            z-index: 3000; display: flex; align-items: center; justify-content: center;
+            visibility: hidden; opacity: 0; transition: 0.2s;
+        }
+        .password-modal.open { visibility: visible; opacity: 1; }
+        .password-box { background: var(--dark3); padding: 2rem; border-radius: 32px; border: 2px solid var(--primary); width: 350px; text-align: center; }
+        .password-box h3 { color: var(--primary); margin-bottom: 1.5rem; }
+        .password-box input { width: 100%; padding: 12px; border-radius: 40px; background: var(--dark4); border: 1px solid var(--primary); color: white; margin-bottom: 1rem; }
+        .password-box button { background: var(--primary); border: none; padding: 12px; border-radius: 40px; width: 100%; cursor: pointer; font-weight: bold; }
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: var(--dark); padding: 10px 20px;
+            border-radius: 50px; z-index: 3500; animation: fadeOut 2s forwards;
+        }
+        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+        footer { background: var(--dark2); text-align: center; padding: 2rem; border-top: 1px solid rgba(212,175,55,0.1); }
+        @media (max-width: 768px) { nav { padding: 0.8rem 1rem; } .menu-section { padding: 1rem; } .combo-section { padding: 2rem 1rem; } }
     </style>
 </head>
 <body>
 
-<!-- НЕГИЗГИ САЙТ -->
-<div id="mainApp">
-    <header>
-        <div class="top-bar">
-            <div class="logo"><h1>KING <span>FOOD HALAL</span></h1><p>КИНГ ФУД ХАЛАЛ</p></div>
-            <div style="display:flex;gap:15px;">
-                <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link"><i class="fab fa-instagram"></i> Instagram</a>
-                <div class="cart-icon" id="cartIconBtn"><i class="fas fa-shopping-basket"></i><span id="cartCount">0</span><span class="cart-count" id="cartBadge">0</span></div>
+<nav>
+    <div class="nav-logo">KING <span>FOOD HALAL</span></div>
+    <ul class="nav-links">
+        <li><a onclick="showPage(1)" class="active" id="nav1">Башкы</a></li>
+        <li><a onclick="showPage(2)" id="nav2">Меню</a></li>
+        <li><a onclick="showPage(3)" id="nav3">Биз жөнүндө</a></li>
+    </ul>
+    <div class="nav-icons">
+        <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link"><i class="fab fa-instagram"></i> Instagram</a>
+        <div class="cart-icon" id="cartIconBtn"><i class="fas fa-shopping-basket"></i><span id="cartCount">0</span><span class="cart-count" id="cartBadge">0</span></div>
+    </div>
+</nav>
+
+<!-- PAGE 1 - MAIN -->
+<div id="page1" class="page active">
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">🍔 ХАЛАЛЬ & ФРЕШ</div>
+            <h1 class="hero-title">Кинг Фуд <span>Халал</span><br>Даамдуу жана Тез</h1>
+            <p class="hero-desc">Шаурма, бургерлер, хот-догдор жана суусундуктар. Таза халаль продукттар, тез жеткирүү.</p>
+            <div class="hero-btns">
+                <button class="btn-primary" onclick="showPage(2)">Менюну көрүү</button>
+                <button class="btn-outline" id="cartBtn2">Корзина</button>
             </div>
         </div>
-        <div class="hero">
-            <div class="combo-card"><h3>🍔 KING KOMBO 600 сом</h3><p>Шаурма уй этинен + Кинг Бургер + Фри S</p></div>
-            <div class="combo-card"><h3>🔥 03 KOMBO 500 сом</h3><p>Шаурма тоок этинен + Хот-Дог + Нагреты</p></div>
-            <div class="delivery-badge"><i class="fas fa-motorcycle"></i> АЛЫП КЕТУУ & ЖЕТКИРҮҮ</div>
+    </div>
+    <div class="combo-section">
+        <div class="section-tag">🔥 КОМБОЛАР</div>
+        <div class="section-title">Эң популярдуу сеттер</div>
+        <div class="combo-grid">
+            <div class="combo-card"><h3>🍔 KING KOMBO</h3><p>600 сом</p><p style="font-size:0.8rem; margin-top:8px;">Шаурма уй этинен + Кинг Бургер + Фри S + Султан Чай</p></div>
+            <div class="combo-card"><h3>🔥 03 KOMBO</h3><p>500 сом</p><p style="font-size:0.8rem; margin-top:8px;">Шаурма тоок этинен + Классика Хот-Дог + Нагреты + Султан Чай</p></div>
         </div>
-    </header>
-    <main class="menu-section">
+    </div>
+    <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p></footer>
+</div>
+
+<!-- PAGE 2 - MENU -->
+<div id="page2" class="page">
+    <div class="menu-section">
         <div class="category"><h2>🥙 ШАУРМА</h2><div class="menu-grid" id="shaurmaGrid"></div></div>
         <div class="category"><h2>🍔 БУРГЕР</h2><div class="menu-grid" id="burgerGrid"></div></div>
         <div class="category"><h2>🌭 ХОТ-ДОГ</h2><div class="menu-grid" id="hotdogGrid"></div></div>
         <div class="category"><h2>📦 КОМБО</h2><div class="menu-grid" id="comboGrid"></div></div>
         <div class="category"><h2>🥤 СУУСУНДУКТАР</h2><div class="menu-grid" id="drinksGrid"></div></div>
         <div class="category"><h2>🍟 ЖЕНИЛ ТАМАКТАР</h2><div class="menu-grid" id="snacksGrid"></div></div>
-    </main>
-    <footer><p>©KING.FOOD.HALAL | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p></footer>
+    </div>
+    <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03</p></footer>
 </div>
 
-<!-- АДМИН БАСКЫЧЫ -->
+<!-- PAGE 3 - ABOUT -->
+<div id="page3" class="page">
+    <div class="hero" style="min-height: 50vh; margin-top: 68px;">
+        <div class="hero-content">
+            <div class="hero-tag">🌿 БИЗ ЖӨНҮНДӨ</div>
+            <h1 class="hero-title">Сапаттуу <span>Халаль</span><br>тамак-аш</h1>
+            <p class="hero-desc">KING FOOD HALAL — 2026-жылы Баткенде ачылган. Биздин максат — даамдуу, таза жана халаль тамак-ашты тез жеткирүү. Бардык продукттар сертификатталган.</p>
+        </div>
+    </div>
+    <div class="combo-section" style="background: var(--dark3);">
+        <div class="section-tag">📞 БАЙЛАНЫШ</div>
+        <div class="section-title">Биз менен байланышыңыз</div>
+        <div class="combo-grid" style="max-width: 500px;">
+            <div class="combo-card"><i class="fas fa-phone" style="font-size: 2rem; color: var(--primary);"></i><h3>+996 778 03 12 03</h3><p>WhatsApp</p></div>
+            <div class="combo-card"><i class="fas fa-phone" style="font-size: 2rem; color: var(--primary);"></i><h3>+996 558 45 46 51</h3><p>Telegram</p></div>
+        </div>
+    </div>
+    <footer><p>©KING.FOOD.HALAL | Доставка: +996 778 03 12 03</p></footer>
+</div>
+
+<!-- ADMIN BUTTON -->
 <div class="admin-toggle" id="adminToggleBtn"><i class="fas fa-cog"></i></div>
 
-<!-- ПАРОЛЬ МОДАЛЫ -->
+<!-- PASSWORD MODAL -->
 <div id="passwordModal" class="password-modal">
     <div class="password-box">
         <h3><i class="fas fa-lock"></i> Админге кирүү</h3>
-        <input type="password" id="adminPassword" placeholder="Парольду киргизиңиз" autocomplete="off">
+        <input type="password" id="adminPassword" placeholder="Пароль" autocomplete="off">
         <button onclick="checkAdminPassword()">Кирүү</button>
-        <div id="pwdError" class="pwd-error"></div>
+        <div id="pwdError" style="color: #e74c3c; margin-top: 10px;"></div>
     </div>
 </div>
 
-<!-- АДМИН ПАНЕЛЬ -->
+<!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
-    <h2 style="color:#d4af37;margin-bottom:15px;"><i class="fas fa-cog"></i> Меню башкаруу</h2>
+    <h2 style="color:#d4af37; margin-bottom: 1rem;"><i class="fas fa-cog"></i> Меню башкаруу</h2>
     <div id="adminCategories"></div>
     <div class="close-admin" id="closeAdminPanel">Жабуу</div>
 </div>
 
-<!-- КАРЗИНА -->
-<div id="cartOverlay" class="cart-overlay">
+<!-- CART MODAL -->
+<div id="cartModal" class="cart-modal">
     <div class="cart-panel">
         <div class="cart-header"><span><i class="fas fa-shopping-cart"></i> Корзина</span><i class="fas fa-times" id="closeCart" style="cursor:pointer;"></i></div>
         <div id="cartItemsList" class="cart-items">🛒 Корзина бош</div>
         <div class="cart-total" id="cartTotal">Жалпы сумма: 0 сом</div>
-        <div class="address-section"><label>📍 Доставка дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Тургунбая Садыкова"></textarea></div>
-        <button id="whatsappOrder" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-        <button id="telegramOrder" class="telegram-btn"><i class="fab fa-telegram"></i> Telegram</button>
+        <div class="address-section"><label>📍 Доставка дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Бишкек, Чүй 150..."></textarea></div>
+        <div class="order-buttons"><button id="whatsappOrder" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button><button id="telegramOrder" class="btn-telegram"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button></div>
         <div class="close-cart" id="closeCartFooter">Жабуу</div>
     </div>
 </div>
 
 <script>
-    // ========== ПАРОЛЬ (ӨЗҮҢҮЗГӨ ЫҢГАЙЛУУ КЫЛЫП ӨЗГӨРТҮҢҮЗ) ==========
-    const ADMIN_PASSWORD = "ArsBek.2003";  // <--- Пароль ушул жерде!
-    
+    const ADMIN_PASSWORD = "ArsBek.2003";
     let isAdminLoggedIn = false;
     
-    // МЕНЮ МААЛЫМАТТАРЫ
     let menu = {
         shaurma: [{id:"sh1",name:"Шаурма тоок этинен",price:220},{id:"sh2",name:"Шаурма уй этинен",price:230},{id:"sh3",name:"Бышырылган Шаурма",price:240}],
         burger: [{id:"bg1",name:"Кинг Бургер",price:210},{id:"bg2",name:"Кош Кинг Бургер",price:240},{id:"bg3",name:"Чизбургер",price:210},{id:"bg4",name:"Кош Чизбургер",price:240},{id:"bg5",name:"Чикен бургер",price:190},{id:"bg6",name:"Кош Чикен бургер",price:220}],
@@ -150,66 +370,106 @@
     
     let cart = [];
     
-    // Пароль текшерүү
-    function checkAdminPassword(){
-        let pass = document.getElementById('adminPassword').value;
-        if(pass === ADMIN_PASSWORD){
-            isAdminLoggedIn = true;
-            document.getElementById('passwordModal').classList.remove('open');
-            document.getElementById('adminPanel').classList.add('open');
-            renderAdmin();
-            toast('✅ Админ режимине кирдиңиз!');
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('pwdError').innerText = '';
-        } else {
-            document.getElementById('pwdError').innerText = '❌ Пароль туура эмес!';
-        }
+    function saveAll() { 
+        localStorage.setItem('king_food_menu', JSON.stringify(menu)); 
+        localStorage.setItem('king_food_cart', JSON.stringify(cart)); 
     }
     
-    // Enter баскычы
-    document.getElementById('adminPassword').addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') checkAdminPassword();
-    });
+    function loadAll() { 
+        let m = localStorage.getItem('king_food_menu'); 
+        if(m) menu = JSON.parse(m); 
+        let c = localStorage.getItem('king_food_cart'); 
+        if(c) cart = JSON.parse(c); 
+        updateCart(); 
+        renderMenu();
+    }
     
-    function saveAll(){localStorage.setItem('king_menu',JSON.stringify(menu));localStorage.setItem('king_cart',JSON.stringify(cart));}
-    function loadAll(){let m=localStorage.getItem('king_menu');if(m)menu=JSON.parse(m);let c=localStorage.getItem('king_cart');if(c)cart=JSON.parse(c);updateCart();}
-    
-    function updateCart(){
-        let count=cart.reduce((s,i)=>s+i.qty,0);
-        document.getElementById('cartCount').innerText=count;
-        document.getElementById('cartBadge').innerText=count;
-        let total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
-        document.getElementById('cartTotal').innerHTML=`Жалпы сумма: ${total} сом`;
-        let container=document.getElementById('cartItemsList');
-        if(cart.length===0){container.innerHTML='🛒 Кoрзина бош';return;}
+    function updateCart() {
+        let count = cart.reduce((s,i)=>s+i.qty,0);
+        let cartCountSpan = document.getElementById('cartCount');
+        let cartBadgeSpan = document.getElementById('cartBadge');
+        if(cartCountSpan) cartCountSpan.innerText = count;
+        if(cartBadgeSpan) cartBadgeSpan.innerText = count;
+        let total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+        let cartTotalDiv = document.getElementById('cartTotal');
+        if(cartTotalDiv) cartTotalDiv.innerHTML = `Жалпы сумма: ${total} сом`;
+        let container = document.getElementById('cartItemsList');
+        if(!container) return;
+        if(cart.length===0){ container.innerHTML='🛒 Корзина бош'; return; }
         let html='';
-        cart.forEach(i=>{html+=`<div class="cart-item"><div><strong>${i.name}</strong><br>${i.price} сом</div><div class="cart-qty"><button onclick="changeQty('${i.id}',-1)">-</button><span>${i.qty}</span><button onclick="changeQty('${i.id}',1)">+</button><button onclick="removeItem('${i.id}')">✕</button></div></div>`;});
+        cart.forEach(i=>{ 
+            html+=`<div class="cart-item"><div><strong>${escapeHtml(i.name)}</strong><br>${i.price} сом</div><div class="cart-qty"><button onclick="changeQty('${i.id}',-1)">-</button><span>${i.qty}</span><button onclick="changeQty('${i.id}',1)">+</button><button onclick="removeItem('${i.id}')">✕</button></div></div>`; 
+        });
         container.innerHTML=html;
     }
-    function changeQty(id,delta){let idx=cart.findIndex(i=>i.id===id);if(idx!==-1){let newQty=cart[idx].qty+delta;if(newQty<=0)cart.splice(idx,1);else cart[idx].qty=newQty;updateCart();saveAll();}}
-    function removeItem(id){cart=cart.filter(i=>i.id!==id);updateCart();saveAll();}
-    function addToCart(item){let exist=cart.find(i=>i.id===item.id);if(exist)exist.qty++;else cart.push({...item,qty:1});updateCart();saveAll();toast(item.name+' кошулду');}
     
-    function renderMenu(){
-        renderCat('shaurmaGrid',menu.shaurma);
-        renderCat('burgerGrid',menu.burger);
-        renderCat('hotdogGrid',menu.hotdog);
-        renderCat('comboGrid',menu.combo);
-        renderCat('drinksGrid',menu.drinks);
-        renderCat('snacksGrid',menu.snacks);
+    function changeQty(id,delta){ 
+        let idx=cart.findIndex(i=>i.id===id); 
+        if(idx!==-1){ 
+            let newQty=cart[idx].qty+delta; 
+            if(newQty<=0) cart.splice(idx,1); 
+            else cart[idx].qty=newQty; 
+            updateCart(); saveAll(); 
+        } 
     }
-    function renderCat(gridId,items){
-        let container=document.getElementById(gridId);
-        if(!container)return;
+    
+    function removeItem(id){ 
+        cart=cart.filter(i=>i.id!==id); 
+        updateCart(); saveAll(); 
+        toast('Алып салынды'); 
+    }
+    
+    function addToCart(item){ 
+        let exist=cart.find(i=>i.id===item.id); 
+        if(exist){ 
+            exist.qty++; 
+            toast(item.name+' +1'); 
+        } else { 
+            cart.push({...item,qty:1}); 
+            toast(item.name+' кошулды'); 
+        } 
+        updateCart(); saveAll(); 
+    }
+    
+    function toast(msg){ 
+        let t=document.createElement('div'); 
+        t.className='toast'; 
+        t.innerText=msg; 
+        document.body.appendChild(t); 
+        setTimeout(()=>t.remove(),2000);
+    }
+    
+    function renderMenu() {
+        renderCat('shaurmaGrid', menu.shaurma); 
+        renderCat('burgerGrid', menu.burger); 
+        renderCat('hotdogGrid', menu.hotdog);
+        renderCat('comboGrid', menu.combo); 
+        renderCat('drinksGrid', menu.drinks); 
+        renderCat('snacksGrid', menu.snacks);
+    }
+    
+    function renderCat(gridId, items){
+        let container=document.getElementById(gridId); 
+        if(!container) return;
         container.innerHTML='';
-        items.forEach(item=>{
-            let div=document.createElement('div');
-            div.className='menu-item';
-            div.innerHTML=`<div><div class="item-name">${item.name}</div><div class="item-price">${item.price} сом</div></div><button class="add-btn" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`;
-            container.appendChild(div);
+        items.forEach(item=>{ 
+            let div=document.createElement('div'); 
+            div.className='menu-item'; 
+            div.innerHTML=`<div><div class="item-name">${escapeHtml(item.name)}</div><div class="item-price">${item.price} сом</div></div><button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`; 
+            container.appendChild(div); 
         });
-        container.querySelectorAll('.add-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>addToCart({id:btn.dataset.id,name:btn.dataset.name,price:parseInt(btn.dataset.price)}));
+        container.querySelectorAll('.add-btn').forEach(btn=>{ 
+            btn.addEventListener('click',()=>addToCart({id:btn.dataset.id,name:btn.dataset.name,price:parseInt(btn.dataset.price)})); 
+        });
+    }
+    
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
         });
     }
     
@@ -217,97 +477,164 @@
         if(!isAdminLoggedIn) return;
         let cats=['shaurma','burger','hotdog','combo','drinks','snacks'];
         let titles=['ШАУРМА','БУРГЕР','ХОТ-ДОГ','КОМБО','СУУСУНДУКТАР','ЖЕНИЛ ТАМАКТАР'];
-        let container=document.getElementById('adminCategories');
+        let container=document.getElementById('adminCategories'); 
+        if(!container) return;
         container.innerHTML='';
         for(let i=0;i<cats.length;i++){
-            let cat=cats[i];
-            let items=menu[cat];
-            let div=document.createElement('div');
+            let cat=cats[i]; 
+            let items=menu[cat] || [];
+            let div=document.createElement('div'); 
             div.className='admin-category';
-            div.innerHTML=`<h3>${titles[i]}</h3><div id="admin_${cat}_items"></div><div class="add-item-form"><input type="text" id="newName_${cat}" placeholder="Жаңы тамак"><input type="number" id="newPrice_${cat}" placeholder="Баасы"><button onclick="addItem('${cat}')">➕ Кошуу</button></div>`;
+            div.innerHTML=`<h4 style="color:#d4af37">${titles[i]}</h4><div id="admin_${cat}_items"></div><div class="add-item-form"><input type="text" id="newName_${cat}" placeholder="Жаңы тамак"><input type="number" id="newPrice_${cat}" placeholder="Баасы"><button onclick="addItem('${cat}')">➕ Кошуу</button></div>`;
             container.appendChild(div);
-            let itemsDiv=document.getElementById(`admin_${cat}_items`);
-            itemsDiv.innerHTML='';
-            items.forEach((item,idx)=>{
-                itemsDiv.innerHTML+=`<div class="admin-item"><input type="text" id="name_${cat}_${idx}" value="${item.name}" style="flex:2"><input type="number" id="price_${cat}_${idx}" value="${item.price}" style="flex:1"><button class="edit-btn" onclick="updateItem('${cat}',${idx})"><i class="fas fa-save"></i></button><button class="del-btn" onclick="deleteItem('${cat}',${idx})"><i class="fas fa-trash"></i></button></div>`;
-            });
+            let itemsDiv=document.getElementById(`admin_${cat}_items`); 
+            if(itemsDiv) {
+                itemsDiv.innerHTML='';
+                items.forEach((item,idx)=>{ 
+                    itemsDiv.innerHTML+=`<div class="admin-item"><input type="text" id="name_${cat}_${idx}" value="${escapeHtml(item.name)}" style="flex:2"><input type="number" id="price_${cat}_${idx}" value="${item.price}" style="flex:1"><button class="edit-btn" onclick="updateItem('${cat}',${idx})"><i class="fas fa-save"></i></button><button class="del-btn" onclick="deleteItem('${cat}',${idx})"><i class="fas fa-trash"></i></button></div>`; 
+                });
+            }
         }
     }
-    function addItem(cat){
-        if(!isAdminLoggedIn) return;
-        let nameInput=document.getElementById(`newName_${cat}`);
-        let priceInput=document.getElementById(`newPrice_${cat}`);
-        let newName=nameInput.value.trim();
-        let newPrice=parseInt(priceInput.value);
-        if(!newName||isNaN(newPrice)){toast('Аты жана баасы туура эмес');return;}
-        let newId=cat+'_'+Date.now();
-        menu[cat].push({id:newId,name:newName,price:newPrice});
-        saveAll();renderMenu();renderAdmin();toast(`✅ ${newName} кошулду`);
-        nameInput.value='';priceInput.value='';
+    
+    function addItem(cat){ 
+        let nameInp=document.getElementById(`newName_${cat}`); 
+        let priceInp=document.getElementById(`newPrice_${cat}`); 
+        if(!nameInp || !priceInp) return;
+        let newName=nameInp.value.trim(); 
+        let newPrice=parseInt(priceInp.value); 
+        if(!newName||isNaN(newPrice)){toast('Аты жана баасы туура эмес');return;} 
+        let newId=cat+'_'+Date.now(); 
+        menu[cat].push({id:newId,name:newName,price:newPrice}); 
+        saveAll(); 
+        renderMenu(); 
+        renderAdmin(); 
+        toast(`✅ ${newName} кошулду`); 
+        nameInp.value=''; priceInp.value=''; 
     }
-    function updateItem(cat,idx){
-        if(!isAdminLoggedIn) return;
-        let nameInp=document.getElementById(`name_${cat}_${idx}`);
-        let priceInp=document.getElementById(`price_${cat}_${idx}`);
-        if(nameInp&&priceInp){
-            menu[cat][idx].name=nameInp.value.trim();
-            menu[cat][idx].price=parseInt(priceInp.value);
-            saveAll();renderMenu();renderAdmin();toast('Өзгөртүлдү');
-        }
+    
+    function updateItem(cat,idx){ 
+        let nameInp=document.getElementById(`name_${cat}_${idx}`); 
+        let priceInp=document.getElementById(`price_${cat}_${idx}`); 
+        if(nameInp&&priceInp && menu[cat] && menu[cat][idx]){ 
+            menu[cat][idx].name=nameInp.value.trim(); 
+            menu[cat][idx].price=parseInt(priceInp.value); 
+            saveAll(); renderMenu(); renderAdmin(); 
+            toast('Өзгөртүлдү'); 
+        } 
     }
-    function deleteItem(cat,idx){
-        if(!isAdminLoggedIn) return;
-        let name=menu[cat][idx].name;
-        if(confirm(`"${name}" өчүрүлсүнбү?`)){
-            menu[cat].splice(idx,1);
-            saveAll();renderMenu();renderAdmin();toast(`🗑️ ${name} өчүрүлдү`);
-        }
+    
+    function deleteItem(cat,idx){ 
+        if(!menu[cat] || !menu[cat][idx]) return;
+        let name=menu[cat][idx].name; 
+        if(confirm(`"${name}" өчүрүлсүнбү?`)){ 
+            menu[cat].splice(idx,1); 
+            saveAll(); renderMenu(); renderAdmin(); 
+            toast(`🗑️ ${name} өчүрүлдү`); 
+        } 
+    }
+    
+    function checkAdminPassword(){ 
+        let pass=document.getElementById('adminPassword').value; 
+        if(pass===ADMIN_PASSWORD){ 
+            isAdminLoggedIn=true; 
+            document.getElementById('passwordModal').classList.remove('open'); 
+            document.getElementById('adminPanel').classList.add('open'); 
+            renderAdmin(); 
+            toast('✅ Админ режимине кирдиңиз!'); 
+            document.getElementById('pwdError').innerText=''; 
+        } else { 
+            document.getElementById('pwdError').innerText='❌ Пароль туура эмес!'; 
+        } 
     }
     
     function sendOrder(platform){
-        if(cart.length===0){alert('Карзина бош!');return;}
+        if(cart.length===0){ alert('Корзина бош!'); return; }
         let address=document.getElementById('deliveryAddress').value.trim()||'Адрес жок';
         let items='',total=0;
-        cart.forEach(i=>{items+=`${i.name} x${i.qty} = ${i.price*i.qty} сом\n`;total+=i.price*i.qty;});
-        let msg=`🛒 *KING FOOD HALAL* 🍔\n\n${items}\n━━━━━━━━━━━━━━\n💰 *Жалпы: ${total} сом*\n📍 *Дареги:* ${address}\n`;
-        let url=platform==='whatsapp'?`https://wa.me/996778031203?text=${encodeURIComponent(msg)}`:`https://t.me/share/url?url=${encodeURIComponent('Заказ')}&text=${encodeURIComponent(msg)}`;
+        cart.forEach(i=>{ 
+            items+=`${i.name} x${i.qty} = ${i.price*i.qty} сом\n`; 
+            total+=i.price*i.qty; 
+        });
+        let msg=`🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${items}\n━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n📍 *Доставка дареги:* ${address}\n`;
+        
+        let url;
+        if(platform==='whatsapp') {
+            url = `https://wa.me/996778031203?text=${encodeURIComponent(msg)}`;
+        } else {
+            url = `https://t.me/share/url?url=${encodeURIComponent('KING FOOD HALAL заказы')}&text=${encodeURIComponent(msg)}`;
+        }
         window.open(url,'_blank');
-        cart=[];updateCart();saveAll();toast('Заказ жөнөтүлдү!');
+        cart=[]; updateCart(); saveAll(); toast('Заказ жөнөтүлдү!');
     }
     
-    function toast(msg){let t=document.createElement('div');t.className='toast-msg';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}
+    function showPage(n){
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+        let page = document.getElementById(`page${n}`);
+        let nav = document.getElementById(`nav${n}`);
+        if(page) page.classList.add('active');
+        if(nav) nav.classList.add('active');
+        window.scrollTo(0,0);
+    }
     
-    // Интерфейс окуялары
-    let overlay=document.getElementById('cartOverlay');
-    document.getElementById('cartIconBtn').onclick=()=>overlay.classList.add('open');
-    document.getElementById('closeCart').onclick=()=>overlay.classList.remove('open');
-    document.getElementById('closeCartFooter').onclick=()=>overlay.classList.remove('open');
-    overlay.onclick=(e)=>{if(e.target===overlay)overlay.classList.remove('open');};
-    document.getElementById('whatsappOrder').onclick=()=>sendOrder('whatsapp');
-    document.getElementById('telegramOrder').onclick=()=>sendOrder('telegram');
-    
-    // Админ баскычы - пароль сурайт
-    let adminPanel=document.getElementById('adminPanel');
-    document.getElementById('adminToggleBtn').onclick=()=>{
-        if(isAdminLoggedIn){
-            adminPanel.classList.toggle('open');
-            if(adminPanel.classList.contains('open')) renderAdmin();
-        } else {
-            document.getElementById('passwordModal').classList.add('open');
+    // Инициализация событий
+    function initEvents() {
+        let cartModal = document.getElementById('cartModal');
+        let cartIconBtn = document.getElementById('cartIconBtn');
+        let closeCart = document.getElementById('closeCart');
+        let closeCartFooter = document.getElementById('closeCartFooter');
+        let whatsappOrder = document.getElementById('whatsappOrder');
+        let telegramOrder = document.getElementById('telegramOrder');
+        let cartBtn2 = document.getElementById('cartBtn2');
+        let adminToggleBtn = document.getElementById('adminToggleBtn');
+        let closeAdminPanel = document.getElementById('closeAdminPanel');
+        let adminPasswordInput = document.getElementById('adminPassword');
+        
+        if(cartIconBtn) cartIconBtn.onclick = () => { if(cartModal) cartModal.classList.add('open'); };
+        if(closeCart) closeCart.onclick = () => { if(cartModal) cartModal.classList.remove('open'); };
+        if(closeCartFooter) closeCartFooter.onclick = () => { if(cartModal) cartModal.classList.remove('open'); };
+        if(cartModal) cartModal.onclick = (e) => { if(e.target === cartModal) cartModal.classList.remove('open'); };
+        if(whatsappOrder) whatsappOrder.onclick = () => sendOrder('whatsapp');
+        if(telegramOrder) telegramOrder.onclick = () => sendOrder('telegram');
+        if(cartBtn2) cartBtn2.addEventListener('click', () => { if(cartModal) cartModal.classList.add('open'); });
+        
+        if(adminToggleBtn) {
+            adminToggleBtn.onclick = () => { 
+                if(isAdminLoggedIn){ 
+                    let adminPanel = document.getElementById('adminPanel');
+                    if(adminPanel) {
+                        adminPanel.classList.toggle('open'); 
+                        if(adminPanel.classList.contains('open')) renderAdmin(); 
+                    }
+                } else { 
+                    let passwordModal = document.getElementById('passwordModal');
+                    if(passwordModal) passwordModal.classList.add('open'); 
+                } 
+            };
         }
-    };
-    document.getElementById('closeAdminPanel').onclick=()=>adminPanel.classList.remove('open');
+        if(closeAdminPanel) closeAdminPanel.onclick = () => {
+            let adminPanel = document.getElementById('adminPanel');
+            if(adminPanel) adminPanel.classList.remove('open');
+        };
+        if(adminPasswordInput) adminPasswordInput.addEventListener('keypress', (e) => { if(e.key==='Enter') checkAdminPassword(); });
+    }
     
-    window.changeQty=changeQty;
-    window.removeItem=removeItem;
-    window.addItem=addItem;
-    window.updateItem=updateItem;
-    window.deleteItem=deleteItem;
-    window.checkAdminPassword=checkAdminPassword;
+    // Глобалдык функцияларды коюу
+    window.changeQty = changeQty; 
+    window.removeItem = removeItem; 
+    window.addItem = addItem; 
+    window.updateItem = updateItem; 
+    window.deleteItem = deleteItem; 
+    window.checkAdminPassword = checkAdminPassword;
+    window.showPage = showPage;
+    window.addToCart = addToCart;
     
-    loadAll();
-    renderMenu();
+    // Баштоо
+    loadAll(); 
+    renderMenu(); 
     updateCart();
+    initEvents();
 </script>
 </body>
 </html>
