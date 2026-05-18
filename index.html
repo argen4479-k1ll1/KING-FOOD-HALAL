@@ -245,6 +245,7 @@
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: var(--dark); padding: 10px 20px;
             border-radius: 50px; z-index: 3500; animation: fadeOut 2s forwards;
+            font-weight: bold;
         }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         footer { background: var(--dark2); text-align: center; padding: 2rem; border-top: 1px solid rgba(212,175,55,0.1); }
@@ -349,7 +350,7 @@
         <div class="cart-header"><span><i class="fas fa-shopping-cart"></i> Корзина</span><i class="fas fa-times" id="closeCart" style="cursor:pointer;"></i></div>
         <div id="cartItemsList" class="cart-items">🛒 Корзина бош</div>
         <div class="cart-total" id="cartTotal">Жалпы сумма: 0 сом</div>
-        <div class="address-section"><label>📍 Доставка дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Бишкек, Чүй 150..."></textarea></div>
+        <div class="address-section"><label>📍 Доставка дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Баткен, Тургунбая Садыкова"></textarea></div>
         <div class="order-buttons"><button id="whatsappOrder" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button><button id="telegramOrder" class="btn-telegram"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button></div>
         <div class="close-cart" id="closeCartFooter">Жабуу</div>
     </div>
@@ -381,7 +382,7 @@
         let c = localStorage.getItem('king_food_cart'); 
         if(c) cart = JSON.parse(c); 
         updateCart(); 
-        renderMenu();
+        renderMenu();  // <-- БУЛ МААНИЛҮҮ! Менюну көрсөтүү
     }
     
     function updateCart() {
@@ -451,6 +452,7 @@
     function renderCat(gridId, items){
         let container=document.getElementById(gridId); 
         if(!container) return;
+        if(!items) items = [];
         container.innerHTML='';
         items.forEach(item=>{ 
             let div=document.createElement('div'); 
@@ -504,12 +506,12 @@
         let newName=nameInp.value.trim(); 
         let newPrice=parseInt(priceInp.value); 
         if(!newName||isNaN(newPrice)){toast('Аты жана баасы туура эмес');return;} 
-        let newId=cat+'_'+Date.now(); 
+        let newId=cat+'_'+Date.now()+'_'+Math.random(); 
         menu[cat].push({id:newId,name:newName,price:newPrice}); 
         saveAll(); 
-        renderMenu(); 
-        renderAdmin(); 
-        toast(`✅ ${newName} кошулду`); 
+        renderMenu();     // <-- Менюну жаңыртуу (бардык колдонуучуларга көрүнөт)
+        renderAdmin();    // <-- Админ панелин жаңыртуу
+        toast(`✅ ${newName} кошулдy! Эми менюда көрүнөт`); 
         nameInp.value=''; priceInp.value=''; 
     }
     
@@ -519,7 +521,9 @@
         if(nameInp&&priceInp && menu[cat] && menu[cat][idx]){ 
             menu[cat][idx].name=nameInp.value.trim(); 
             menu[cat][idx].price=parseInt(priceInp.value); 
-            saveAll(); renderMenu(); renderAdmin(); 
+            saveAll(); 
+            renderMenu();    // <-- Өзгөртүүнү көрсөтүү
+            renderAdmin(); 
             toast('Өзгөртүлдү'); 
         } 
     }
@@ -529,7 +533,9 @@
         let name=menu[cat][idx].name; 
         if(confirm(`"${name}" өчүрүлсүнбү?`)){ 
             menu[cat].splice(idx,1); 
-            saveAll(); renderMenu(); renderAdmin(); 
+            saveAll(); 
+            renderMenu();    // <-- Өчүрүүнү көрсөтүү
+            renderAdmin(); 
             toast(`🗑️ ${name} өчүрүлдү`); 
         } 
     }
@@ -632,8 +638,6 @@
     
     // Баштоо
     loadAll(); 
-    renderMenu(); 
-    updateCart();
     initEvents();
 </script>
 </body>
