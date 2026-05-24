@@ -2,7 +2,7 @@
 <html lang="ky">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>KING FOOD HALAL - Шаурма & Бургерлер</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -44,6 +44,11 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark2); }
+        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
             display: flex; align-items: center; justify-content: space-between;
@@ -86,6 +91,8 @@
             text-decoration: none; color: white; font-size: 0.75rem;
             display: flex; align-items: center; gap: 6px;
         }
+        .instagram-link:hover { background: #c13584; }
+        
         .hero {
             position: relative; min-height: 85vh;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a120b 100%);
@@ -273,7 +280,7 @@
     </div>
 </nav>
 
-<!-- PAGE 1 -->
+<!-- PAGE 1 - MAIN -->
 <div id="page1" class="page active">
     <div class="hero">
         <div class="hero-content">
@@ -358,7 +365,7 @@
         <div class="cart-header"><span><i class="fas fa-shopping-cart"></i> Менин себетим</span><i class="fas fa-times" id="closeCart" style="cursor:pointer;"></i></div>
         <div id="cartItemsList" class="cart-items">🛒 Себет бош</div>
         <div class="cart-total" id="cartTotal">Жалпы сумма: 0 сом</div>
-        <div class="address-section"><label>📍 Жеткирүү дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Бишкек, көчөсү, үйү..."></textarea></div>
+        <div class="address-section"><label>📍 Жеткирүү дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="..."></textarea></div>
         <div class="order-buttons"><button id="whatsappOrder" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button><button id="telegramOrder" class="btn-telegram"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button></div>
         <div class="close-cart" id="closeCartFooter">Жабуу</div>
     </div>
@@ -379,12 +386,10 @@
         appId: "СИЗДИН_APP_ID"
     };
     
-    // Firebase инициализациясы
     let database = null;
     let firebaseReady = false;
     
     function initFirebase() {
-        // Демо режим (эгер Firebase кошулбаса)
         if (firebaseConfig.apiKey === "СИЗДИН_API_KEY") {
             console.warn("⚠️ Firebase конфигурациясы коюлган эмес! Демо режимде иштеп жатат.");
             showToast("⚠️ Firebase кошулган жок. Демо режим - өзгөртүүлөр сакталбайт!", true);
@@ -418,7 +423,7 @@
     let isAdminLoggedIn = false;
     const ADMIN_PASSWORD = "king123";
     
-    // Баштапкы меню
+    // Баштапкы меню (жаңыртылган - Чай Пиала жана Асу кошулду)
     const defaultMenu = {
         shaurma: [
             {id:"sh1",name:"Шаурма тоок этинен",price:240},
@@ -452,9 +457,9 @@
             {id:"dr3",name:"Нитро 0.5л",price:85},
             {id:"dr4",name:"Летс гоу 1.25л",price:110},
             {id:"dr5",name:"Летс гоу (груша) 0.5л",price:60},
-            {id:"dr6",name:"Кола/Фанта/Пепси 1л",price:110}
-            {id:"dr7",name:"Чай Пиала 1л",price:100}
-            {id:"dr8",name:"ASU 1л",price:80}
+            {id:"dr6",name:"Кола/Фанта/Пепси 1л",price:110},
+            {id:"dr7",name:"Чай Пиала 1л",price:100},
+            {id:"dr8",name:"Асу 1л",price:80}
         ],
         snacks: [
             {id:"sn1",name:"Фри S 150гр",price:150},
@@ -467,7 +472,6 @@
     // ==================== FIREBASE ФУНКЦИЯЛАР ====================
     async function loadMenuFromFirebase() {
         if (!firebaseReady || !database) {
-            // Демо режим - жергиликтүү сактагычтан жүктөө
             const saved = localStorage.getItem('king_food_menu_demo');
             if (saved) {
                 menu = JSON.parse(saved);
@@ -486,7 +490,6 @@
                 menu = data;
                 console.log("✅ Firebase'тен меню жүктөлдү");
             } else {
-                // Firebase бош болсо, баштапкы менюну жүктөө
                 menu = JSON.parse(JSON.stringify(defaultMenu));
                 await saveMenuToFirebase();
             }
@@ -828,7 +831,7 @@
             total += i.price * i.qty;
         });
         
-        const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n📍 *Жеткирүү дареги:* ${address}\n━━━━━━━━━━━━━━━━━━\n`;
+        const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n📍 *Жеткирүү дареги:* ${address}\n━━━━━━━━━━━━━━━━━━\n📞 Байланыш: +996 778 03 12 03\n📸 @king.food.halal`;
         
         let url;
         if (platform === 'whatsapp') {
