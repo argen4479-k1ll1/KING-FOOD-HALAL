@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
@@ -223,11 +222,11 @@
         .admin-item { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
         .admin-item input { flex: 1; padding: 8px 12px; border-radius: 10px; background: var(--dark2); border: 1px solid var(--primary); color: white; }
         .admin-item button { padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .edit-btn { background: var(--primary); color: var(--dark); }
+        .edit-btn { background: var(--success); color: white; }
         .del-btn { background: var(--error); color: white; }
         .add-item-form { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         .add-item-form input { flex: 1; padding: 8px 12px; border-radius: 10px; background: var(--dark2); border: 1px solid var(--primary); color: white; }
-        .add-item-form button { background: var(--success); color: white; padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; }
+        .add-item-form button { background: var(--primary); color: var(--dark); padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
         .close-admin { background: #333; color: white; padding: 12px; border-radius: 40px; text-align: center; cursor: pointer; margin-top: 20px; }
         .password-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -280,7 +279,6 @@
     </div>
 </nav>
 
-<!-- PAGE 1 - MAIN -->
 <div id="page1" class="page active">
     <div class="hero">
         <div class="hero-content">
@@ -304,7 +302,6 @@
     <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p></footer>
 </div>
 
-<!-- PAGE 2 - MENU -->
 <div id="page2" class="page">
     <div class="menu-section">
         <div class="category"><h2>🥙 ШАУРМА</h2><div class="menu-grid" id="shaurmaGrid"></div></div>
@@ -318,13 +315,12 @@
     <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03 | +996 558 45 46 51</p></footer>
 </div>
 
-<!-- PAGE 3 - ABOUT -->
 <div id="page3" class="page">
     <div class="hero" style="min-height: 50vh; margin-top: 68px;">
         <div class="hero-content">
             <div class="hero-tag">🌿 БИЗ ЖӨНҮНДӨ</div>
             <h1 class="hero-title">Сапаттуу <span>Халаль</span><br>тамак-аш</h1>
-            <p class="hero-desc">KING FOOD HALAL — 2026-жылы ачылган. Биздин максат — даамдуу, таза жана халаль тамак-ашты тез жеткирүү. Бардык продукттар сертификатталган.</p>
+            <p class="hero-desc">KING FOOD HALAL — 2022-жылы ачылган. Биздин максат — даамдуу, таза жана халаль тамак-ашты тез жеткирүү. Бардык продукттар сертификатталган.</p>
         </div>
     </div>
     <div class="combo-section" style="background: var(--dark3);">
@@ -338,10 +334,8 @@
     <footer><p>©KING.FOOD.HALAL | Жеткирүү: +996 778 03 12 03 | +996 558 45 46 51</p></footer>
 </div>
 
-<!-- ADMIN BUTTON -->
 <div class="admin-toggle" id="adminToggleBtn"><i class="fas fa-cog"></i></div>
 
-<!-- PASSWORD MODAL -->
 <div id="passwordModal" class="password-modal">
     <div class="password-box">
         <h3><i class="fas fa-lock"></i> Админге кирүү</h3>
@@ -351,21 +345,19 @@
     </div>
 </div>
 
-<!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
     <h2 style="color:#d4af37; margin-bottom: 1rem;"><i class="fas fa-cog"></i> Меню башкаруу</h2>
-    <p style="font-size:0.8rem; color:#aaa; margin-bottom:1rem;">Бааларды өзгөртүп, "Сактоо" баскычын басыңыз. <br>🔥 Өзгөртүүлөр БАРДЫК колдонуучуларга көрүнөт!</p>
+    <p style="font-size:0.8rem; color:#aaa; margin-bottom:1rem;">Бааларды өзгөртүп, "Сактоо" баскычын басыңыз. <br>🔥 Өзгөртүүлөр БАРДЫК колдонуучуларга дароо көрүнөт!</p>
     <div id="adminCategories"></div>
     <div class="close-admin" id="closeAdminPanel">Жабуу</div>
 </div>
 
-<!-- CART MODAL -->
 <div id="cartModal" class="cart-modal">
     <div class="cart-panel">
         <div class="cart-header"><span><i class="fas fa-shopping-cart"></i> Менин себетим</span><i class="fas fa-times" id="closeCart" style="cursor:pointer;"></i></div>
         <div id="cartItemsList" class="cart-items">🛒 Себет бош</div>
         <div class="cart-total" id="cartTotal">Жалпы сумма: 0 сом</div>
-        <div class="address-section"><label>📍 Жеткирүү дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="..."></textarea></div>
+        <div class="address-section"><label>📍 Жеткирүү дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Бишкек, көчөсү, үйү..."></textarea></div>
         <div class="order-buttons"><button id="whatsappOrder" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button><button id="telegramOrder" class="btn-telegram"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button></div>
         <div class="close-cart" id="closeCartFooter">Жабуу</div>
     </div>
@@ -373,9 +365,7 @@
 
 <script>
     // ==================== FIREBASE КОНФИГУРАЦИЯСЫ ====================
-    // 🔴 Төмөнкү маалыматтарды Firebase консольдон алыңыз! 🔴
-    // https://console.firebase.google.com/
-    
+    // 🔴 Бул жерге өзүңүздүн Firebase долбооруңуздун маалыматтарын коюңуз!
     const firebaseConfig = {
         apiKey: "СИЗДИН_API_KEY",
         authDomain: "СИЗДИН_AUTH_DOMAIN",
@@ -390,7 +380,7 @@
     let firebaseReady = false;
     
     function initFirebase() {
-        if (firebaseConfig.apiKey === "СИЗДИН_API_KEY") {
+        if (firebaseConfig.apiKey === "СИЗДИН_API_KEY" || firebaseConfig.databaseURL === "СИЗДИН_DATABASE_URL") {
             console.warn("⚠️ Firebase конфигурациясы коюлган эмес! Демо режимде иштеп жатат.");
             showToast("⚠️ Firebase кошулган жок. Демо режим - өзгөртүүлөр сакталбайт!", true);
             return false;
@@ -400,7 +390,7 @@
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             firebaseReady = true;
-            console.log("✅ Firebase инициализацияланды!");
+            console.log("✅ Firebase ийгиликтүү туташты!");
             return true;
         } catch(e) {
             console.error("Firebase катасы:", e);
@@ -409,21 +399,14 @@
         }
     }
     
-    // ==================== МААЛЫМАТТАР ====================
+    // ==================== БАШТАПКЫ МААЛЫМАТТАР ====================
     let menu = {
-        shaurma: [],
-        burger: [],
-        hotdog: [],
-        combo: [],
-        salads: [],
-        drinks: [],
-        snacks: []
+        shaurma: [], burger: [], hotdog: [], combo: [], salads: [], drinks: [], snacks: []
     };
     let cart = [];
     let isAdminLoggedIn = false;
     const ADMIN_PASSWORD = "king123";
     
-    // Баштапкы меню (жаңыртылган - Чай Пиала жана Асу кошулду)
     const defaultMenu = {
         shaurma: [
             {id:"sh1",name:"Шаурма тоок этинен",price:240},
@@ -469,8 +452,8 @@
         ]
     };
     
-    // ==================== FIREBASE ФУНКЦИЯЛАР ====================
-    async function loadMenuFromFirebase() {
+    // ==================== FIREBASE РЕАЛДУУ УБАҚЫТТА ЖАНЫЛОО ====================
+    function loadMenuFromFirebase() {
         if (!firebaseReady || !database) {
             const saved = localStorage.getItem('king_food_menu_demo');
             if (saved) {
@@ -483,29 +466,30 @@
         }
         
         showLoading(true);
-        try {
-            const snapshot = await database.ref('menu').once('value');
+        
+        // .once ордуна .on колдонулуп, реалдуу убакытта базаны угат
+        database.ref('menu').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 menu = data;
-                console.log("✅ Firebase'тен меню жүктөлдү");
+                console.log("✅ Меню базадан жаңыртылды!");
             } else {
                 menu = JSON.parse(JSON.stringify(defaultMenu));
-                await saveMenuToFirebase();
+                saveMenuToFirebase();
             }
             renderMenu();
-        } catch(e) {
-            console.error("Firebase жүктөө катасы:", e);
-            showToast("❌ Серверге туташуу катасы! Демо режимде иштеп жатат", true);
-            const saved = localStorage.getItem('king_food_menu_demo');
-            if (saved) {
-                menu = JSON.parse(saved);
-            } else {
-                menu = JSON.parse(JSON.stringify(defaultMenu));
+            
+            // Башкаруу панели ачык болсо, аны да автоматтык түрдө жаңылайт
+            const adminPanel = document.getElementById('adminPanel');
+            if (isAdminLoggedIn && adminPanel && adminPanel.classList.contains('open')) {
+                renderAdmin();
             }
-            renderMenu();
-        }
-        showLoading(false);
+            showLoading(false);
+        }, (error) => {
+            console.error("Firebase катасы:", error);
+            showToast("❌ Базадан жүктөөдө ката кетти!", true);
+            showLoading(false);
+        });
     }
     
     async function saveMenuToFirebase() {
@@ -516,7 +500,6 @@
         
         try {
             await database.ref('menu').set(menu);
-            console.log("✅ Меню Firebase'ке сакталды");
         } catch(e) {
             console.error("Firebase сактоо катасы:", e);
             localStorage.setItem('king_food_menu_demo', JSON.stringify(menu));
@@ -526,11 +509,7 @@
     async function loadCartFromFirebase() {
         if (!firebaseReady || !database) {
             const saved = localStorage.getItem('king_food_cart_demo');
-            if (saved) {
-                cart = JSON.parse(saved);
-            } else {
-                cart = [];
-            }
+            if (saved) cart = JSON.parse(saved);
             updateCart();
             return;
         }
@@ -544,16 +523,10 @@
         try {
             const snapshot = await database.ref('carts/' + userId).once('value');
             const data = snapshot.val();
-            if (data && data.items) {
-                cart = data.items;
-            } else {
-                cart = [];
-            }
+            if (data && data.items) cart = data.items;
             updateCart();
         } catch(e) {
-            console.error("Firebase корзина жүктөө катасы:", e);
-            const saved = localStorage.getItem('king_food_cart_demo');
-            if (saved) cart = JSON.parse(saved);
+            console.error("Корзина жүктөө катасы:", e);
         }
     }
     
@@ -564,23 +537,17 @@
         }
         
         let userId = localStorage.getItem('userId');
-        if (!userId) {
-            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('userId', userId);
-        }
-        
         try {
             await database.ref('carts/' + userId).set({
                 items: cart,
                 updatedAt: Date.now()
             });
         } catch(e) {
-            console.error("Firebase корзина сактоо катасы:", e);
-            localStorage.setItem('king_food_cart_demo', JSON.stringify(cart));
+            console.error("Корзина сактоо катасы:", e);
         }
     }
     
-    // ==================== UI ФУНКЦИЯЛАР ====================
+    // ==================== UI ИШТӨӨСҮ ====================
     function showLoading(show) {
         const loader = document.getElementById('loading');
         if (loader) loader.style.display = show ? 'flex' : 'none';
@@ -608,13 +575,8 @@
     
     function renderMenu() {
         const categories = {
-            shaurma: 'shaurmaGrid',
-            burger: 'burgerGrid',
-            hotdog: 'hotdogGrid',
-            combo: 'comboGrid',
-            salads: 'saladsGrid',
-            drinks: 'drinksGrid',
-            snacks: 'snacksGrid'
+            shaurma: 'shaurmaGrid', burger: 'burgerGrid', hotdog: 'hotdogGrid',
+            combo: 'comboGrid', salads: 'saladsGrid', drinks: 'drinksGrid', snacks: 'snacksGrid'
         };
         
         for (const [cat, gridId] of Object.entries(categories)) {
@@ -637,13 +599,13 @@
                 });
                 
                 container.querySelectorAll('.add-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
+                    btn.onclick = () => {
                         addToCart({
                             id: btn.dataset.id,
                             name: btn.dataset.name,
                             price: parseInt(btn.dataset.price)
                         });
-                    });
+                    };
                 });
             }
         }
@@ -668,8 +630,7 @@
             html += `
                 <div class="cart-item">
                     <div>
-                        <strong>${escapeHtml(i.name)}</strong><br>
-                        ${i.price} сом
+                        <strong>${escapeHtml(i.name)}</strong><br>${i.price} сом
                     </div>
                     <div class="cart-qty">
                         <button onclick="changeQty('${i.id}', -1)">-</button>
@@ -776,9 +737,7 @@
         menu[category].push({ id: newId, name: newName, price: newPrice });
         
         await saveMenuToFirebase();
-        renderMenu();
-        renderAdmin();
-        showToast(`✅ "${newName}" кошулду! БАРДЫК колдонуучулар көрөт!`);
+        showToast(`✅ "${newName}" кошулду!`);
         
         nameInp.value = '';
         priceInp.value = '';
@@ -799,9 +758,7 @@
         menu[category][idx].price = newPrice;
         
         await saveMenuToFirebase();
-        renderMenu();
-        renderAdmin();
-        showToast(`✅ Өзгөртүлдү! БАРДЫК колдонуучулар көрөт!`);
+        showToast(`✅ Өзгөртүү сакталды!`);
     }
     
     async function deleteItem(category, idx) {
@@ -809,20 +766,18 @@
         if (confirm(`"${name}" өчүрүлсүнбү?`)) {
             menu[category].splice(idx, 1);
             await saveMenuToFirebase();
-            renderMenu();
-            renderAdmin();
             showToast(`🗑️ "${name}" өчүрүлдү!`);
         }
     }
     
-    // ==================== ЗАКАЗ ====================
+    // ==================== ЗАКАЗ ЖӨНӨТҮҮ ====================
     async function sendOrder(platform) {
         if (cart.length === 0) {
             alert('Себет бош!');
             return;
         }
         
-        const address = document.getElementById('deliveryAddress').value.trim() || 'Адрес жок';
+        const address = document.getElementById('deliveryAddress').value.trim() || 'Адрес көрсөтүлгөн эмес';
         let itemsText = '';
         let total = 0;
         
@@ -843,10 +798,11 @@
         window.open(url, '_blank');
         cart = [];
         updateCart();
+        document.getElementById('cartModal').classList.remove('open');
         showToast('Заказ жөнөтүлдү! Рахмат!');
     }
     
-    // ==================== БАШКАРУУ ====================
+    // ==================== БАРАКЧАЛАРДЫ БАШҚАРУҮ ====================
     function showPage(n) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -855,7 +811,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
-    async function checkAdminPassword() {
+    function checkAdminPassword() {
         const pass = document.getElementById('adminPassword').value;
         if (pass === ADMIN_PASSWORD) {
             isAdminLoggedIn = true;
@@ -863,7 +819,7 @@
             document.getElementById('passwordModal').classList.remove('open');
             document.getElementById('adminPanel').classList.add('open');
             renderAdmin();
-            showToast('✅ Админ режимине кирдиңиз! Эми менюну өзгөртө аласыз');
+            showToast('✅ Админ режимине кирдиңиз!');
             document.getElementById('pwdError').innerText = '';
             document.getElementById('adminPassword').value = '';
         } else {
@@ -871,7 +827,7 @@
         }
     }
     
-    // ==================== ОКУЯЛАР ====================
+    // ==================== ОКУЯЛАРДЫ ИНИЦИАЛИЗАЦИЯЛОО ====================
     function initEvents() {
         const cartModal = document.getElementById('cartModal');
         const cartIconBtn = document.getElementById('cartIconBtn');
@@ -907,9 +863,9 @@
             document.getElementById('adminPanel').classList.remove('open');
         };
         if (adminPasswordInput) {
-            adminPasswordInput.addEventListener('keypress', (e) => {
+            adminPasswordInput.onkeypress = (e) => {
                 if (e.key === 'Enter') checkAdminPassword();
-            });
+            };
         }
         
         if (sessionStorage.getItem('isAdmin') === 'true') {
@@ -917,7 +873,7 @@
         }
     }
     
-    // ==================== БАШТОО ====================
+    // Глобалдык функцияларды терезеге байлоо
     window.changeQty = changeQty;
     window.removeItem = removeItem;
     window.addItem = addItem;
@@ -927,11 +883,12 @@
     window.showPage = showPage;
     window.addToCart = addToCart;
     
-    async function init() {
+    // БАШТОО
+    function init() {
         initEvents();
         initFirebase();
-        await loadMenuFromFirebase();
-        await loadCartFromFirebase();
+        loadMenuFromFirebase();
+        loadCartFromFirebase();
     }
     
     init();
