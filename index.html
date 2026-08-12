@@ -1,897 +1,1012 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>KING FOOD HALAL - Шаурма & Бургерлер</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary: #d4af37;
-            --primary-dark: #b8960c;
-            --primary-light: #e8c84a;
-            --dark: #0a0a0a;
-            --dark2: #14100e;
-            --dark3: #1f1b15;
-            --dark4: #2a2520;
-            --white: #f5f3e8;
-            --gray: #bcae7a;
-            --error: #e74c3c;
-            --success: #27ae60;
-            --whatsapp: #25D366;
-            --telegram: #0088cc;
-        }
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--dark);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--dark2); }
-        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-        
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 1rem 3rem;
-            background: rgba(10,10,10,0.95);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(212,175,55,0.2);
-        }
-        .nav-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem; font-weight: 900;
-            color: var(--primary);
-            letter-spacing: 2px;
-        }
-        .nav-logo span { color: var(--white); }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a {
-            color: var(--white); text-decoration: none;
-            font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase;
-            opacity: 0.7; cursor: pointer;
-        }
-        .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--primary); }
-        .nav-icons { display: flex; gap: 1rem; align-items: center; }
-        .cart-icon {
-            position: relative; cursor: pointer;
-            background: rgba(212,175,55,0.15);
-            padding: 0.5rem 1rem; border-radius: 30px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .cart-icon:hover { background: rgba(212,175,55,0.3); }
-        .cart-count {
-            position: absolute; top: -8px; right: -8px;
-            background: var(--primary); color: var(--dark);
-            border-radius: 50%; width: 22px; height: 22px;
-            font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-        }
-        .instagram-link {
-            background: #d62976; padding: 0.5rem 1rem; border-radius: 30px;
-            text-decoration: none; color: white; font-size: 0.75rem;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .instagram-link:hover { background: #c13584; }
-        
-        .hero {
-            position: relative; min-height: 85vh;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a120b 100%);
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; margin-top: 68px;
-        }
-        .hero-content { padding: 3rem; max-width: 800px; }
-        .hero-tag {
-            display: inline-block;
-            font-size: 0.7rem; letter-spacing: 3px;
-            color: var(--primary); border: 1px solid var(--primary);
-            padding: 0.4rem 1rem; margin-bottom: 1.5rem;
-            border-radius: 50px;
-        }
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 900; line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        .hero-title span { color: var(--primary); font-style: italic; }
-        .hero-desc {
-            font-size: 1rem; color: rgba(245,243,232,0.7);
-            max-width: 550px; margin: 0 auto 2rem; line-height: 1.6;
-        }
-        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .btn-primary {
-            background: var(--primary); color: var(--dark);
-            border: none; padding: 0.9rem 2rem;
-            font-size: 0.8rem; letter-spacing: 2px;
-            font-weight: 600; cursor: pointer; border-radius: 40px;
-        }
-        .btn-primary:hover { background: var(--primary-light); transform: scale(1.02); }
-        .btn-outline {
-            background: transparent; color: var(--white);
-            border: 1px solid rgba(212,175,55,0.5);
-            padding: 0.9rem 2rem; font-size: 0.8rem;
-            letter-spacing: 2px; cursor: pointer; border-radius: 40px;
-        }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-        .combo-section { padding: 4rem 3rem; background: var(--dark2); text-align: center; }
-        .section-tag {
-            font-size: 0.7rem; letter-spacing: 3px;
-            color: var(--primary); margin-bottom: 1rem;
-        }
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem; font-weight: 700; margin-bottom: 2.5rem;
-        }
-        .combo-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem; max-width: 1000px; margin: 0 auto;
-        }
-        .combo-card {
-            background: var(--dark3); border: 1px solid rgba(212,175,55,0.15);
-            padding: 2rem; border-radius: 20px;
-            transition: transform 0.3s;
-        }
-        .combo-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .combo-card h3 { color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .menu-section { padding: 4rem 3rem; max-width: 1400px; margin: 0 auto; }
-        .category { margin-bottom: 3rem; }
-        .category h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem; border-left: 4px solid var(--primary);
-            padding-left: 1rem; margin-bottom: 1.5rem;
-        }
-        .menu-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .menu-item {
-            background: var(--dark3); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px; padding: 1.2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .menu-item:hover { border-color: var(--primary); transform: translateY(-3px); }
-        .item-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem; }
-        .item-price { color: var(--primary); font-size: 1.2rem; font-weight: bold; }
-        .add-btn {
-            background: var(--primary); border: none; color: var(--dark);
-            padding: 0.5rem 1rem; border-radius: 30px; cursor: pointer;
-            display: flex; align-items: center; gap: 5px; font-weight: 600;
-        }
-        .add-btn:hover { background: var(--primary-light); transform: scale(0.96); }
-        .cart-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
-            z-index: 2000; display: flex; justify-content: flex-end;
-            visibility: hidden; opacity: 0; transition: 0.2s;
-        }
-        .cart-modal.open { visibility: visible; opacity: 1; }
-        .cart-panel {
-            width: 100%; max-width: 450px; background: var(--dark3);
-            height: 100vh; overflow-y: auto; padding: 1.5rem;
-            border-left: 2px solid var(--primary);
-        }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--primary); padding-bottom: 1rem; font-size: 1.3rem; }
-        .cart-items { margin: 1.5rem 0; max-height: 45vh; overflow-y: auto; }
-        .cart-item { background: var(--dark4); margin-bottom: 0.8rem; padding: 1rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .cart-qty { display: flex; gap: 10px; align-items: center; }
-        .cart-qty button { background: var(--primary); border: none; width: 28px; height: 28px; border-radius: 30px; cursor: pointer; font-weight: bold; }
-        .cart-qty button:last-child { background: var(--error); color: white; }
-        .cart-total { font-size: 1.3rem; font-weight: bold; border-top: 1px solid var(--primary); padding-top: 1rem; text-align: right; }
-        .address-section { margin: 1rem 0; background: var(--dark4); padding: 1rem; border-radius: 16px; }
-        .address-section textarea { width: 100%; padding: 0.8rem; border-radius: 12px; background: var(--dark2); border: 1px solid rgba(212,175,55,0.3); color: var(--white); resize: vertical; }
-        .order-buttons { display: flex; gap: 1rem; margin-top: 1rem; flex-direction: column; }
-        .btn-whatsapp { background: var(--whatsapp); color: #121212; padding: 0.8rem; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-telegram { background: var(--telegram); color: white; padding: 0.8rem; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .close-cart { background: #333; color: white; padding: 0.8rem; border-radius: 40px; text-align: center; cursor: pointer; margin-top: 1rem; }
-        .admin-toggle {
-            position: fixed; bottom: 20px; right: 20px;
-            background: var(--primary); color: var(--dark);
-            width: 55px; height: 55px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 150; font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .admin-toggle:hover { transform: scale(1.1); background: var(--primary-light); }
-        .admin-panel {
-            position: fixed; top: 0; left: -450px; width: 100%; max-width: 450px;
-            height: 100vh; background: var(--dark3); z-index: 2001;
-            padding: 1.5rem; overflow-y: auto; transition: 0.3s;
-            border-right: 2px solid var(--primary);
-        }
-        .admin-panel.open { left: 0; }
-        .admin-category { background: var(--dark4); padding: 1rem; border-radius: 16px; margin-bottom: 1.5rem; }
-        .admin-item { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
-        .admin-item input { flex: 1; padding: 8px 12px; border-radius: 10px; background: var(--dark2); border: 1px solid var(--primary); color: white; }
-        .admin-item button { padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .edit-btn { background: var(--success); color: white; }
-        .del-btn { background: var(--error); color: white; }
-        .add-item-form { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
-        .add-item-form input { flex: 1; padding: 8px 12px; border-radius: 10px; background: var(--dark2); border: 1px solid var(--primary); color: white; }
-        .add-item-form button { background: var(--primary); color: var(--dark); padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .close-admin { background: #333; color: white; padding: 12px; border-radius: 40px; text-align: center; cursor: pointer; margin-top: 20px; }
-        .password-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
-            z-index: 3000; display: flex; align-items: center; justify-content: center;
-            visibility: hidden; opacity: 0; transition: 0.2s;
-        }
-        .password-modal.open { visibility: visible; opacity: 1; }
-        .password-box { background: var(--dark3); padding: 2rem; border-radius: 32px; border: 2px solid var(--primary); width: 350px; text-align: center; }
-        .password-box h3 { color: var(--primary); margin-bottom: 1.5rem; }
-        .password-box input { width: 100%; padding: 12px; border-radius: 40px; background: var(--dark4); border: 1px solid var(--primary); color: white; margin-bottom: 1rem; }
-        .password-box button { background: var(--primary); border: none; padding: 12px; border-radius: 40px; width: 100%; cursor: pointer; font-weight: bold; }
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--primary); color: var(--dark); padding: 12px 24px;
-            border-radius: 50px; z-index: 3500; font-weight: bold;
-            animation: fadeOut 2.5s forwards;
-        }
-        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-        footer { background: var(--dark2); text-align: center; padding: 2rem; border-top: 1px solid rgba(212,175,55,0.1); }
-        .loading {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--dark3); padding: 20px 40px; border-radius: 50px;
-            border: 1px solid var(--primary); z-index: 5000;
-        }
-        @media (max-width: 768px) {
-            nav { padding: 0.8rem 1rem; }
-            .menu-section { padding: 1rem; }
-            .combo-section { padding: 2rem 1rem; }
-            .nav-links { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KING FOOD HALAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{
+    --bg:#150E08;
+    --surface:#221609;
+    --surface-2:#2C1D0E;
+    --line: rgba(212,162,76,0.18);
+    --gold:#D4A24C;
+    --gold-soft: rgba(212,162,76,0.14);
+    --crimson:#B7211D;
+    --crimson-soft: rgba(183,33,29,0.18);
+    --cream:#F7EDE0;
+    --text:#F3E9DA;
+    --text-dim:#C9B79C;
+    --success:#5FA875;
+    --radius: 18px;
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% -10%, rgba(212,162,76,0.10), transparent 45%),
+      radial-gradient(circle at 100% 0%, rgba(183,33,29,0.12), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Manrope', sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  #shell{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 100%);
+  }
+  ::selection{ background: var(--gold-soft); }
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+
+  /* ---------- Header ---------- */
+  header.topbar{
+    display:flex; align-items:center; gap:10px;
+    padding:16px 18px 12px 18px;
+    position:sticky; top:0; z-index:20;
+    background: linear-gradient(180deg, var(--bg) 70%, transparent);
+  }
+  .crest{
+    width:38px; height:38px; flex:none;
+  }
+  .brandtext{
+    display:flex; flex-direction:column; line-height:1.05;
+  }
+  .brandtext b{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.5px;
+    color:var(--cream);
+  }
+  .brandtext span{
+    font-size:10px;
+    letter-spacing:2.5px;
+    color:var(--gold);
+    text-transform:uppercase;
+    font-weight:600;
+  }
+  .headline-spacer{flex:1;}
+  .icon-btn{
+    background:var(--surface); border:1px solid var(--line);
+    width:38px;height:38px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold); cursor:pointer;
+  }
+
+  /* ---------- Main ---------- */
+  main{ flex:1; padding: 4px 18px 96px 18px; }
+
+  h1.pagehead{
+    font-family:'Cormorant Garamond', serif;
+    font-size:28px; font-weight:700; color:var(--cream);
+    margin: 6px 0 2px 0;
+  }
+  p.subhead{ color:var(--text-dim); font-size:13.5px; margin:0 0 20px 0; line-height:1.5;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    border:none; cursor:pointer; border-radius:14px;
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:14.5px;
+    padding:14px 18px; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: linear-gradient(135deg, var(--crimson), #8f1a17); color:var(--cream); box-shadow: 0 8px 20px rgba(183,33,29,0.35);}
+  .btn-gold{ background: linear-gradient(135deg, var(--gold), #b9803a); color:#241505; box-shadow: 0 8px 20px rgba(212,162,76,0.25);}
+  .btn-ghost{ background: var(--surface); color:var(--cream); border:1px solid var(--line);}
+  .btn-block{ width:100%; }
+  .btn-sm{ padding:9px 12px; font-size:12.5px; border-radius:10px; }
+  .btn[disabled]{ opacity:0.45; cursor:not-allowed; }
+
+  /* ---------- Inputs ---------- */
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:11.5px; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; font-weight:700;}
+  .field select{
+    width:100%; background:var(--surface); border:1px solid var(--line); color:var(--text);
+    padding:13px 14px; border-radius:12px; font-size:14px; font-family:'Manrope',sans-serif;
+    outline:none; appearance:none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23D4A24C' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat; background-position:right 14px center;
+  }
+  .field select:disabled{ opacity:0.4; }
+  .field input, .field textarea{
+    width:100%; background:var(--surface); border:1px solid var(--line); color:var(--text);
+    padding:13px 14px; border-radius:12px; font-size:14.5px; font-family:'Manrope',sans-serif;
+    outline:none;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--gold); }
+  .field .hint{ font-size:11.5px; color:var(--text-dim); margin-top:5px; }
+  .field .err{ font-size:11.5px; color:#e08b7d; margin-top:5px; display:none;}
+
+  /* ---------- Auth screen ---------- */
+  .auth-wrap{ padding-top:8vh; text-align:center; }
+  .auth-crest{ width:88px; height:88px; margin:0 auto 18px auto; }
+  .auth-title{ font-family:'Cormorant Garamond',serif; font-weight:700; font-size:32px; color:var(--cream); margin:0;}
+  .auth-sub{ color:var(--text-dim); font-size:13.5px; margin:6px 0 30px 0;}
+  .auth-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; text-align:left; box-shadow:var(--shadow);}
+  .divider{ display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:11px; margin:16px 0; text-transform:uppercase; letter-spacing:1px;}
+  .divider::before, .divider::after{ content:''; flex:1; height:1px; background:var(--line);}
+  .google-btn{ background:var(--cream); color:#3c2a12; }
+
+  /* ---------- Category chips ---------- */
+  .chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 0 16px 0; }
+  .chip{
+    flex:none; padding:9px 15px; border-radius:999px; font-size:12.5px; font-weight:700;
+    background:var(--surface); border:1px solid var(--line); color:var(--text-dim); cursor:pointer;
+  }
+  .chip.active{ background: var(--gold-soft); border-color:var(--gold); color:var(--gold); }
+
+  /* ---------- Food card ---------- */
+  .food-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px; display:flex; gap:12px; margin-bottom:12px; position:relative;
+  }
+  .food-emoji{
+    width:64px; height:64px; border-radius:14px; flex:none;
+    background: linear-gradient(160deg, var(--surface-2), var(--surface));
+    display:flex; align-items:center; justify-content:center; font-size:30px;
+    border:1px solid var(--line);
+  }
+  .food-info{ flex:1; min-width:0; }
+  .food-name{ font-weight:700; font-size:15px; color:var(--cream); margin:0 0 2px 0;}
+  .food-desc{ font-size:12px; color:var(--text-dim); margin:0 0 8px 0; line-height:1.4;}
+  .food-bottom{ display:flex; align-items:center; justify-content:space-between; }
+  .food-price{ font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--gold); font-size:14.5px;}
+  .halal-badge{
+    position:absolute; top:10px; right:10px; font-size:9px; font-weight:800; letter-spacing:0.5px;
+    background: var(--crimson-soft); color:#e79d92; padding:3px 7px; border-radius:6px; border:1px solid rgba(183,33,29,0.4);
+  }
+  .qty-ctl{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:4px 6px; border:1px solid var(--line);}
+  .qty-ctl button{ width:24px;height:24px; border-radius:6px; border:none; background:var(--surface); color:var(--gold); font-weight:800; cursor:pointer; font-size:14px;}
+  .qty-ctl span{ min-width:16px; text-align:center; font-weight:700; font-size:13px;}
+  .add-btn{ background:var(--gold); color:#241505; border:none; border-radius:10px; padding:8px 12px; font-weight:800; font-size:12.5px; cursor:pointer;}
+
+  /* ---------- Empty state ---------- */
+  .empty{ text-align:center; padding:60px 20px; color:var(--text-dim);}
+  .empty .em{ font-size:40px; margin-bottom:10px;}
+  .empty b{ display:block; color:var(--cream); font-size:15px; margin-bottom:4px;}
+
+  /* ---------- Cart ---------- */
+  .cart-item{ display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin-bottom:10px;}
+  .cart-item .food-emoji{ width:44px;height:44px; font-size:22px; border-radius:10px;}
+  .cart-item .ci-name{ font-weight:700; font-size:13.5px; color:var(--cream); margin:0;}
+  .cart-item .ci-price{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold);}
+  .cart-item .ci-remove{ background:none; border:none; color:#e08b7d; font-size:17px; cursor:pointer; padding:4px;}
+
+  .summary-box{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin:16px 0;}
+  .summary-row{ display:flex; justify-content:space-between; font-size:13.5px; color:var(--text-dim); margin-bottom:8px;}
+  .summary-row.total{ color:var(--cream); font-weight:800; font-size:16px; border-top:1px solid var(--line); padding-top:10px; margin-top:4px;}
+  .summary-row .val{ font-family:'JetBrains Mono',monospace; color:var(--cream); }
+
+  /* ---------- Map ---------- */
+  .map-box{ position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); height:190px; margin-bottom:16px;
+    background: var(--surface-2);
+  }
+  .map-box .leaflet-container{ width:100%; height:100%; background:var(--surface-2); font-family:'Manrope',sans-serif; }
+  .map-box .leaflet-control-attribution{ font-size:8px; background:rgba(21,14,8,0.7)!important; color:var(--text-dim)!important; }
+  .map-box .leaflet-control-attribution a{ color:var(--gold)!important; }
+  .courier-pin{ font-size:22px; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.6)); animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-4px);} }
+  .eta-badge{
+    position:absolute; bottom:10px; left:10px; z-index:500; background:rgba(21,14,8,0.9); border:1px solid var(--gold);
+    color:var(--gold); font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12.5px;
+    padding:6px 10px; border-radius:10px; pointer-events:none;
+  }
+  .map-locating{
+    position:absolute; inset:0; z-index:600; display:flex; align-items:center; justify-content:center;
+    background:rgba(21,14,8,0.55); color:var(--gold); font-size:12.5px; font-weight:700; pointer-events:none;
+  }
+  .addr-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* ---------- Order confirmation ---------- */
+  .order-status{ text-align:center; padding:26px 10px; }
+  .order-timer{
+    font-family:'JetBrains Mono',monospace; font-size:44px; font-weight:700; color:var(--gold);
+    margin:10px 0;
+  }
+
+  /* ---------- Bottom nav ---------- */
+  nav.bottomnav{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; background:rgba(21,14,8,0.92); backdrop-filter: blur(10px);
+    border-top:1px solid var(--line); display:flex; z-index:30;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom)) 6px;
+  }
+  nav.bottomnav button{
+    flex:1; background:none; border:none; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:8px 2px; cursor:pointer; font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; position:relative;
+  }
+  nav.bottomnav button .ic{ font-size:19px; }
+  nav.bottomnav button.active{ color:var(--gold); }
+  .navbadge{
+    position:absolute; top:2px; right:22%; background:var(--crimson); color:#fff; font-size:9px; font-weight:800;
+    min-width:15px; height:15px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0 3px;
+  }
+
+  /* ---------- Admin ---------- */
+  .admin-item-row{ display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:9px 10px; margin-bottom:8px;}
+  .admin-item-row .food-emoji{ width:36px;height:36px;font-size:18px;border-radius:8px;}
+  .admin-item-row .aname{ font-size:13px; font-weight:700; color:var(--cream); flex:1; }
+  .admin-item-row .adel{ background:none;border:none;color:#e08b7d;font-size:16px;cursor:pointer;}
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .pin-wrap{ text-align:center; padding-top:10vh;}
+  .pin-dots{ display:flex; gap:12px; justify-content:center; margin:20px 0;}
+  .pin-dots span{ width:14px;height:14px;border-radius:50%; border:1px solid var(--gold); }
+  .pin-dots span.filled{ background:var(--gold); }
+  .keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:260px; margin:0 auto;}
+  .keypad button{ background:var(--surface); border:1px solid var(--line); color:var(--cream); font-size:20px; font-weight:700; border-radius:16px; padding:16px 0; cursor:pointer;}
+  .keypad button:active{ background:var(--gold-soft); }
+
+  /* ---------- Chat ---------- */
+  .chat-scroll{ display:flex; flex-direction:column; gap:12px; padding-bottom:12px; }
+  .msg{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 12px; max-width:86%; }
+  .msg .m-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;}
+  .msg .m-name{ font-weight:800; font-size:12.5px; color:var(--gold);}
+  .msg .m-time{ font-size:10px; color:var(--text-dim);}
+  .msg .m-text{ font-size:13.5px; color:var(--text); line-height:1.45; white-space:pre-wrap;}
+  .msg .m-stars{ color:var(--gold); font-size:12px; margin-bottom:3px;}
+  .msg img.m-img{ max-width:100%; border-radius:10px; margin-top:6px; display:block; }
+  .chat-input-bar{
+    position:fixed; bottom:64px; left:50%; transform:translateX(-50%); width:100%; max-width:480px;
+    background:var(--bg); border-top:1px solid var(--line); padding:10px 14px; display:flex; gap:8px; align-items:center; z-index:25;
+  }
+  .chat-input-bar input[type=text]{ flex:1; background:var(--surface); border:1px solid var(--line); color:var(--text); border-radius:20px; padding:11px 16px; font-size:13.5px; outline:none;}
+  .round-btn{ width:40px;height:40px;border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--gold); font-size:17px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;}
+  .round-btn.send{ background:var(--crimson); color:#fff; border:none; }
+  .star-picker{ display:flex; gap:4px; margin-bottom:8px;}
+  .star-picker span{ font-size:20px; cursor:pointer; opacity:0.35;}
+  .star-picker span.on{ opacity:1;}
+
+  .toast{
+    position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(10px); opacity:0;
+    background:var(--gold); color:#241505; font-weight:800; font-size:13px; padding:10px 18px; border-radius:12px;
+    z-index:60; transition: all .25s ease; pointer-events:none; box-shadow:var(--shadow); max-width:88%; text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
 </head>
 <body>
-
-<div id="loading" class="loading" style="display: none;">
-    <i class="fas fa-spinner fa-spin"></i> Жүктөлүүдө...
-</div>
-
-<nav>
-    <div class="nav-logo">KING <span>FOOD HALAL</span></div>
-    <ul class="nav-links">
-        <li><a onclick="showPage(1)" class="active" id="nav1">Башкы</a></li>
-        <li><a onclick="showPage(2)" id="nav2">Меню</a></li>
-        <li><a onclick="showPage(3)" id="nav3">Биз жөнүндө</a></li>
-    </ul>
-    <div class="nav-icons">
-        <a href="https://instagram.com/king.food.halal" target="_blank" class="instagram-link"><i class="fab fa-instagram"></i> Instagram</a>
-        <div class="cart-icon" id="cartIconBtn"><i class="fas fa-shopping-basket"></i><span id="cartCount">0</span><span class="cart-count" id="cartBadge">0</span></div>
-    </div>
-</nav>
-
-<div id="page1" class="page active">
-    <div class="hero">
-        <div class="hero-content">
-            <div class="hero-tag">🍔 ХАЛАЛЬ & ФРЕШ</div>
-            <h1 class="hero-title">Кинг Фуд <span>Халал</span><br>Даамдуу жана Тез</h1>
-            <p class="hero-desc">Шаурма, бургерлер, хот-догдор, салаттар жана суусундуктар. Таза халаль продукттар, тез жеткирүү.</p>
-            <div class="hero-btns">
-                <button class="btn-primary" onclick="showPage(2)">Менюну көрүү</button>
-                <button class="btn-outline" id="cartBtn2">Себет</button>
-            </div>
-        </div>
-    </div>
-    <div class="combo-section">
-        <div class="section-tag">🔥 КОМБОЛАР</div>
-        <div class="section-title">Эң популярдуу сеттер</div>
-        <div class="combo-grid">
-            <div class="combo-card"><h3>🍔 KING KOMBO</h3><p>650 сом</p><p style="font-size:0.8rem; margin-top:8px;">Шаурма уй этинен + Кинг Бургер + Фри S + Султан Чай</p></div>
-            <div class="combo-card"><h3>🔥 03 KOMBO</h3><p>550 сом</p><p style="font-size:0.8rem; margin-top:8px;">Шаурма тоок этинен + Классика Хот-Дог + Наггетсы + Султан Чай</p></div>
-        </div>
-    </div>
-    <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p></footer>
-</div>
-
-<div id="page2" class="page">
-    <div class="menu-section">
-        <div class="category"><h2>🥙 ШАУРМА</h2><div class="menu-grid" id="shaurmaGrid"></div></div>
-        <div class="category"><h2>🍔 БУРГЕР</h2><div class="menu-grid" id="burgerGrid"></div></div>
-        <div class="category"><h2>🌭 ХОТ-ДОГ</h2><div class="menu-grid" id="hotdogGrid"></div></div>
-        <div class="category"><h2>📦 КОМБО</h2><div class="menu-grid" id="comboGrid"></div></div>
-        <div class="category"><h2>🥗 САЛАТТАР</h2><div class="menu-grid" id="saladsGrid"></div></div>
-        <div class="category"><h2>🥤 СУУСУНДУКТАР</h2><div class="menu-grid" id="drinksGrid"></div></div>
-        <div class="category"><h2>🍟 ЖЕНИЛ ТАМАКТАР</h2><div class="menu-grid" id="snacksGrid"></div></div>
-    </div>
-    <footer><p>©KING.FOOD.HALAL — Халяль даам | +996 778 03 12 03 | +996 558 45 46 51</p></footer>
-</div>
-
-<div id="page3" class="page">
-    <div class="hero" style="min-height: 50vh; margin-top: 68px;">
-        <div class="hero-content">
-            <div class="hero-tag">🌿 БИЗ ЖӨНҮНДӨ</div>
-            <h1 class="hero-title">Сапаттуу <span>Халаль</span><br>тамак-аш</h1>
-            <p class="hero-desc">KING FOOD HALAL — 2022-жылы ачылган. Биздин максат — даамдуу, таза жана халаль тамак-ашты тез жеткирүү. Бардык продукттар сертификатталган.</p>
-        </div>
-    </div>
-    <div class="combo-section" style="background: var(--dark3);">
-        <div class="section-tag">📞 БАЙЛАНЫШ</div>
-        <div class="section-title">Биз менен байланышыңыз</div>
-        <div class="combo-grid" style="max-width: 500px;">
-            <div class="combo-card"><i class="fab fa-whatsapp" style="font-size: 2rem; color: #25D366;"></i><h3>WhatsApp</h3><p>+996 778 03 12 03</p></div>
-            <div class="combo-card"><i class="fab fa-telegram" style="font-size: 2rem; color: #0088CC;"></i><h3>Telegram</h3><p>+996 558 45 46 51</p></div>
-        </div>
-    </div>
-    <footer><p>©KING.FOOD.HALAL | Жеткирүү: +996 778 03 12 03 | +996 558 45 46 51</p></footer>
-</div>
-
-<div class="admin-toggle" id="adminToggleBtn"><i class="fas fa-cog"></i></div>
-
-<div id="passwordModal" class="password-modal">
-    <div class="password-box">
-        <h3><i class="fas fa-lock"></i> Админге кирүү</h3>
-        <input type="password" id="adminPassword" placeholder="Пароль" autocomplete="off">
-        <button onclick="checkAdminPassword()">Кирүү</button>
-        <div id="pwdError" style="color: #e74c3c; margin-top: 10px;"></div>
-    </div>
-</div>
-
-<div class="admin-panel" id="adminPanel">
-    <h2 style="color:#d4af37; margin-bottom: 1rem;"><i class="fas fa-cog"></i> Меню башкаруу</h2>
-    <p style="font-size:0.8rem; color:#aaa; margin-bottom:1rem;">Бааларды өзгөртүп, "Сактоо" баскычын басыңыз. <br>🔥 Өзгөртүүлөр БАРДЫК колдонуучуларга дароо көрүнөт!</p>
-    <div id="adminCategories"></div>
-    <div class="close-admin" id="closeAdminPanel">Жабуу</div>
-</div>
-
-<div id="cartModal" class="cart-modal">
-    <div class="cart-panel">
-        <div class="cart-header"><span><i class="fas fa-shopping-cart"></i> Менин себетим</span><i class="fas fa-times" id="closeCart" style="cursor:pointer;"></i></div>
-        <div id="cartItemsList" class="cart-items">🛒 Себет бош</div>
-        <div class="cart-total" id="cartTotal">Жалпы сумма: 0 сом</div>
-        <div class="address-section"><label>📍 Жеткирүү дареги:</label><textarea id="deliveryAddress" rows="2" placeholder="Бишкек, көчөсү, үйү..."></textarea></div>
-        <div class="order-buttons"><button id="whatsappOrder" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp аркылуу заказ</button><button id="telegramOrder" class="btn-telegram"><i class="fab fa-telegram"></i> Telegram аркылуу заказ</button></div>
-        <div class="close-cart" id="closeCartFooter">Жабуу</div>
-    </div>
+<div id="shell">
+  <header class="topbar" id="topbar"></header>
+  <main id="app"></main>
+  <div id="chatbar"></div>
+  <nav class="bottomnav" id="bottomnav"></nav>
+  <div class="toast" id="toast"></div>
 </div>
 
 <script>
-    // ==================== FIREBASE КОНФИГУРАЦИЯСЫ ====================
-    // 🔴 Бул жерге өзүңүздүн Firebase долбооруңуздун маалыматтарын коюңуз!
-    const firebaseConfig = {
-        apiKey: "СИЗДИН_API_KEY",
-        authDomain: "СИЗДИН_AUTH_DOMAIN",
-        databaseURL: "СИЗДИН_DATABASE_URL",
-        projectId: "СИЗДИН_PROJECT_ID",
-        storageBucket: "СИЗДИН_STORAGE_BUCKET",
-        messagingSenderId: "СИЗДИН_SENDER_ID",
-        appId: "СИЗДИН_APP_ID"
-    };
-    
-    let database = null;
-    let firebaseReady = false;
-    
-    function initFirebase() {
-        if (firebaseConfig.apiKey === "СИЗДИН_API_KEY" || firebaseConfig.databaseURL === "СИЗДИН_DATABASE_URL") {
-            console.warn("⚠️ Firebase конфигурациясы коюлган эмес! Демо режимде иштеп жатат.");
-            showToast("⚠️ Firebase кошулган жок. Демо режим - өзгөртүүлөр сакталбайт!", true);
-            return false;
+/* ================= CROWN-HALAL CREST (signature SVG mark) ================= */
+const CREST_SVG = `
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#D4A24C" stroke-width="2.5"/>
+  <path d="M50 8 A32 32 0 1 0 68 65" fill="none" stroke="#D4A24C" stroke-width="3" stroke-linecap="round"/>
+  <path d="M28 44 L34 30 L40 40 L50 24 L60 40 L66 30 L72 44 L68 54 L32 54 Z" fill="#D4A24C"/>
+  <circle cx="34" cy="30" r="2.6" fill="#B7211D"/>
+  <circle cx="50" cy="24" r="2.6" fill="#B7211D"/>
+  <circle cx="66" cy="30" r="2.6" fill="#B7211D"/>
+</svg>`;
+
+/* ================= KYRGYZSTAN OBLAST / RAION DATA (approx centers, used to place the map pin) ================= */
+const KG_REGIONS = {
+  'Бишкек ш.': { districts: { 'Ленин району':[42.850,74.580],'Октябрь району':[42.880,74.560],'Свердлов району':[42.865,74.610],'Биринчи май району':[42.845,74.615] } },
+  'Ош ш.': { districts: { 'Ош шаары':[40.533,72.797] } },
+  'Чүй облусу': { districts: { 'Аламүдүн району':[42.845,74.660],'Жайыл району':[42.880,73.700],'Кемин району':[42.780,75.700],'Москва району':[42.780,73.900],'Панфилов району':[42.900,73.500],'Сокулук району':[42.850,74.280],'Чүй району':[42.980,74.850],'Ысык-Ата району':[42.700,74.900],'Кант шаары':[42.891,74.847] } },
+  'Ысык-Көл облусу': { districts: { 'Ак-Суу району':[42.620,78.200],'Жети-Өгүз району':[42.400,78.150],'Иссык-Куль району':[42.630,77.080],'Тоң району':[42.170,77.500],'Түп району':[42.720,78.360],'Каракол шаары':[42.490,78.393] } },
+  'Нарын облусу': { districts: { 'Ак-Талаа району':[41.320,75.150],'Ат-Башы району':[41.170,75.800],'Жумгал району':[42.050,74.850],'Кочкор району':[42.210,75.750],'Нарын району':[41.430,76.000] } },
+  'Талас облусу': { districts: { 'Бакай-Ата району':[42.500,71.900],'Кара-Буура району':[42.480,71.650],'Манас району':[42.600,72.400],'Талас району':[42.522,72.240] } },
+  'Ош облусу': { districts: { 'Алай району':[39.700,73.400],'Араван району':[40.550,72.500],'Кара-Кулжа району':[40.550,73.450],'Кара-Суу району':[40.700,72.870],'Ноокат району':[40.280,72.620],'Өзгөн району':[40.770,73.300],'Чоң-Алай району':[39.700,71.900] } },
+  'Жалал-Абад облусу': { districts: { 'Аксы району':[41.400,71.600],'Ала-Бука району':[41.350,71.450],'Базар-Коргон району':[41.050,72.750],'Ноокен району':[40.920,72.870],'Сузак району':[40.850,73.100],'Тогуз-Торо району':[41.400,73.300],'Токтогул району':[41.870,72.950],'Чаткал району':[41.750,71.400],'Жалал-Абад шаары':[40.933,72.996] } },
+  'Баткен облусу': { districts: { 'Баткен району':[40.060,70.820],'Кадамжай району':[40.140,71.700],'Лейлек району':[39.900,69.900],'Баткен шаары':[40.061,70.818] } },
+};
+
+/* ================= STATE ================= */
+let state = {
+  view: 'auth',            // auth | menu | cart | admin | chat | orderStatus
+  profile: null,           // {phone, email}
+  menu: [],
+  cart: {},                // itemId -> qty
+  category: 'Баары',
+  chat: [],
+  adminUnlocked: false,
+  pin: '',
+  order: null,             // {etaMinutes, placedAt, items, total, address, oblast, district}
+  starDraft: 0,
+  chatImgDraft: null,
+  addrOblast: '',
+  addrDistrict: '',
+  addrStreet: '',
+  mapInstance: null,
+  mapMarker: null,
+  geocodeTimer: null
+};
+const PIN_CODE = '1234';
+const CATS = ['Баары','Бургер','Шаурма','Тоок','Пицца','Ичимдик'];
+
+const DEFAULT_MENU = [
+  {id:'f1', name:'King Zinger Бургер', desc:'Куурулган тоок эти, жалбырак, король соусу', price:220, cat:'Бургер', emoji:'🍔'},
+  {id:'f2', name:'Дабл Чиз Бургер', desc:'Эки котлет, эки сыр, тузделген бадыраң', price:260, cat:'Бургер', emoji:'🍔'},
+  {id:'f3', name:'Классик Шаурма', desc:'Тоок, жашылчалар, сарымсак соусу, лаваш', price:180, cat:'Шаурма', emoji:'🌯'},
+  {id:'f4', name:'King Шаурма XL', desc:'Чоң өлчөм, эки эсе эт, картошка кошулган', price:230, cat:'Шаурма', emoji:'🌯'},
+  {id:'f5', name:'Крылышки Halal (6дана)', desc:'Хрустящий тоок канаттары, тандалма соус', price:210, cat:'Тоок', emoji:'🍗'},
+  {id:'f6', name:'Наггетс (9дана)', desc:'Тоок эттен, кетчуп менен', price:190, cat:'Тоок', emoji:'🍗'},
+  {id:'f7', name:'Пепперони Пицца Halal', desc:'Тоок пепперони, моцарелла, 30см', price:390, cat:'Пицца', emoji:'🍕'},
+  {id:'f8', name:'Картошка Фри', desc:'Хрустящий, король татымдары менен', price:110, cat:'Тоок', emoji:'🍟'},
+  {id:'f9', name:'Кола 0.5л', desc:'Муздак, газдалган', price:60, cat:'Ичимдик', emoji:'🥤'},
+  {id:'f10', name:'Компот', desc:'Үй жасаган, кургатылган мөмө', price:70, cat:'Ичимдик', emoji:'🧃'}
+];
+
+/* ================= STORAGE HELPERS ================= */
+async function sGet(key, shared){
+  try{ const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function sSet(key, value, shared){
+  try{ await window.storage.set(key, JSON.stringify(value), shared); return true; }
+  catch(e){ console.error('storage error', e); return false; }
+}
+
+/* ================= INIT ================= */
+async function boot(){
+  const profile = await sGet('kfh:profile', false);
+  if(profile){ state.profile = profile; state.view = 'menu'; }
+
+  let menu = await sGet('kfh:menu', true);
+  if(!menu || !Array.isArray(menu) || menu.length === 0){
+    menu = DEFAULT_MENU;
+    await sSet('kfh:menu', menu, true);
+  }
+  state.menu = menu;
+
+  const cart = await sGet('kfh:cart', false);
+  if(cart) state.cart = cart;
+
+  const savedAddr = await sGet('kfh:address', false);
+  if(savedAddr){
+    state.addrOblast = savedAddr.oblast || '';
+    state.addrDistrict = savedAddr.district || '';
+    state.addrStreet = savedAddr.street || '';
+  }
+
+  const chat = await sGet('kfh:chat', true);
+  state.chat = chat || [];
+
+  render();
+  setInterval(pollShared, 4000);
+}
+
+async function pollShared(){
+  const menu = await sGet('kfh:menu', true);
+  if(menu) state.menu = menu;
+  const chat = await sGet('kfh:chat', true);
+  if(chat) state.chat = chat;
+  if(state.view === 'menu' || state.view === 'admin' || state.view === 'chat' || state.view === 'cart'){
+    render();
+  }
+}
+
+/* ================= UTIL ================= */
+function money(n){ return n.toLocaleString('ru-RU') + ' сом'; }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+function cartCount(){ return Object.values(state.cart).reduce((a,b)=>a+b,0); }
+function cartTotal(){
+  return Object.entries(state.cart).reduce((sum,[id,qty])=>{
+    const item = state.menu.find(m=>m.id===id);
+    return sum + (item ? item.price*qty : 0);
+  },0);
+}
+function timeAgo(ts){
+  const diff = Math.floor((Date.now()-ts)/1000);
+  if(diff<60) return 'азыр эле';
+  if(diff<3600) return Math.floor(diff/60)+' мүн мурун';
+  return Math.floor(diff/3600)+' саат мурун';
+}
+
+/* ================= RENDER: TOPBAR ================= */
+function renderTopbar(){
+  const tb = document.getElementById('topbar');
+  tb.innerHTML = `
+    <div class="crest">${CREST_SVG}</div>
+    <div class="brandtext"><b>King Food</b><span>Halal Delivery</span></div>
+    <div class="headline-spacer"></div>
+    ${state.profile ? `<div class="icon-btn" title="Профиль">👤</div>` : ``}
+  `;
+}
+
+/* ================= RENDER: BOTTOM NAV ================= */
+function renderNav(){
+  const nav = document.getElementById('bottomnav');
+  if(state.view === 'auth'){ nav.innerHTML=''; return; }
+  const items = [
+    {id:'menu', ic:'🍽️', label:'Меню'},
+    {id:'cart', ic:'🧺', label:'Себет', badge: cartCount()},
+    {id:'chat', ic:'💬', label:'Чат'},
+    {id:'admin', ic:'🛠️', label:'Админ'},
+  ];
+  nav.innerHTML = items.map(it => `
+    <button data-nav="${it.id}" class="${state.view===it.id?'active':''}">
+      <span class="ic">${it.ic}</span>${it.label}
+      ${it.badge ? `<span class="navbadge">${it.badge}</span>` : ''}
+    </button>
+  `).join('');
+  nav.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{ state.view = b.dataset.nav; if(b.dataset.nav!=='admin') {} render(); });
+  });
+}
+
+/* ================= RENDER ROOT ================= */
+function render(){
+  renderTopbar();
+  renderNav();
+  const app = document.getElementById('app');
+  const chatbar = document.getElementById('chatbar');
+  chatbar.innerHTML = '';
+  if(state.view === 'auth') app.innerHTML = viewAuth();
+  else if(state.view === 'menu') app.innerHTML = viewMenu();
+  else if(state.view === 'cart') app.innerHTML = viewCart();
+  else if(state.view === 'orderStatus') app.innerHTML = viewOrderStatus();
+  else if(state.view === 'admin') app.innerHTML = viewAdmin();
+  else if(state.view === 'chat'){ app.innerHTML = viewChat(); chatbar.innerHTML = chatInputBar(); }
+  attachHandlers();
+
+  if(state.view === 'cart' && Object.values(state.cart).some(q=>q>0)){
+    state.mapInstance = null; // force fresh init since DOM node is new
+    refreshMapForCurrentAddress();
+  } else if(state.view === 'orderStatus' && state.order){
+    state.mapInstance = null;
+    const coords = (KG_REGIONS[state.order.oblast] && KG_REGIONS[state.order.oblast].districts[state.order.district])
+      || currentAddrCoords();
+    initOrUpdateMap(coords, {zoom:14});
+  }
+}
+
+/* ================= VIEW: AUTH ================= */
+function viewAuth(){
+  return `
+  <div class="auth-wrap">
+    <div class="auth-crest">${CREST_SVG}</div>
+    <h1 class="auth-title">King Food Halal</h1>
+    <p class="auth-sub">Даамдуу халал тамактарды буйрутма кылуу үчүн катталыңыз</p>
+    <div class="auth-card">
+      <div class="field">
+        <label>Телефон номери</label>
+        <input type="tel" id="inPhone" placeholder="+996 700 00 00 00" value="${state.draftPhone||''}">
+        <div class="err" id="errPhone">Телефон номерин туура киргизиңиз</div>
+      </div>
+      <div class="field">
+        <label>Gmail дареги</label>
+        <input type="email" id="inEmail" placeholder="ysimal@gmail.com" value="${state.draftEmail||''}">
+        <div class="err" id="errEmail">Туура Gmail дарегин киргизиңиз</div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btnRegister">Катталуу жана кирүү</button>
+      <div class="divider">же</div>
+      <button class="btn google-btn btn-block" id="btnGoogle">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.6 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.6 6.1 29.6 4 24 4c-7.5 0-14 4.1-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.5 35.4 26.9 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.6 5.1C9.9 39.8 16.4 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.5l6.5 5.5C41.5 36.4 44 30.7 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+        Google менен кирүү
+      </button>
+      <p class="hint" style="margin-top:12px;text-align:center;">Катталуу менен сиз тамак-аш менюсуна жана заказ тарыхыңызга ээ болосуз</p>
+    </div>
+  </div>`;
+}
+
+/* ================= VIEW: MENU ================= */
+function viewMenu(){
+  const filtered = state.category === 'Баары' ? state.menu : state.menu.filter(m=>m.cat===state.category);
+  return `
+    <h1 class="pagehead">Салам, ${state.profile ? esc(state.profile.phone) : 'конок'} 👋</h1>
+    <p class="subhead">Бүгүн эмне каалайсыз? Баардык тамактар 100% Halal сертификатталган.</p>
+    <div class="chips">
+      ${CATS.map(c=>`<div class="chip ${state.category===c?'active':''}" data-cat="${c}">${c}</div>`).join('')}
+    </div>
+    ${filtered.length===0 ? emptyState('🍽️','Бул категорияда тамак жок','Админ панелден кошуп коюңуз') :
+      filtered.map(item => foodCard(item)).join('')}
+  `;
+}
+function foodCard(item){
+  const qty = state.cart[item.id] || 0;
+  return `
+  <div class="food-card">
+    <div class="halal-badge">HALAL ✓</div>
+    <div class="food-emoji">${item.emoji||'🍽️'}</div>
+    <div class="food-info">
+      <p class="food-name">${esc(item.name)}</p>
+      <p class="food-desc">${esc(item.desc||'')}</p>
+      <div class="food-bottom">
+        <span class="food-price">${money(item.price)}</span>
+        ${qty===0 ?
+          `<button class="add-btn" data-add="${item.id}">+ Кошуу</button>` :
+          `<div class="qty-ctl">
+            <button data-dec="${item.id}">−</button>
+            <span>${qty}</span>
+            <button data-inc="${item.id}">+</button>
+          </div>`
         }
-        
-        try {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            firebaseReady = true;
-            console.log("✅ Firebase ийгиликтүү туташты!");
-            return true;
-        } catch(e) {
-            console.error("Firebase катасы:", e);
-            showToast("❌ Firebase катасы! Демо режимде иштеп жатат.", true);
-            return false;
-        }
+      </div>
+    </div>
+  </div>`;
+}
+function emptyState(em, title, sub){
+  return `<div class="empty"><div class="em">${em}</div><b>${title}</b><span>${sub}</span></div>`;
+}
+
+/* ================= VIEW: CART ================= */
+function viewCart(){
+  const entries = Object.entries(state.cart).filter(([id,qty])=>qty>0);
+  if(entries.length===0){
+    return `<h1 class="pagehead">Себет</h1><p class="subhead">Буйрутма берүү үчүн менюдан тамак тандаңыз</p>${emptyState('🧺','Себет бош','Менюга өтүп тамак кошуңуз')}`;
+  }
+  const total = cartTotal();
+  const delivery = total >= 500 ? 0 : 60;
+  return `
+    <h1 class="pagehead">Себет</h1>
+    <p class="subhead">Заказыңызды текшерип, дарегиңизди көрсөтүңүз</p>
+    ${entries.map(([id,qty])=>{
+      const item = state.menu.find(m=>m.id===id);
+      if(!item) return '';
+      return `
+      <div class="cart-item">
+        <div class="food-emoji">${item.emoji||'🍽️'}</div>
+        <div style="flex:1;">
+          <p class="ci-name">${esc(item.name)}</p>
+          <span class="ci-price">${qty} × ${money(item.price)}</span>
+        </div>
+        <div class="qty-ctl">
+          <button data-dec="${id}">−</button><span>${qty}</span><button data-inc="${id}">+</button>
+        </div>
+        <button class="ci-remove" data-remove="${id}">✕</button>
+      </div>`;
+    }).join('')}
+
+    <p class="subhead" style="margin:14px 0 6px 0;">Жеткирүү дареги</p>
+    <div class="addr-row">
+      <div class="field">
+        <label>Облусу</label>
+        <select id="selOblast">
+          <option value="">Тандаңыз</option>
+          ${Object.keys(KG_REGIONS).map(o=>`<option value="${o}" ${state.addrOblast===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Району</label>
+        <select id="selDistrict" ${!state.addrOblast?'disabled':''}>
+          <option value="">Тандаңыз</option>
+          ${state.addrOblast ? Object.keys(KG_REGIONS[state.addrOblast].districts).map(d=>`<option value="${d}" ${state.addrDistrict===d?'selected':''}>${d}</option>`).join('') : ''}
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Көчө, үй №, кв.</label>
+      <input type="text" id="inStreet" placeholder="Мисалы: Ленин көчөсү 15, 4-кв." value="${esc(state.addrStreet||'')}">
+    </div>
+
+    <div class="map-box" id="mapBox">
+      <div id="leafletMap" style="width:100%;height:100%;"></div>
+      <div class="eta-badge">⏱ Даярдалуу убактысы: 20–35 мүн</div>
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-row"><span>Тамактар</span><span class="val">${money(total)}</span></div>
+      <div class="summary-row"><span>Жеткирүү</span><span class="val">${delivery===0?'Акысыз':money(delivery)}</span></div>
+      <div class="summary-row total"><span>Жалпы сумма</span><span class="val">${money(total+delivery)}</span></div>
+    </div>
+    <button class="btn btn-primary btn-block" id="btnPlaceOrder">Заказ берүү</button>
+  `;
+}
+
+/* ================= VIEW: ORDER STATUS ================= */
+function viewOrderStatus(){
+  if(!state.order) { state.view='menu'; return viewMenu(); }
+  return `
+  <div class="order-status">
+    <div style="font-size:52px;">🧾</div>
+    <h1 class="pagehead">Заказ кабыл алынды!</h1>
+    <p class="subhead">Курьер жакында жолго чыгат. Даяр болушуна калган убакыт:</p>
+    <div class="order-timer" id="orderTimer">--:--</div>
+    <div class="map-box" style="margin-top:14px;">
+      <div id="leafletMap" style="width:100%;height:100%;"></div>
+      <div class="eta-badge" id="etaBadge">⏱ Даярдалууда...</div>
+    </div>
+    <div class="summary-box" style="text-align:left;">
+      <div class="summary-row"><span>Дарек</span><span class="val">${esc(state.order.address||'—')}</span></div>
+      <div class="summary-row"><span>Аймак</span><span class="val">${esc(state.order.district||'')}, ${esc(state.order.oblast||'')}</span></div>
+      <div class="summary-row total"><span>Төлөнүүчү сумма</span><span class="val">${money(state.order.total)}</span></div>
+    </div>
+    <button class="btn btn-ghost btn-block" id="btnBackToMenu">Менюга кайтуу</button>
+  </div>`;
+}
+
+/* ================= VIEW: ADMIN ================= */
+function viewAdmin(){
+  if(!state.adminUnlocked){
+    const dots = state.pin.length;
+    return `
+    <div class="pin-wrap">
+      <div style="font-size:40px;">🔐</div>
+      <h1 class="pagehead">Админ панели</h1>
+      <p class="subhead">Кирүү үчүн PIN кодду киргизиңиз</p>
+      <div class="pin-dots">
+        ${[0,1,2,3].map(i=>`<span class="${i<dots?'filled':''}"></span>`).join('')}
+      </div>
+      <div class="keypad">
+        ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`<button data-key="${k}">${k}</button>`).join('')}
+      </div>
+      <p class="hint" style="margin-top:14px;">Демо PIN: 1234</p>
+    </div>`;
+  }
+  return `
+    <h1 class="pagehead">Админ панели</h1>
+    <p class="subhead">Жаңы тамак кошсоңуз, ал бардык колдонуучулардын телефонунда автоматтык түрдө көрүнөт.</p>
+    <div class="auth-card" style="margin-bottom:20px;">
+      <div class="field"><label>Тамактын аты</label><input type="text" id="adName" placeholder="Мисалы: Чиз Бургер"></div>
+      <div class="grid2">
+        <div class="field"><label>Баасы (сом)</label><input type="number" id="adPrice" placeholder="200"></div>
+        <div class="field"><label>Эмодзи</label><input type="text" id="adEmoji" placeholder="🍔"></div>
+      </div>
+      <div class="field"><label>Категория</label>
+        <select id="adCat" style="width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);padding:13px 14px;border-radius:12px;font-size:14.5px;">
+          ${CATS.filter(c=>c!=='Баары').map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Сыпаттамасы</label><textarea id="adDesc" rows="2" placeholder="Кыскача сыпаттама"></textarea></div>
+      <button class="btn btn-gold btn-block" id="btnAddItem">+ Менюга кошуу</button>
+    </div>
+    <p class="subhead" style="margin-bottom:8px;">Учурдагы меню (${state.menu.length})</p>
+    ${state.menu.map(item => `
+      <div class="admin-item-row">
+        <div class="food-emoji">${item.emoji||'🍽️'}</div>
+        <span class="aname">${esc(item.name)} · ${money(item.price)}</span>
+        <button class="adel" data-deleteitem="${item.id}">✕</button>
+      </div>
+    `).join('')}
+    <button class="btn btn-ghost btn-block" id="btnLockAdmin" style="margin-top:16px;">Админден чыгуу</button>
+  `;
+}
+
+/* ================= VIEW: CHAT ================= */
+function viewChat(){
+  return `
+    <h1 class="pagehead">Пикирлер жана чат</h1>
+    <p class="subhead">Сурак, сунуш же пикириңизди калтырыңыз. Биз менен тез байланышыңыз:</p>
+    <a href="tel:+996700000000" class="btn btn-gold btn-block" style="text-decoration:none; margin-bottom:16px;">📞 Чалуу: +996 700 00 00 00</a>
+    <div class="chat-scroll">
+      ${state.chat.length===0 ? emptyState('💬','Азырынча пикир жок','Биринчи болуп жазыңыз!') :
+        [...state.chat].sort((a,b)=>a.ts-b.ts).map(m => `
+        <div class="msg">
+          <div class="m-top"><span class="m-name">${esc(m.name)}</span><span class="m-time">${timeAgo(m.ts)}</span></div>
+          ${m.rating ? `<div class="m-stars">${'★'.repeat(m.rating)}${'☆'.repeat(5-m.rating)}</div>` : ''}
+          <div class="m-text">${esc(m.text)}</div>
+          ${m.img ? `<img class="m-img" src="${m.img}">` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function chatInputBar(){
+  return `
+    <div class="chat-input-bar">
+      <label class="round-btn" for="chatImgInput">📷</label>
+      <input type="file" id="chatImgInput" accept="image/*" style="display:none;">
+      <input type="text" id="chatTextInput" placeholder="Билдирүү жазыңыз...">
+      <button class="round-btn send" id="btnSendChat">➤</button>
+    </div>
+  `;
+}
+
+/* ================= MAP (Leaflet + district fallback + live geocoding) ================= */
+function currentAddrCoords(){
+  if(state.addrOblast && state.addrDistrict && KG_REGIONS[state.addrOblast] && KG_REGIONS[state.addrOblast].districts[state.addrDistrict]){
+    return KG_REGIONS[state.addrOblast].districts[state.addrDistrict];
+  }
+  return [42.8746, 74.5698]; // default: Бишкек
+}
+
+function initOrUpdateMap(coords, opts){
+  opts = opts || {};
+  const el = document.getElementById('leafletMap');
+  if(!el || typeof L === 'undefined') return;
+  if(!state.mapInstance || state.mapInstance._container !== el){
+    // (re)create map because DOM node is fresh after re-render
+    state.mapInstance = L.map(el, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:false })
+      .setView(coords, opts.zoom || 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 18
+    }).addTo(state.mapInstance);
+    const icon = L.divIcon({ className:'', html:'<div class="courier-pin">📍</div>', iconSize:[26,26], iconAnchor:[13,24] });
+    state.mapMarker = L.marker(coords, {icon}).addTo(state.mapInstance);
+  } else {
+    state.mapInstance.setView(coords, opts.zoom || state.mapInstance.getZoom());
+    state.mapMarker.setLatLng(coords);
+  }
+  setTimeout(()=>{ if(state.mapInstance) state.mapInstance.invalidateSize(); }, 150);
+}
+
+async function tryLiveGeocode(oblast, district, street){
+  if(!street || street.length < 3) return;
+  const box = document.getElementById('mapBox');
+  let loader;
+  if(box && !box.querySelector('.map-locating')){
+    loader = document.createElement('div');
+    loader.className = 'map-locating';
+    loader.textContent = '📍 Дарек аныкталууда...';
+    box.appendChild(loader);
+  }
+  try{
+    const query = encodeURIComponent(`${street}, ${district}, ${oblast}, Кыргызстан`);
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`);
+    const data = await res.json();
+    if(data && data[0]){
+      const coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      initOrUpdateMap(coords, {zoom:16});
     }
-    
-    // ==================== БАШТАПКЫ МААЛЫМАТТАР ====================
-    let menu = {
-        shaurma: [], burger: [], hotdog: [], combo: [], salads: [], drinks: [], snacks: []
-    };
-    let cart = [];
-    let isAdminLoggedIn = false;
-    const ADMIN_PASSWORD = "king123";
-    
-    const defaultMenu = {
-        shaurma: [
-            {id:"sh1",name:"Шаурма тоок этинен",price:240},
-            {id:"sh2",name:"Шаурма уй этинен",price:250},
-            {id:"sh3",name:"Бышырылган Шаурма",price:260}
-        ],
-        burger: [
-            {id:"bg1",name:"Кинг Бургер",price:230},
-            {id:"bg2",name:"Кош Кинг Бургер",price:270},
-            {id:"bg3",name:"Чизбургер",price:230},
-            {id:"bg4",name:"Кош Чизбургер",price:270},
-            {id:"bg5",name:"Чикен бургер",price:220},
-            {id:"bg6",name:"Кош Чикен бургер",price:250}
-        ],
-        hotdog: [
-            {id:"hd1",name:"Классика Хот-Дог",price:170},
-            {id:"hd2",name:"Острый Хот-Дог",price:180},
-            {id:"hd3",name:"Чиз Хот-Дог",price:190}
-        ],
-        combo: [
-            {id:"cb1",name:"Кинг комбо",price:650},
-            {id:"cb2",name:"03 комбо",price:550}
-        ],
-        salads: [
-            {id:"sal1",name:"Цезарь салаты",price:220},
-            {id:"sal2",name:"Цезарь салаты (чоң)",price:260}
-        ],
-        drinks: [
-            {id:"dr1",name:"Султан чай 1л",price:75},
-            {id:"dr2",name:"Мохито 0.5л",price:85},
-            {id:"dr3",name:"Нитро 0.5л",price:85},
-            {id:"dr4",name:"Летс гоу 1.25л",price:110},
-            {id:"dr5",name:"Летс гоу (груша) 0.5л",price:60},
-            {id:"dr6",name:"Кола/Фанта/Пепси 1л",price:110},
-            {id:"dr7",name:"Чай Пиала 1л",price:100},
-            {id:"dr8",name:"Асу 1л",price:80}
-        ],
-        snacks: [
-            {id:"sn1",name:"Фри S 150гр",price:150},
-            {id:"sn2",name:"Фри M 220гр",price:170},
-            {id:"sn3",name:"Чили Чиз-Фрайс",price:220},
-            {id:"sn4",name:"Наггетсы",price:170}
-        ]
-    };
-    
-    // ==================== FIREBASE РЕАЛДУУ УБАҚЫТТА ЖАНЫЛОО ====================
-    function loadMenuFromFirebase() {
-        if (!firebaseReady || !database) {
-            const saved = localStorage.getItem('king_food_menu_demo');
-            if (saved) {
-                menu = JSON.parse(saved);
-            } else {
-                menu = JSON.parse(JSON.stringify(defaultMenu));
-            }
-            renderMenu();
-            return;
+  }catch(e){ /* geocoding failed silently, district-level pin stays */ }
+  finally{
+    const l = document.querySelector('.map-locating');
+    if(l) l.remove();
+  }
+}
+
+function refreshMapForCurrentAddress(){
+  const coords = currentAddrCoords();
+  const zoom = (state.addrOblast && state.addrDistrict) ? 13 : 7;
+  initOrUpdateMap(coords, {zoom});
+}
+
+/* ================= ESCAPE ================= */
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ================= VALIDATION ================= */
+function validPhone(v){ return /^\+?\d[\d\s\-]{8,14}\d$/.test(v.trim()); }
+function validEmail(v){ return /^[^\s@]+@gmail\.com$/i.test(v.trim()); }
+
+/* ================= HANDLERS ================= */
+function attachHandlers(){
+  const app = document.getElementById('app');
+
+  // --- AUTH ---
+  const btnReg = document.getElementById('btnRegister');
+  if(btnReg){
+    btnReg.addEventListener('click', async ()=>{
+      const phone = document.getElementById('inPhone').value;
+      const email = document.getElementById('inEmail').value;
+      let ok = true;
+      document.getElementById('errPhone').style.display='none';
+      document.getElementById('errEmail').style.display='none';
+      if(!validPhone(phone)){ document.getElementById('errPhone').style.display='block'; ok=false; }
+      if(!validEmail(email)){ document.getElementById('errEmail').style.display='block'; ok=false; }
+      if(!ok) return;
+      state.profile = {phone: phone.trim(), email: email.trim()};
+      await sSet('kfh:profile', state.profile, false);
+      state.view = 'menu';
+      showToast('Ийгиликтүү катталдыңыз!');
+      render();
+    });
+  }
+  const btnGoogle = document.getElementById('btnGoogle');
+  if(btnGoogle){
+    btnGoogle.addEventListener('click', async ()=>{
+      const email = prompt('Gmail дарегиңизди киргизиңиз:');
+      if(!email) return;
+      if(!validEmail(email)){ showToast('Gmail дареги туура эмес'); return; }
+      const phone = document.getElementById('inPhone').value || 'Google колдонуучу';
+      state.profile = {phone: phone.trim(), email: email.trim()};
+      await sSet('kfh:profile', state.profile, false);
+      state.view = 'menu';
+      showToast('Google менен киришиңиз ийгиликтүү!');
+      render();
+    });
+  }
+
+  // --- CATEGORY CHIPS ---
+  app.querySelectorAll('[data-cat]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.category = el.dataset.cat; render(); });
+  });
+
+  // --- ADD / INC / DEC / REMOVE CART ---
+  app.querySelectorAll('[data-add]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.add;
+      state.cart[id] = (state.cart[id]||0)+1;
+      await sSet('kfh:cart', state.cart, false);
+      showToast('Себетке кошулду');
+      render();
+    });
+  });
+  app.querySelectorAll('[data-inc]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.inc;
+      state.cart[id] = (state.cart[id]||0)+1;
+      await sSet('kfh:cart', state.cart, false);
+      render();
+    });
+  });
+  app.querySelectorAll('[data-dec]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.dec;
+      state.cart[id] = Math.max(0,(state.cart[id]||0)-1);
+      await sSet('kfh:cart', state.cart, false);
+      render();
+    });
+  });
+  app.querySelectorAll('[data-remove]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.remove;
+      delete state.cart[id];
+      await sSet('kfh:cart', state.cart, false);
+      render();
+    });
+  });
+
+  // --- ADDRESS: OBLAST / DISTRICT / STREET ---
+  const selOblast = document.getElementById('selOblast');
+  if(selOblast){
+    selOblast.addEventListener('change', ()=>{
+      state.addrOblast = selOblast.value;
+      state.addrDistrict = '';
+      render();
+    });
+  }
+  const selDistrict = document.getElementById('selDistrict');
+  if(selDistrict){
+    selDistrict.addEventListener('change', ()=>{
+      state.addrDistrict = selDistrict.value;
+      refreshMapForCurrentAddress();
+      const s = document.getElementById('inStreet');
+      if(s && s.value.trim()) tryLiveGeocode(state.addrOblast, state.addrDistrict, s.value.trim());
+    });
+  }
+  const inStreet = document.getElementById('inStreet');
+  if(inStreet){
+    inStreet.addEventListener('input', ()=>{
+      state.addrStreet = inStreet.value;
+      clearTimeout(state.geocodeTimer);
+      state.geocodeTimer = setTimeout(()=>{
+        if(state.addrOblast && state.addrDistrict){
+          tryLiveGeocode(state.addrOblast, state.addrDistrict, inStreet.value.trim());
         }
-        
-        showLoading(true);
-        
-        // .once ордуна .on колдонулуп, реалдуу убакытта базаны угат
-        database.ref('menu').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                menu = data;
-                console.log("✅ Меню базадан жаңыртылды!");
-            } else {
-                menu = JSON.parse(JSON.stringify(defaultMenu));
-                saveMenuToFirebase();
-            }
-            renderMenu();
-            
-            // Башкаруу панели ачык болсо, аны да автоматтык түрдө жаңылайт
-            const adminPanel = document.getElementById('adminPanel');
-            if (isAdminLoggedIn && adminPanel && adminPanel.classList.contains('open')) {
-                renderAdmin();
-            }
-            showLoading(false);
-        }, (error) => {
-            console.error("Firebase катасы:", error);
-            showToast("❌ Базадан жүктөөдө ката кетти!", true);
-            showLoading(false);
-        });
-    }
-    
-    async function saveMenuToFirebase() {
-        if (!firebaseReady || !database) {
-            localStorage.setItem('king_food_menu_demo', JSON.stringify(menu));
-            return Promise.resolve();
-        }
-        
-        try {
-            await database.ref('menu').set(menu);
-        } catch(e) {
-            console.error("Firebase сактоо катасы:", e);
-            localStorage.setItem('king_food_menu_demo', JSON.stringify(menu));
-        }
-    }
-    
-    async function loadCartFromFirebase() {
-        if (!firebaseReady || !database) {
-            const saved = localStorage.getItem('king_food_cart_demo');
-            if (saved) cart = JSON.parse(saved);
-            updateCart();
-            return;
-        }
-        
-        let userId = localStorage.getItem('userId');
-        if (!userId) {
-            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('userId', userId);
-        }
-        
-        try {
-            const snapshot = await database.ref('carts/' + userId).once('value');
-            const data = snapshot.val();
-            if (data && data.items) cart = data.items;
-            updateCart();
-        } catch(e) {
-            console.error("Корзина жүктөө катасы:", e);
-        }
-    }
-    
-    async function saveCartToFirebase() {
-        if (!firebaseReady || !database) {
-            localStorage.setItem('king_food_cart_demo', JSON.stringify(cart));
-            return;
-        }
-        
-        let userId = localStorage.getItem('userId');
-        try {
-            await database.ref('carts/' + userId).set({
-                items: cart,
-                updatedAt: Date.now()
-            });
-        } catch(e) {
-            console.error("Корзина сактоо катасы:", e);
-        }
-    }
-    
-    // ==================== UI ИШТӨӨСҮ ====================
-    function showLoading(show) {
-        const loader = document.getElementById('loading');
-        if (loader) loader.style.display = show ? 'flex' : 'none';
-    }
-    
-    function showToast(msg, isError = false) {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.style.background = isError ? 'var(--error)' : 'var(--primary)';
-        t.style.color = isError ? 'white' : 'var(--dark)';
-        t.innerHTML = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    function renderMenu() {
-        const categories = {
-            shaurma: 'shaurmaGrid', burger: 'burgerGrid', hotdog: 'hotdogGrid',
-            combo: 'comboGrid', salads: 'saladsGrid', drinks: 'drinksGrid', snacks: 'snacksGrid'
-        };
-        
-        for (const [cat, gridId] of Object.entries(categories)) {
-            const container = document.getElementById(gridId);
-            if (container && menu[cat]) {
-                container.innerHTML = '';
-                menu[cat].forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'menu-item';
-                    div.innerHTML = `
-                        <div>
-                            <div class="item-name">${escapeHtml(item.name)}</div>
-                            <div class="item-price">${item.price} сом</div>
-                        </div>
-                        <button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}">
-                            <i class="fas fa-plus-circle"></i> Кошуу
-                        </button>
-                    `;
-                    container.appendChild(div);
-                });
-                
-                container.querySelectorAll('.add-btn').forEach(btn => {
-                    btn.onclick = () => {
-                        addToCart({
-                            id: btn.dataset.id,
-                            name: btn.dataset.name,
-                            price: parseInt(btn.dataset.price)
-                        });
-                    };
-                });
-            }
-        }
-    }
-    
-    function updateCart() {
-        const count = cart.reduce((s, i) => s + i.qty, 0);
-        document.getElementById('cartCount').innerText = count;
-        document.getElementById('cartBadge').innerText = count;
-        
-        const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-        document.getElementById('cartTotal').innerHTML = `Жалпы сумма: ${total} сом`;
-        
-        const container = document.getElementById('cartItemsList');
-        if (cart.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:2rem;">🛒 Себет бош</div>';
-            return;
-        }
-        
-        let html = '';
-        cart.forEach(i => {
-            html += `
-                <div class="cart-item">
-                    <div>
-                        <strong>${escapeHtml(i.name)}</strong><br>${i.price} сом
-                    </div>
-                    <div class="cart-qty">
-                        <button onclick="changeQty('${i.id}', -1)">-</button>
-                        <span>${i.qty}</span>
-                        <button onclick="changeQty('${i.id}', 1)">+</button>
-                        <button onclick="removeItem('${i.id}')">✕</button>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-        saveCartToFirebase();
-    }
-    
-    function addToCart(item) {
-        const exist = cart.find(i => i.id === item.id);
-        if (exist) {
-            exist.qty++;
-            showToast(item.name + ' +1');
-        } else {
-            cart.push({ ...item, qty: 1 });
-            showToast(item.name + ' кошулду');
-        }
-        updateCart();
-    }
-    
-    function changeQty(id, delta) {
-        const idx = cart.findIndex(i => i.id === id);
-        if (idx !== -1) {
-            const newQty = cart[idx].qty + delta;
-            if (newQty <= 0) {
-                cart.splice(idx, 1);
-            } else {
-                cart[idx].qty = newQty;
-            }
-            updateCart();
-        }
-    }
-    
-    function removeItem(id) {
-        cart = cart.filter(i => i.id !== id);
-        updateCart();
-        showToast('Алып салынды');
-    }
-    
-    // ==================== АДМИН ПАНЕЛИ ====================
-    function renderAdmin() {
-        if (!isAdminLoggedIn) return;
-        
-        const cats = ['shaurma', 'burger', 'hotdog', 'combo', 'salads', 'drinks', 'snacks'];
-        const titles = ['ШАУРМА', 'БУРГЕР', 'ХОТ-ДОГ', 'КОМБО', 'САЛАТТАР', 'СУУСУНДУКТАР', 'ЖЕНИЛ ТАМАКТАР'];
-        const container = document.getElementById('adminCategories');
-        container.innerHTML = '';
-        
-        for (let i = 0; i < cats.length; i++) {
-            const cat = cats[i];
-            const items = menu[cat] || [];
-            const div = document.createElement('div');
-            div.className = 'admin-category';
-            div.innerHTML = `
-                <h4 style="color:#d4af37; margin-bottom:10px;">${titles[i]}</h4>
-                <div id="admin_${cat}_items"></div>
-                <div class="add-item-form">
-                    <input type="text" id="newName_${cat}" placeholder="Жаңы тамак аты">
-                    <input type="number" id="newPrice_${cat}" placeholder="Баасы">
-                    <button onclick="addItem('${cat}')">➕ Кошуу</button>
-                </div>
-            `;
-            container.appendChild(div);
-            
-            const itemsDiv = document.getElementById(`admin_${cat}_items`);
-            if (itemsDiv) {
-                itemsDiv.innerHTML = '';
-                items.forEach((item, idx) => {
-                    itemsDiv.innerHTML += `
-                        <div class="admin-item">
-                            <input type="text" id="name_${cat}_${idx}" value="${escapeHtml(item.name)}" style="flex:2">
-                            <input type="number" id="price_${cat}_${idx}" value="${item.price}" style="flex:1">
-                            <button class="edit-btn" onclick="updateItem('${cat}', ${idx})">
-                                <i class="fas fa-save"></i> Сактоо
-                            </button>
-                            <button class="del-btn" onclick="deleteItem('${cat}', ${idx})">
-                                <i class="fas fa-trash"></i> Өчүрүү
-                            </button>
-                        </div>
-                    `;
-                });
-            }
-        }
-    }
-    
-    async function addItem(category) {
-        const nameInp = document.getElementById(`newName_${category}`);
-        const priceInp = document.getElementById(`newPrice_${category}`);
-        const newName = nameInp.value.trim();
-        const newPrice = parseInt(priceInp.value);
-        
-        if (!newName || isNaN(newPrice)) {
-            showToast('Аты жана баасы туура эмес!', true);
-            return;
-        }
-        
-        const newId = category + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-        menu[category].push({ id: newId, name: newName, price: newPrice });
-        
-        await saveMenuToFirebase();
-        showToast(`✅ "${newName}" кошулду!`);
-        
-        nameInp.value = '';
-        priceInp.value = '';
-    }
-    
-    async function updateItem(category, idx) {
-        const nameInp = document.getElementById(`name_${category}_${idx}`);
-        const priceInp = document.getElementById(`price_${category}_${idx}`);
-        const newName = nameInp.value.trim();
-        const newPrice = parseInt(priceInp.value);
-        
-        if (!newName || isNaN(newPrice)) {
-            showToast('Аты жана баасы туура эмес!', true);
-            return;
-        }
-        
-        menu[category][idx].name = newName;
-        menu[category][idx].price = newPrice;
-        
-        await saveMenuToFirebase();
-        showToast(`✅ Өзгөртүү сакталды!`);
-    }
-    
-    async function deleteItem(category, idx) {
-        const name = menu[category][idx].name;
-        if (confirm(`"${name}" өчүрүлсүнбү?`)) {
-            menu[category].splice(idx, 1);
-            await saveMenuToFirebase();
-            showToast(`🗑️ "${name}" өчүрүлдү!`);
-        }
-    }
-    
-    // ==================== ЗАКАЗ ЖӨНӨТҮҮ ====================
-    async function sendOrder(platform) {
-        if (cart.length === 0) {
-            alert('Себет бош!');
-            return;
-        }
-        
-        const address = document.getElementById('deliveryAddress').value.trim() || 'Адрес көрсөтүлгөн эмес';
-        let itemsText = '';
-        let total = 0;
-        
-        cart.forEach(i => {
-            itemsText += `✓ ${i.name} x${i.qty} = ${i.price * i.qty} сом\n`;
-            total += i.price * i.qty;
-        });
-        
-        const msg = `🛒 *KING FOOD HALAL ЗАКАЗЫ* 🍔\n\n${itemsText}\n━━━━━━━━━━━━━━━━━━\n💰 *Жалпы сумма: ${total} сом*\n📍 *Жеткирүү дареги:* ${address}\n━━━━━━━━━━━━━━━━━━\n📞 Байланыш: +996 778 03 12 03\n📸 @king.food.halal`;
-        
-        let url;
-        if (platform === 'whatsapp') {
-            url = `https://wa.me/996778031203?text=${encodeURIComponent(msg)}`;
-        } else {
-            url = `https://t.me/share/url?url=${encodeURIComponent('KING FOOD HALAL заказы')}&text=${encodeURIComponent(msg)}`;
-        }
-        
-        window.open(url, '_blank');
-        cart = [];
-        updateCart();
-        document.getElementById('cartModal').classList.remove('open');
-        showToast('Заказ жөнөтүлдү! Рахмат!');
-    }
-    
-    // ==================== БАРАКЧАЛАРДЫ БАШҚАРУҮ ====================
-    function showPage(n) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        document.getElementById(`page${n}`).classList.add('active');
-        document.getElementById(`nav${n}`).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    function checkAdminPassword() {
-        const pass = document.getElementById('adminPassword').value;
-        if (pass === ADMIN_PASSWORD) {
-            isAdminLoggedIn = true;
-            sessionStorage.setItem('isAdmin', 'true');
-            document.getElementById('passwordModal').classList.remove('open');
-            document.getElementById('adminPanel').classList.add('open');
-            renderAdmin();
-            showToast('✅ Админ режимине кирдиңиз!');
-            document.getElementById('pwdError').innerText = '';
-            document.getElementById('adminPassword').value = '';
-        } else {
-            document.getElementById('pwdError').innerText = '❌ Пароль туура эмес!';
-        }
-    }
-    
-    // ==================== ОКУЯЛАРДЫ ИНИЦИАЛИЗАЦИЯЛОО ====================
-    function initEvents() {
-        const cartModal = document.getElementById('cartModal');
-        const cartIconBtn = document.getElementById('cartIconBtn');
-        const closeCart = document.getElementById('closeCart');
-        const closeCartFooter = document.getElementById('closeCartFooter');
-        const whatsappOrder = document.getElementById('whatsappOrder');
-        const telegramOrder = document.getElementById('telegramOrder');
-        const cartBtn2 = document.getElementById('cartBtn2');
-        const adminToggleBtn = document.getElementById('adminToggleBtn');
-        const closeAdminPanel = document.getElementById('closeAdminPanel');
-        const adminPasswordInput = document.getElementById('adminPassword');
-        
-        if (cartIconBtn) cartIconBtn.onclick = () => cartModal.classList.add('open');
-        if (closeCart) closeCart.onclick = () => cartModal.classList.remove('open');
-        if (closeCartFooter) closeCartFooter.onclick = () => cartModal.classList.remove('open');
-        if (cartModal) cartModal.onclick = (e) => { if (e.target === cartModal) cartModal.classList.remove('open'); };
-        if (whatsappOrder) whatsappOrder.onclick = () => sendOrder('whatsapp');
-        if (telegramOrder) telegramOrder.onclick = () => sendOrder('telegram');
-        if (cartBtn2) cartBtn2.addEventListener('click', () => cartModal.classList.add('open'));
-        
-        if (adminToggleBtn) {
-            adminToggleBtn.onclick = () => {
-                if (isAdminLoggedIn) {
-                    const panel = document.getElementById('adminPanel');
-                    panel.classList.toggle('open');
-                    if (panel.classList.contains('open')) renderAdmin();
-                } else {
-                    document.getElementById('passwordModal').classList.add('open');
-                }
-            };
-        }
-        if (closeAdminPanel) closeAdminPanel.onclick = () => {
-            document.getElementById('adminPanel').classList.remove('open');
-        };
-        if (adminPasswordInput) {
-            adminPasswordInput.onkeypress = (e) => {
-                if (e.key === 'Enter') checkAdminPassword();
-            };
-        }
-        
-        if (sessionStorage.getItem('isAdmin') === 'true') {
-            isAdminLoggedIn = true;
-        }
-    }
-    
-    // Глобалдык функцияларды терезеге байлоо
-    window.changeQty = changeQty;
-    window.removeItem = removeItem;
-    window.addItem = addItem;
-    window.updateItem = updateItem;
-    window.deleteItem = deleteItem;
-    window.checkAdminPassword = checkAdminPassword;
-    window.showPage = showPage;
-    window.addToCart = addToCart;
-    
-    // БАШТОО
-    function init() {
-        initEvents();
-        initFirebase();
-        loadMenuFromFirebase();
-        loadCartFromFirebase();
-    }
-    
-    init();
+      }, 900);
+    });
+  }
+
+  // --- PLACE ORDER ---
+  const btnPlace = document.getElementById('btnPlaceOrder');
+  if(btnPlace){
+    btnPlace.addEventListener('click', async ()=>{
+      const oblast = state.addrOblast;
+      const district = state.addrDistrict;
+      const street = document.getElementById('inStreet').value.trim();
+      if(!oblast || !district){ showToast('Облус жана районду тандаңыз'); return; }
+      if(!street){ showToast('Көчө, үй номерин жазыңыз'); return; }
+      await sSet('kfh:address', {oblast, district, street}, false);
+      const total = cartTotal();
+      const delivery = total >= 500 ? 0 : 60;
+      const etaMinutes = 20 + Math.floor(Math.random()*16); // 20-35
+      const fullAddress = `${street}, ${district}, ${oblast}`;
+      state.order = { address: fullAddress, oblast, district, total: total+delivery, etaMinutes, placedAt: Date.now() };
+      state.cart = {};
+      await sSet('kfh:cart', state.cart, false);
+      state.view = 'orderStatus';
+      render();
+      startOrderCountdown();
+    });
+  }
+  const btnBackToMenu = document.getElementById('btnBackToMenu');
+  if(btnBackToMenu){
+    btnBackToMenu.addEventListener('click', ()=>{ state.order=null; state.view='menu'; render(); });
+  }
+
+  // --- ADMIN PIN KEYPAD ---
+  app.querySelectorAll('[data-key]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const k = el.dataset.key;
+      if(k==='') return;
+      if(k==='⌫'){ state.pin = state.pin.slice(0,-1); render(); return; }
+      if(state.pin.length>=4) return;
+      state.pin += k;
+      if(state.pin.length===4){
+        if(state.pin===PIN_CODE){ state.adminUnlocked = true; state.pin=''; showToast('Кош келиңиз, админ!'); }
+        else { showToast('PIN туура эмес'); state.pin=''; }
+      }
+      render();
+    });
+  });
+  const btnLockAdmin = document.getElementById('btnLockAdmin');
+  if(btnLockAdmin){ btnLockAdmin.addEventListener('click', ()=>{ state.adminUnlocked=false; render(); }); }
+
+  // --- ADMIN ADD ITEM ---
+  const btnAddItem = document.getElementById('btnAddItem');
+  if(btnAddItem){
+    btnAddItem.addEventListener('click', async ()=>{
+      const name = document.getElementById('adName').value.trim();
+      const price = parseInt(document.getElementById('adPrice').value,10);
+      const emoji = document.getElementById('adEmoji').value.trim() || '🍽️';
+      const cat = document.getElementById('adCat').value;
+      const desc = document.getElementById('adDesc').value.trim();
+      if(!name || !price){ showToast('Атын жана баасын толтуруңуз'); return; }
+      const newItem = {id:'f'+Date.now(), name, price, cat, emoji, desc};
+      state.menu = [...state.menu, newItem];
+      await sSet('kfh:menu', state.menu, true);
+      showToast('Меню жаңыртылды — баары көрөт!');
+      render();
+    });
+  }
+  app.querySelectorAll('[data-deleteitem]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.deleteitem;
+      state.menu = state.menu.filter(m=>m.id!==id);
+      await sSet('kfh:menu', state.menu, true);
+      render();
+    });
+  });
+
+  // --- CHAT ---
+  const btnSendChat = document.getElementById('btnSendChat');
+  if(btnSendChat){
+    btnSendChat.addEventListener('click', sendChatMessage);
+    const txt = document.getElementById('chatTextInput');
+    txt.addEventListener('keydown', e=>{ if(e.key==='Enter') sendChatMessage(); });
+    const imgIn = document.getElementById('chatImgInput');
+    imgIn.addEventListener('change', ()=>{
+      const file = imgIn.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{ state.chatImgDraft = reader.result; sendChatMessage(); };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+async function sendChatMessage(){
+  const txtEl = document.getElementById('chatTextInput');
+  const text = txtEl ? txtEl.value.trim() : '';
+  if(!text && !state.chatImgDraft) return;
+  const name = state.profile ? state.profile.phone : 'Конок';
+  const msg = { id:'m'+Date.now(), name, text: text || '📷 сүрөт', img: state.chatImgDraft || null, ts: Date.now() };
+  state.chat = [...state.chat, msg];
+  state.chatImgDraft = null;
+  await sSet('kfh:chat', state.chat, true);
+  render();
+}
+
+/* ================= ORDER COUNTDOWN ================= */
+function startOrderCountdown(){
+  clearInterval(startOrderCountdown._t);
+  startOrderCountdown._t = setInterval(()=>{
+    if(!state.order || state.view!=='orderStatus'){ clearInterval(startOrderCountdown._t); return; }
+    const elapsedSec = Math.floor((Date.now()-state.order.placedAt)/1000);
+    const totalSec = state.order.etaMinutes*60;
+    const remain = Math.max(0, totalSec - elapsedSec);
+    const mm = String(Math.floor(remain/60)).padStart(2,'0');
+    const ss = String(remain%60).padStart(2,'0');
+    const timerEl = document.getElementById('orderTimer');
+    const etaEl = document.getElementById('etaBadge');
+    if(timerEl) timerEl.textContent = `${mm}:${ss}`;
+    if(etaEl) etaEl.textContent = remain>0 ? `⏱ Даяр болууга: ${mm}:${ss}` : '✅ Тамагыңыз даяр, жеткирилүүдө!';
+    if(remain<=0) clearInterval(startOrderCountdown._t);
+  }, 1000);
+}
+
+boot();
 </script>
 </body>
 </html>
