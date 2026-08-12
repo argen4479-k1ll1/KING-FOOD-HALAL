@@ -229,7 +229,19 @@
     const WHATSAPP_NUMBER = "996778031203";
     const DELIVERY_ZONE = "Баткен району";
     const ADMIN_PASSWORD = "king123";
+
+    // jsonbin.io'дон (jsonbin.io сайтында катталып, жаңы Bin түзгөндөн кийин) алган
+    // Bin ID жана X-Master-Key ачкычын ушул жерге коюңуз.
+    // Жетишпесе меню бул браузерде гана иштеп, башка телефонго синхрондолбойт.
+    const JSONBIN_ID = "6a7c5e6f23a2f6593e59f379";
+    const JSONBIN_API_KEY = "$2a$10$vvV4YFAbbCrDfgvbnwQE2uSyeJQ1nNroPIxlgiZKTE0wwSlpzEM/K";
     /* ================= ▲▲▲ ЖӨНГӨ САЛУУ АЯКТАДЫ ▲▲▲ ================= */
+
+    const jsonbinReady = !JSONBIN_ID.includes("СЕНИН") && !JSONBIN_API_KEY.includes("СЕНИН");
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+    if (!jsonbinReady) {
+        console.warn("jsonbin.io конфигурациясы толтурулган эмес — жогорудагы JSONBIN_ID/JSONBIN_API_KEY толтуруңуз.");
+    }
 
     // Категориялардын так тизмеси - бул эле тизме меню, админ панель экөөндө тең колдонулат
     const CATS = [
@@ -263,64 +275,97 @@
         return String(str).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
     }
 
-    // ========== STORAGE HELPERS ==========
-    async function storageGet(key, shared) {
-        try {
-            const r = await window.storage.get(key, shared);
-            return r && r.value ? JSON.parse(r.value) : null;
-        } catch (e) { return null; }
-    }
-    async function storageSet(key, value, shared) {
-        try { await window.storage.set(key, JSON.stringify(value), shared); return true; }
-        catch (e) { console.error("storage error", e); return false; }
-    }
+    // ========== YARDAMCHY ==========
     function isTyping() {
         const el = document.activeElement;
         return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA"));
     }
+    function fillMissingAvailability(m) {
+        CATS.forEach(c => {
+            if (Array.isArray(m[c.key])) {
+                m[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
+            } else {
+                m[c.key] = [];
+            }
+        });
+        return m;
+    }
 
-    // ========== МЕНЮНУ САКТОО ЖАНА ЖҮКТӨӨ (БАРДЫК КОЛДОНУУЧУЛАРГА — SHARED) ==========
+    // ========== МЕНЮНУ САКТОО ЖАНА ЖҮКТӨӨ (JSONBIN.IO АРКЫЛУУ, БАРДЫК КОЛДОНУУЧУЛАРГА) ==========
+    // saveMenu() jsonbin.io'го жазат; ар бир браузер 4 секунд сайын текшерип,
+    // өзгөрүү болсо, менюну жаңылап турат (толук реалдуу убакыт эмес, бирок
+    // бир нече секунддун ичинде бардык телефондорго жетет).
+    async function jsonbinRead() {
+        const res = await fetch(`${JSONBIN_URL}/latest`, {
+            headers: { "X-Master-Key": JSONBIN_API_KEY }
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        return data.record;
+    }
+
+    async function jsonbinWrite(data) {
+        const res = await fetch(JSONBIN_URL, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_API_KEY },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+    }
+
     async function saveMenu(silent) {
-        await storageSet("king_food_menu", menu, true); // true = бардык колдонуучуларга бөлүшүлөт
-        renderMenu();
-        if (!silent) toast("✅ Баалар өзгөртүлдү! Бардык колдонуучуларга көрүнөт.");
+        if (!jsonbinReady) {
+            renderMenu();
+            toast("⚠️ jsonbin.io туташкан жок — Кодду ачып JSONBIN_ID/JSONBIN_API_KEY толтуруңуз.");
+            return;
+        }
+        try {
+            await jsonbinWrite(menu);
+            renderMenu();
+            if (!silent) toast("✅ Баалар өзгөртүлдү! Бир нече секунддан кийин бардык телефондорго көрүнөт.");
+        } catch (e) {
+            console.error("jsonbin жазуу катасы:", e);
+            renderMenu();
+            toast("❌ Сактоо катасы — интернетти же jsonbin ачкычын текшериңиз.");
+        }
     }
 
     async function loadMenu() {
-        let saved = await storageGet("king_food_menu", true);
-        if (saved) {
-            // Эски сакталган маалыматта "available" талаасы жок болушу мүмкүн — коргоо
-            CATS.forEach(c => {
-                if (Array.isArray(saved[c.key])) {
-                    saved[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
-                } else {
-                    saved[c.key] = [];
-                }
-            });
-            menu = saved;
-        } else {
-            await storageSet("king_food_menu", menu, true);
+        if (!jsonbinReady) {
+            renderMenu();
+            return;
+        }
+        try {
+            const saved = await jsonbinRead();
+            if (saved && Object.keys(saved).length) {
+                menu = fillMissingAvailability(saved);
+            } else {
+                // Bin жаңы бош — баштапкы менюну ошол жерге жазабыз
+                await jsonbinWrite(menu);
+            }
+        } catch (e) {
+            console.error("jsonbin окуу катасы:", e);
         }
         renderMenu();
-    }
 
-    // Ар 5 секундда башка колдонуучулар (админ) кошкон өзгөрүүлөрдү текшерет
-    setInterval(async () => {
-        if (isTyping()) return; // жазып жаткан колдонуучунун фокусун бузбоо
-        const saved = await storageGet("king_food_menu", true);
-        if (saved && JSON.stringify(saved) !== JSON.stringify(menu)) {
-            CATS.forEach(c => {
-                if (Array.isArray(saved[c.key])) {
-                    saved[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
+        // Ар 4 секундда башка телефон/админ жасаган өзгөртүүлөрдү текшерет
+        setInterval(async () => {
+            if (isTyping()) return; // жазып жаткан колдонуучунун фокусун бузбоо
+            try {
+                const saved = await jsonbinRead();
+                if (!saved) return;
+                const updated = fillMissingAvailability(saved);
+                if (JSON.stringify(updated) === JSON.stringify(menu)) return;
+                menu = updated;
+                renderMenu();
+                if (isAdminLoggedIn && document.getElementById("adminOverlay").classList.contains("open")) {
+                    renderAdminAll();
                 }
-            });
-            menu = saved;
-            renderMenu();
-            if (isAdminLoggedIn && document.getElementById("adminOverlay").classList.contains("open")) {
-                renderAdminAll();
+            } catch (e) {
+                console.error("jsonbin синхрондоо катасы:", e);
             }
-        }
-    }, 5000);
+        }, 4000);
+    }
 
     // ========== ЭКСПОРТ/ИМПОРТ (АДМИНГЕ ЖАРДАМ) ==========
     function exportData() {
@@ -358,17 +403,20 @@
         input.value = "";
     }
 
-    // ========== КАРЗИНА (ЖЕКЕ — ар бир колдонуучунун өзүндө) ==========
+    // ========== КАРЗИНА (ЖЕКЕ — ар бир колдонуучунун өз браузеринде, localStorage) ==========
     async function saveCart() {
-        await storageSet("king_food_cart", cart, false); // false = жеке гана ушул колдонуучуга
+        try { localStorage.setItem("king_food_cart", JSON.stringify(cart)); }
+        catch (e) { console.error("cart save error", e); }
     }
 
     async function loadCart() {
-        let saved = await storageGet("king_food_cart", false);
-        if (saved) {
-            cart = saved;
-            updateCart();
-        }
+        try {
+            let raw = localStorage.getItem("king_food_cart");
+            if (raw) {
+                cart = JSON.parse(raw);
+                updateCart();
+            }
+        } catch (e) { console.error("cart load error", e); }
     }
 
     function updateCart() {
