@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KING FOOD HALAL - Реалдуу меню</title>
+    <title>KING FOOD HALAL - Меню</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
@@ -20,12 +20,15 @@
         .category{margin-bottom:3rem;}
         .category h2{font-size:1.9rem;border-left:5px solid #d4af37;padding-left:18px;margin-bottom:1.5rem;}
         .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
-        .menu-item{background:#14100e;border-radius:28px;padding:1rem;border:1px solid #2f2a24;display:flex;justify-content:space-between;align-items:center;transition:0.2s;}
+        .menu-item{background:#14100e;border-radius:28px;padding:1rem;border:1px solid #2f2a24;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:0.2s;}
         .menu-item:hover{border-color:#d4af37;transform:translateY(-3px);}
+        .menu-item.menu-item-unavailable{opacity:0.5;}
+        .menu-item.menu-item-unavailable:hover{transform:none;border-color:#2f2a24;}
         .item-name{font-weight:bold;font-size:1rem;}
         .item-price{color:#f5c542;font-size:1.2rem;font-weight:bold;}
-        .add-btn{background:#d4af37;border:none;color:#1e1a14;padding:8px 16px;border-radius:40px;cursor:pointer;display:flex;gap:5px;font-weight:bold;}
+        .add-btn{background:#d4af37;border:none;color:#1e1a14;padding:8px 16px;border-radius:40px;cursor:pointer;display:flex;gap:5px;font-weight:bold;white-space:nowrap;}
         .add-btn:hover{background:#f5c542;transform:scale(0.96);}
+        .unavailable-badge{background:#3a2020;color:#ff8a8a;padding:8px 14px;border-radius:30px;font-size:0.78rem;white-space:nowrap;}
         .cart-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000000cc;z-index:1000;display:flex;justify-content:flex-end;visibility:hidden;opacity:0;transition:0.2s;}
         .cart-overlay.open{visibility:visible;opacity:1;}
         .cart-panel{width:100%;max-width:450px;background:#0f0e0c;height:100vh;overflow-y:auto;padding:1.5rem;border-left:2px solid #d4af37;}
@@ -39,45 +42,86 @@
         .address-section{margin:15px 0;background:#1a1815;padding:12px;border-radius:16px;}
         .address-section textarea{width:100%;padding:10px;border-radius:12px;background:#2a2722;border:1px solid #d4af3766;color:white;resize:vertical;}
         .address-section label{color:#d4af37;display:block;margin-bottom:8px;}
+        .zone-fixed{background:#2a2722;padding:8px 12px;border-radius:12px;color:#d4af37;font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
         .whatsapp-btn,.telegram-btn{padding:12px;border-radius:50px;font-weight:bold;border:none;cursor:pointer;width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:10px;}
         .whatsapp-btn{background:#25D366;color:#121212;}
         .telegram-btn{background:#0088cc;color:white;}
         .close-cart{background:#333;color:white;padding:10px;border-radius:40px;text-align:center;cursor:pointer;margin-top:15px;}
         footer{background:#070605;text-align:center;padding:2rem;margin-top:2rem;}
-        .toast-msg{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#d4af37;color:#1e1a14;padding:10px 20px;border-radius:50px;z-index:1100;animation:fadeOut 2s forwards;}
+        .toast-msg{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#d4af37;color:#1e1a14;padding:10px 20px;border-radius:50px;z-index:1100;animation:fadeOut 2s forwards;white-space:nowrap;}
         @keyframes fadeOut{0%{opacity:1;}100%{opacity:0;visibility:hidden;}}
         @media(max-width:650px){.top-bar{padding:0.8rem 1rem;}.menu-section{padding:1rem;}.menu-grid{grid-template-columns:1fr;}}
-        
-        .admin-toggle{position:fixed;bottom:20px;right:20px;background:#d4af37;width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200;font-size:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+
+        /* ===== Admin launcher & password ===== */
+        .admin-toggle{position:fixed;bottom:20px;right:20px;background:#d4af37;width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200;font-size:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.3);color:#1e1a14;}
         .admin-toggle:hover{transform:scale(1.1);background:#f5c542;}
-        .admin-panel{position:fixed;top:0;left:-400px;width:100%;max-width:400px;height:100vh;background:#0f0e0c;z-index:1001;padding:1.5rem;overflow-y:auto;transition:0.3s;border-right:2px solid #d4af37;}
-        .admin-panel.open{left:0;}
-        .admin-category{background:#1a1815;padding:1rem;border-radius:16px;margin-bottom:1.5rem;}
-        .admin-category h3{color:#d4af37;margin-bottom:10px;font-size:1rem;}
-        .admin-item{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
-        .admin-item input{flex:1;padding:8px;border-radius:8px;background:#2a2722;border:none;color:white;}
-        .admin-item button{padding:6px 12px;border-radius:8px;border:none;cursor:pointer;}
-        .admin-item .edit-btn{background:#d4af37;color:#1e1a14;}
-        .admin-item .del-btn{background:#ff4444;color:white;}
-        .add-item-form{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
-        .add-item-form input{flex:1;padding:8px;border-radius:8px;background:#2a2722;border:none;color:white;}
-        .add-item-form button{background:#4caf50;color:white;padding:8px 15px;border-radius:8px;border:none;cursor:pointer;}
-        .close-admin{background:#333;color:white;padding:10px;border-radius:40px;text-align:center;cursor:pointer;margin-top:20px;}
         .password-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:#000000dd;backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:0.2s;}
         .password-modal.open{visibility:visible;opacity:1;}
-        .password-box{background:#0f0e0c;padding:2rem;border-radius:32px;border:2px solid #d4af37;width:350px;text-align:center;}
+        .password-box{background:#0f0e0c;padding:2rem;border-radius:32px;border:2px solid #d4af37;width:min(350px,90vw);text-align:center;}
         .password-box h3{color:#d4af37;margin-bottom:20px;}
         .password-box input{width:100%;padding:12px;border-radius:40px;background:#2a2722;border:1px solid #d4af37;color:white;font-size:1rem;margin-bottom:15px;}
-        .password-box button{background:#d4af37;border:none;padding:10px;border-radius:40px;font-weight:bold;cursor:pointer;width:100%;}
-        .pwd-error{color:#ff6666;margin-top:10px;}
-        
-        /* Экспорт/Импорт баскычтары */
-        .data-actions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
-        .data-actions button{background:#2a2a2a;border:1px solid #d4af37;color:white;padding:8px 12px;border-radius:30px;cursor:pointer;font-size:0.8rem;}
-        .data-actions button:hover{background:#d4af37;color:#1e1a14;}
+        .password-box button{background:#d4af37;border:none;padding:10px;border-radius:40px;font-weight:bold;cursor:pointer;width:100%;color:#1e1a14;}
+        .pwd-error{color:#ff6666;margin-top:10px;min-height:1em;}
 
-        .sync-note{background:#16240f;border:1px solid #4caf5055;color:#8fd68a;font-size:0.72rem;padding:8px 12px;border-radius:12px;margin-bottom:15px;}
-        .zone-fixed{background:#2a2722;padding:8px 12px;border-radius:12px;color:#d4af37;font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+        /* ===== Admin dashboard (Yandex-style) ===== */
+        .admin-overlay{position:fixed;inset:0;background:#000000dd;backdrop-filter:blur(6px);z-index:1500;display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:0.2s;}
+        .admin-overlay.open{visibility:visible;opacity:1;}
+        .admin-dashboard{width:95%;max-width:1150px;height:88vh;background:#0f0e0c;border-radius:24px;border:1px solid #2f2a24;display:flex;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,0.65);}
+        .admin-sidebar{width:270px;flex-shrink:0;background:#14100e;border-right:1px solid #2f2a24;padding:1.4rem 1rem;display:flex;flex-direction:column;overflow-y:auto;}
+        .admin-brand{font-size:1.1rem;font-weight:bold;color:#d4af37;margin-bottom:1.1rem;display:flex;align-items:center;gap:8px;}
+        .admin-stats-row{display:flex;gap:8px;margin-bottom:1.1rem;}
+        .admin-stat{flex:1;background:#1a1815;border-radius:14px;padding:10px 6px;text-align:center;}
+        .admin-stat b{display:block;font-size:1.15rem;color:#f5c542;}
+        .admin-stat span{font-size:0.62rem;color:#a89b7a;}
+        .admin-nav{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;}
+        .admin-nav-btn{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:transparent;border:1px solid transparent;color:#c9c2ae;cursor:pointer;font-size:0.88rem;text-align:left;}
+        .admin-nav-btn:hover{background:#1e1b17;}
+        .admin-nav-btn.active{background:#2a2410;border-color:#d4af37;color:#f5c542;font-weight:bold;}
+        .admin-nav-count{background:#2f2a24;padding:2px 9px;border-radius:20px;font-size:0.68rem;}
+        .admin-sync-note{background:#16240f;border:1px solid #4caf5055;color:#8fd68a;font-size:0.68rem;padding:8px 10px;border-radius:12px;margin-bottom:1rem;line-height:1.4;}
+        .admin-sidebar-actions{display:flex;flex-direction:column;gap:8px;margin-top:auto;}
+        .admin-sidebar-actions button,.admin-sidebar-actions label{background:#1e1b17;border:1px solid #2f2a24;color:#c9c2ae;padding:9px;border-radius:12px;text-align:center;cursor:pointer;font-size:0.74rem;display:block;}
+        .admin-sidebar-actions button:hover,.admin-sidebar-actions label:hover{border-color:#d4af37;color:#d4af37;}
+        .admin-logout{background:#2a1515!important;color:#ff8a8a!important;border-color:#4a2222!important;}
+        .admin-logout:hover{background:#3a1a1a!important;color:#ff9a9a!important;}
+        .admin-main{flex:1;display:flex;flex-direction:column;padding:1.4rem 1.6rem;overflow:hidden;min-width:0;}
+        .admin-main-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;}
+        .admin-main-header h2{color:#f5f3e8;font-size:1.3rem;}
+        .admin-close-x{cursor:pointer;color:#a89b7a;font-size:1.3rem;padding:4px 8px;}
+        .admin-close-x:hover{color:#d4af37;}
+        .admin-search-wrap{display:flex;gap:10px;margin-bottom:1rem;}
+        .admin-search-wrap input{flex:1;background:#1a1815;border:1px solid #2f2a24;color:white;padding:9px 14px;border-radius:30px;}
+        .admin-items-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;}
+        .admin-item-row{display:flex;align-items:center;gap:10px;background:#1a1815;padding:10px 12px;border-radius:14px;border:1px solid #2f2a24;flex-wrap:wrap;}
+        .admin-item-row.unavailable{opacity:0.55;}
+        .admin-item-row input[type=text]{flex:2;min-width:120px;background:#2a2722;border:1px solid transparent;color:white;padding:8px 10px;border-radius:8px;}
+        .admin-item-row input[type=number]{width:90px;background:#2a2722;border:1px solid transparent;color:#f5c542;padding:8px 10px;border-radius:8px;}
+        .admin-item-row input:focus{border-color:#d4af37;outline:none;}
+        .admin-toggle-switch{position:relative;width:40px;height:22px;background:#3a352c;border-radius:20px;cursor:pointer;flex-shrink:0;}
+        .admin-toggle-switch.on{background:#4caf50;}
+        .admin-toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:white;border-radius:50%;transition:0.2s;}
+        .admin-toggle-switch.on::after{left:20px;}
+        .admin-item-actions{display:flex;gap:6px;}
+        .admin-item-actions button{width:34px;height:34px;border-radius:9px;border:none;cursor:pointer;flex-shrink:0;}
+        .admin-save-btn{background:#d4af37;color:#1e1a14;}
+        .admin-save-btn:hover{background:#f5c542;}
+        .admin-del-btn{background:#ff4444;color:white;}
+        .admin-del-btn:hover{background:#ff6666;}
+        .admin-empty{color:#8a7d5e;text-align:center;padding:2.5rem 1rem;}
+        .admin-add-form{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #2f2a24;flex-wrap:wrap;}
+        .admin-add-form input{padding:10px;border-radius:10px;background:#1a1815;border:1px solid #2f2a24;color:white;}
+        .admin-add-form input[name=newName]{flex:2;min-width:150px;}
+        .admin-add-form input[name=newPrice]{width:110px;}
+        .admin-add-form button{background:#4caf50;color:white;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:bold;}
+        .admin-add-form button:hover{background:#5fd063;}
+        @media(max-width:760px){
+            .admin-dashboard{flex-direction:column;height:94vh;width:98%;}
+            .admin-sidebar{width:100%;flex-direction:column;padding:1rem;max-height:44vh;}
+            .admin-nav{flex-direction:row;flex-wrap:wrap;overflow-x:auto;}
+            .admin-sidebar-actions{flex-direction:row;margin-top:0.6rem;}
+            .admin-sidebar-actions button,.admin-sidebar-actions label{flex:1;}
+            .admin-main{padding:1rem;}
+        }
     </style>
 </head>
 <body>
@@ -108,7 +152,7 @@
     <footer><p>©KING.FOOD.HALAL | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p><p style="margin-top:6px;color:#8a7d5e;font-size:0.8rem;">Жеткирүү аймагы: Баткен району</p></footer>
 </div>
 
-<div class="admin-toggle" id="adminToggleBtn"><i class="fas fa-cog"></i></div>
+<div class="admin-toggle" id="adminToggleBtn" title="Админ панель"><i class="fas fa-cog"></i></div>
 
 <div id="passwordModal" class="password-modal">
     <div class="password-box">
@@ -119,18 +163,46 @@
     </div>
 </div>
 
-<div class="admin-panel" id="adminPanel">
-    <h2 style="color:#d4af37;margin-bottom:15px;"><i class="fas fa-cog"></i> Меню башкаруу</h2>
-    <div class="sync-note">📡 Бул жерден кошкон же өзгөрткөн тамактарыңыз бардык кардарлардын телефонуна автоматтык түрдө көрүнөт (шаймандар аралык синхрондоо).</div>
-    
-    <div class="data-actions">
-        <button id="exportDataBtn" onclick="exportData()"><i class="fas fa-download"></i> Менюну жүктөө (экспорт)</button>
-        <label for="importFileInput" style="background:#2a2a2a;border:1px solid #d4af37;color:white;padding:8px 12px;border-radius:30px;cursor:pointer;font-size:0.8rem;display:inline-block;"><i class="fas fa-upload"></i> Менюну жүктөө (импорт)</label>
-        <input type="file" id="importFileInput" style="display:none" accept=".json" onchange="importData(this)">
+<!-- ===== Admin dashboard ===== -->
+<div id="adminOverlay" class="admin-overlay">
+    <div class="admin-dashboard">
+        <aside class="admin-sidebar">
+            <div class="admin-brand"><i class="fas fa-store"></i> KING FOOD Админ</div>
+
+            <div class="admin-stats-row">
+                <div class="admin-stat"><b id="statTotal">0</b><span>Тамактар</span></div>
+                <div class="admin-stat"><b id="statAvailable">0</b><span>Жеткиликтүү</span></div>
+                <div class="admin-stat"><b id="statCats">0</b><span>Категория</span></div>
+            </div>
+
+            <div class="admin-sync-note"><i class="fas fa-satellite-dish"></i> Бул жерден өзгөрткөн тамактар бардык кардарлардын телефонуна автоматтык синхрондолот.</div>
+
+            <nav class="admin-nav" id="adminNav"></nav>
+
+            <div class="admin-sidebar-actions">
+                <button id="exportDataBtn" onclick="exportData()"><i class="fas fa-download"></i> Менюну экспорттоо</button>
+                <label for="importFileInput"><i class="fas fa-upload"></i> Менюну импорттоо</label>
+                <input type="file" id="importFileInput" style="display:none" accept=".json" onchange="importData(this)">
+                <button class="admin-logout" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Чыгуу</button>
+            </div>
+        </aside>
+
+        <section class="admin-main">
+            <div class="admin-main-header">
+                <h2 id="adminCatTitle">Категория</h2>
+                <i class="fas fa-times admin-close-x" id="closeAdminPanel" title="Жабуу"></i>
+            </div>
+            <div class="admin-search-wrap">
+                <input type="search" id="adminSearch" placeholder="🔍 Тамактын аты боюнча издөө...">
+            </div>
+            <div class="admin-items-list" id="adminItemsList"></div>
+            <form class="admin-add-form" id="adminAddForm" onsubmit="return false;">
+                <input type="text" name="newName" id="newItemName" placeholder="Жаңы тамактын аты">
+                <input type="number" name="newPrice" id="newItemPrice" placeholder="Баасы (сом)" min="0">
+                <button type="button" onclick="addItem()"><i class="fas fa-plus"></i> Кошуу</button>
+            </form>
+        </section>
     </div>
-    
-    <div id="adminCategories"></div>
-    <div class="close-admin" id="closeAdminPanel">Жабуу</div>
 </div>
 
 <div id="cartOverlay" class="cart-overlay">
@@ -159,50 +231,75 @@
     const ADMIN_PASSWORD = "king123";
     /* ================= ▲▲▲ ЖӨНГӨ САЛУУ АЯКТАДЫ ▲▲▲ ================= */
 
+    // Категориялардын так тизмеси - бул эле тизме меню, админ панель экөөндө тең колдонулат
+    const CATS = [
+        { key: "shaurma", title: "Шаурма", icon: "🥙" },
+        { key: "burger",  title: "Бургер", icon: "🍔" },
+        { key: "hotdog",  title: "Хот-дог", icon: "🌭" },
+        { key: "combo",   title: "Комбо", icon: "📦" },
+        { key: "drinks",  title: "Суусундуктар", icon: "🥤" },
+        { key: "snacks",  title: "Женил тамактар", icon: "🍟" }
+    ];
+
     let isAdminLoggedIn = false;
-    
+
     // ========== МЕНЮ МААЛЫМАТТАРЫ (БАШТАПКЫ) ==========
     let menu = {
-        shaurma: [{id:"sh1",name:"Шаурма тоок этинен",price:220},{id:"sh2",name:"Шаурма уй этинен",price:230},{id:"sh3",name:"Бышырылган Шаурма",price:240}],
-        burger: [{id:"bg1",name:"Кинг Бургер",price:210},{id:"bg2",name:"Кош Кинг Бургер",price:240},{id:"bg3",name:"Чизбургер",price:210},{id:"bg4",name:"Кош Чизбургер",price:240},{id:"bg5",name:"Чикен бургер",price:190},{id:"bg6",name:"Кош Чикен бургер",price:220}],
-        hotdog: [{id:"hd1",name:"Классика Хот-Дог",price:140},{id:"hd2",name:"Острый Хот-Дог",price:150},{id:"hd3",name:"Чиз Хот-Дог",price:160}],
-        combo: [{id:"cb1",name:"Кинг комбо",price:600},{id:"cb2",name:"03 комбо",price:500}],
-        drinks: [{id:"dr1",name:"Султан чай 1л",price:65},{id:"dr2",name:"Мохито 0.5л",price:85},{id:"dr3",name:"Нитро 0.5л",price:85},{id:"dr4",name:"Летс гоу 1.25л",price:100},{id:"dr5",name:"Летс гоу (груша) 0.5л",price:60},{id:"dr6",name:"Кола/Фанта/Пепси 1л",price:100},{id:"dr7",name:"Кофе 3/1",price:40},{id:"dr8",name:"Чай",price:20}],
-        snacks: [{id:"sn1",name:"Фри S 150гр",price:130},{id:"sn2",name:"Фри M 220гр",price:150},{id:"sn3",name:"Чили Чиз-Фрайс",price:200},{id:"sn4",name:"Нагреты",price:150}]
+        shaurma: [{id:"sh1",name:"Шаурма тоок этинен",price:220,available:true},{id:"sh2",name:"Шаурма уй этинен",price:230,available:true},{id:"sh3",name:"Бышырылган Шаурма",price:240,available:true}],
+        burger: [{id:"bg1",name:"Кинг Бургер",price:210,available:true},{id:"bg2",name:"Кош Кинг Бургер",price:240,available:true},{id:"bg3",name:"Чизбургер",price:210,available:true},{id:"bg4",name:"Кош Чизбургер",price:240,available:true},{id:"bg5",name:"Чикен бургер",price:190,available:true},{id:"bg6",name:"Кош Чикен бургер",price:220,available:true}],
+        hotdog: [{id:"hd1",name:"Классика Хот-Дог",price:140,available:true},{id:"hd2",name:"Острый Хот-Дог",price:150,available:true},{id:"hd3",name:"Чиз Хот-Дог",price:160,available:true}],
+        combo: [{id:"cb1",name:"Кинг комбо",price:600,available:true},{id:"cb2",name:"03 комбо",price:500,available:true}],
+        drinks: [{id:"dr1",name:"Султан чай 1л",price:65,available:true},{id:"dr2",name:"Мохито 0.5л",price:85,available:true},{id:"dr3",name:"Нитро 0.5л",price:85,available:true},{id:"dr4",name:"Летс гоу 1.25л",price:100,available:true},{id:"dr5",name:"Летс гоу (груша) 0.5л",price:60,available:true},{id:"dr6",name:"Кола/Фанта/Пепси 1л",price:100,available:true},{id:"dr7",name:"Кофе 3/1",price:40,available:true},{id:"dr8",name:"Чай",price:20,available:true}],
+        snacks: [{id:"sn1",name:"Фри S 150гр",price:130,available:true},{id:"sn2",name:"Фри M 220гр",price:150,available:true},{id:"sn3",name:"Чили Чиз-Фрайс",price:200,available:true},{id:"sn4",name:"Нагреты",price:150,available:true}]
     };
-    
+
     let cart = [];
 
+    // Админ панелдин учурдагы абалы
+    let adminState = { activeCat: "shaurma", search: "" };
+
+    // ========== КООПСУЗДУК: HTML энкодинг ==========
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+    }
+
     // ========== STORAGE HELPERS ==========
-    async function storageGet(key, shared){
-        try{
+    async function storageGet(key, shared) {
+        try {
             const r = await window.storage.get(key, shared);
             return r && r.value ? JSON.parse(r.value) : null;
-        }catch(e){ return null; }
+        } catch (e) { return null; }
     }
-    async function storageSet(key, value, shared){
-        try{ await window.storage.set(key, JSON.stringify(value), shared); return true; }
-        catch(e){ console.error('storage error', e); return false; }
+    async function storageSet(key, value, shared) {
+        try { await window.storage.set(key, JSON.stringify(value), shared); return true; }
+        catch (e) { console.error("storage error", e); return false; }
     }
-    function isTyping(){
+    function isTyping() {
         const el = document.activeElement;
-        return !!(el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'));
+        return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA"));
     }
-    
+
     // ========== МЕНЮНУ САКТОО ЖАНА ЖҮКТӨӨ (БАРДЫК КОЛДОНУУЧУЛАРГА — SHARED) ==========
-    async function saveMenu() {
-        await storageSet('king_food_menu', menu, true); // true = бардык колдонуучуларга бөлүшүлөт
+    async function saveMenu(silent) {
+        await storageSet("king_food_menu", menu, true); // true = бардык колдонуучуларга бөлүшүлөт
         renderMenu();
-        toast("✅ Баалар өзгөртүлдү! Бардык колдонуучуларга көрүнөт.");
+        if (!silent) toast("✅ Баалар өзгөртүлдү! Бардык колдонуучуларга көрүнөт.");
     }
-    
+
     async function loadMenu() {
-        let saved = await storageGet('king_food_menu', true);
+        let saved = await storageGet("king_food_menu", true);
         if (saved) {
+            // Эски сакталган маалыматта "available" талаасы жок болушу мүмкүн — коргоо
+            CATS.forEach(c => {
+                if (Array.isArray(saved[c.key])) {
+                    saved[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
+                } else {
+                    saved[c.key] = [];
+                }
+            });
             menu = saved;
         } else {
-            // биринчи ирет иштетилүүдө — баштапкы менюну бөлүшүлгөн сактагычка жазабыз
-            await storageSet('king_food_menu', menu, true);
+            await storageSet("king_food_menu", menu, true);
         }
         renderMenu();
     }
@@ -210,79 +307,88 @@
     // Ар 5 секундда башка колдонуучулар (админ) кошкон өзгөрүүлөрдү текшерет
     setInterval(async () => {
         if (isTyping()) return; // жазып жаткан колдонуучунун фокусун бузбоо
-        const saved = await storageGet('king_food_menu', true);
+        const saved = await storageGet("king_food_menu", true);
         if (saved && JSON.stringify(saved) !== JSON.stringify(menu)) {
+            CATS.forEach(c => {
+                if (Array.isArray(saved[c.key])) {
+                    saved[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
+                }
+            });
             menu = saved;
             renderMenu();
-            if (isAdminLoggedIn && document.getElementById('adminPanel').classList.contains('open')) {
-                renderAdmin();
+            if (isAdminLoggedIn && document.getElementById("adminOverlay").classList.contains("open")) {
+                renderAdminAll();
             }
         }
     }, 5000);
-    
+
     // ========== ЭКСПОРТ/ИМПОРТ (АДМИНГЕ ЖАРДАМ) ==========
     function exportData() {
         let dataStr = JSON.stringify(menu, null, 2);
-        let blob = new Blob([dataStr], {type: "application/json"});
+        let blob = new Blob([dataStr], { type: "application/json" });
         let url = URL.createObjectURL(blob);
-        let a = document.createElement('a');
+        let a = document.createElement("a");
         a.href = url;
         a.download = "king_food_menu.json";
         a.click();
         URL.revokeObjectURL(url);
         toast("📁 Меню жүктөлдү!");
     }
-    
+
     async function importData(input) {
         let file = input.files[0];
         if (!file) return;
         let reader = new FileReader();
-        reader.onload = async function(e) {
+        reader.onload = async function (e) {
             try {
                 let importedMenu = JSON.parse(e.target.result);
+                CATS.forEach(c => {
+                    if (!Array.isArray(importedMenu[c.key])) importedMenu[c.key] = [];
+                    importedMenu[c.key].forEach(i => { if (typeof i.available === "undefined") i.available = true; });
+                });
                 menu = importedMenu;
-                await saveMenu();
-                if (isAdminLoggedIn) renderAdmin();
+                await saveMenu(true);
+                if (isAdminLoggedIn) renderAdminAll();
                 toast("✅ Меню импорттолду!");
-            } catch(err) {
+            } catch (err) {
                 toast("❌ Ката: туура эмес файл!");
             }
         };
         reader.readAsText(file);
-        input.value = '';
+        input.value = "";
     }
-    
+
     // ========== КАРЗИНА (ЖЕКЕ — ар бир колдонуучунун өзүндө) ==========
     async function saveCart() {
-        await storageSet('king_food_cart', cart, false); // false = жеке гана ушул колдонуучуга
+        await storageSet("king_food_cart", cart, false); // false = жеке гана ушул колдонуучуга
     }
-    
+
     async function loadCart() {
-        let saved = await storageGet('king_food_cart', false);
+        let saved = await storageGet("king_food_cart", false);
         if (saved) {
             cart = saved;
             updateCart();
         }
     }
-    
+
     function updateCart() {
-        let count = cart.reduce((s,i) => s + i.qty, 0);
-        document.getElementById('cartCount').innerText = count;
-        document.getElementById('cartBadge').innerText = count;
-        let total = cart.reduce((s,i) => s + (i.price * i.qty), 0);
-        document.getElementById('cartTotal').innerHTML = `Жалпы сумма: ${total} сом`;
-        let container = document.getElementById('cartItemsList');
+        let count = cart.reduce((s, i) => s + i.qty, 0);
+        document.getElementById("cartCount").innerText = count;
+        document.getElementById("cartBadge").innerText = count;
+        let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        document.getElementById("cartTotal").innerHTML = `Жалпы сумма: ${total} сом`;
+        let container = document.getElementById("cartItemsList");
         if (cart.length === 0) {
-            container.innerHTML = '🛒 Карзина бош';
+            container.innerHTML = "🛒 Карзина бош";
             return;
         }
-        let html = '';
+        let html = "";
         cart.forEach(i => {
-            html += `<div class="cart-item"><div><strong>${i.name}</strong><br>${i.price} сом</div><div class="cart-qty"><button onclick="changeQty('${i.id}',-1)">-</button><span>${i.qty}</span><button onclick="changeQty('${i.id}',1)">+</button><button onclick="removeItem('${i.id}')">✕</button></div></div>`;
+            html += `<div class="cart-item"><div><strong>${escapeHtml(i.name)}</strong><br>${i.price} сом</div><div class="cart-qty"><button onclick="changeQty('${i.id}',-1)">-</button><span>${i.qty}</span><button onclick="changeQty('${i.id}',1)">+</button><button onclick="removeItem('${i.id}')">✕</button></div></div>`;
         });
         container.innerHTML = html;
     }
-    
+
     async function changeQty(id, delta) {
         let idx = cart.findIndex(i => i.id === id);
         if (idx !== -1) {
@@ -293,186 +399,283 @@
             await saveCart();
         }
     }
-    
+
     async function removeItem(id) {
         cart = cart.filter(i => i.id !== id);
         updateCart();
         await saveCart();
-        toast('Алып салынды');
+        toast("Алып салынды");
     }
-    
+
     async function addToCart(item) {
         let exist = cart.find(i => i.id === item.id);
         if (exist) {
             exist.qty++;
             toast(`${item.name} +1`);
         } else {
-            cart.push({...item, qty: 1});
+            cart.push({ ...item, qty: 1 });
             toast(`${item.name} кошулду`);
         }
         updateCart();
         await saveCart();
     }
-    
-    // ========== МЕНЮНУ КӨРСӨТҮҮ ==========
+
+    // ========== МЕНЮНУ КӨРСӨТҮҮ (КАРДАРГА) ==========
     function renderMenu() {
-        renderCat('shaurmaGrid', menu.shaurma);
-        renderCat('burgerGrid', menu.burger);
-        renderCat('hotdogGrid', menu.hotdog);
-        renderCat('comboGrid', menu.combo);
-        renderCat('drinksGrid', menu.drinks);
-        renderCat('snacksGrid', menu.snacks);
+        CATS.forEach(c => renderCat(c.key + "Grid", menu[c.key]));
     }
-    
+
     function renderCat(gridId, items) {
         let container = document.getElementById(gridId);
         if (!container) return;
-        container.innerHTML = '';
+        container.innerHTML = "";
         (items || []).forEach(item => {
-            let div = document.createElement('div');
-            div.className = 'menu-item';
-            div.innerHTML = `<div><div class="item-name">${item.name}</div><div class="item-price">${item.price} сом</div></div><button class="add-btn" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`;
+            let available = item.available !== false;
+            let div = document.createElement("div");
+            div.className = "menu-item" + (available ? "" : " menu-item-unavailable");
+            let actionHtml = available
+                ? `<button class="add-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}"><i class="fas fa-plus-circle"></i> Кошуу</button>`
+                : `<span class="unavailable-badge">Убактылуу жок</span>`;
+            div.innerHTML = `<div><div class="item-name">${escapeHtml(item.name)}</div><div class="item-price">${item.price} сом</div></div>${actionHtml}`;
             container.appendChild(div);
         });
-        container.querySelectorAll('.add-btn').forEach(btn => {
-            btn.addEventListener('click', () => addToCart({id: btn.dataset.id, name: btn.dataset.name, price: parseInt(btn.dataset.price)}));
+        container.querySelectorAll(".add-btn").forEach(btn => {
+            btn.addEventListener("click", () => addToCart({ id: btn.dataset.id, name: btn.dataset.name, price: parseInt(btn.dataset.price) }));
         });
     }
-    
-    // ========== АДМИН ПАНЕЛИ ==========
-    function renderAdmin() {
-        if (!isAdminLoggedIn) return;
-        let cats = ['shaurma', 'burger', 'hotdog', 'combo', 'drinks', 'snacks'];
-        let titles = ['ШАУРМА', 'БУРГЕР', 'ХОТ-ДОГ', 'КОМБО', 'СУУСУНДУКТАР', 'ЖЕНИЛ ТАМАКТАР'];
-        let container = document.getElementById('adminCategories');
-        container.innerHTML = '';
-        for (let i = 0; i < cats.length; i++) {
-            let cat = cats[i];
-            let items = menu[cat] || [];
-            let div = document.createElement('div');
-            div.className = 'admin-category';
-            div.innerHTML = `<h3>${titles[i]}</h3><div id="admin_${cat}_items"></div><div class="add-item-form"><input type="text" id="newName_${cat}" placeholder="Жаңы тамак"><input type="number" id="newPrice_${cat}" placeholder="Баасы"><button onclick="addItem('${cat}')">➕ Кошуу</button></div>`;
-            container.appendChild(div);
-            let itemsDiv = document.getElementById(`admin_${cat}_items`);
-            itemsDiv.innerHTML = '';
-            items.forEach((item, idx) => {
-                itemsDiv.innerHTML += `<div class="admin-item"><input type="text" id="name_${cat}_${idx}" value="${item.name}" style="flex:2"><input type="number" id="price_${cat}_${idx}" value="${item.price}" class="price-input" style="flex:1"><button class="edit-btn" onclick="updateItem('${cat}',${idx})"><i class="fas fa-save"></i></button><button class="del-btn" onclick="deleteItem('${cat}',${idx})"><i class="fas fa-trash"></i></button></div>`;
-            });
+
+    // ========== АДМИН ПАНЕЛИ (Yandex-стилиндеги dashboard) ==========
+    function findItemIndex(cat, id) {
+        return menu[cat].findIndex(i => i.id === id);
+    }
+
+    function openAdminDashboard() {
+        document.getElementById("adminOverlay").classList.add("open");
+        adminState.search = "";
+        document.getElementById("adminSearch").value = "";
+        renderAdminAll();
+    }
+
+    function closeAdminDashboard() {
+        document.getElementById("adminOverlay").classList.remove("open");
+    }
+
+    function renderAdminAll() {
+        renderAdminStats();
+        renderAdminNav();
+        renderAdminItemsList();
+    }
+
+    function renderAdminStats() {
+        let total = 0, available = 0;
+        CATS.forEach(c => {
+            let items = menu[c.key] || [];
+            total += items.length;
+            available += items.filter(i => i.available !== false).length;
+        });
+        document.getElementById("statTotal").innerText = total;
+        document.getElementById("statAvailable").innerText = available;
+        document.getElementById("statCats").innerText = CATS.length;
+    }
+
+    function renderAdminNav() {
+        let nav = document.getElementById("adminNav");
+        nav.innerHTML = "";
+        CATS.forEach(c => {
+            let count = (menu[c.key] || []).length;
+            let btn = document.createElement("button");
+            btn.className = "admin-nav-btn" + (c.key === adminState.activeCat ? " active" : "");
+            btn.innerHTML = `<span>${c.icon} ${c.title}</span><span class="admin-nav-count">${count}</span>`;
+            btn.onclick = () => {
+                adminState.activeCat = c.key;
+                renderAdminNav();
+                renderAdminItemsList();
+            };
+            nav.appendChild(btn);
+        });
+    }
+
+    function renderAdminItemsList() {
+        let cat = adminState.activeCat;
+        let catMeta = CATS.find(c => c.key === cat);
+        document.getElementById("adminCatTitle").innerText = catMeta ? `${catMeta.icon} ${catMeta.title}` : "Категория";
+
+        let items = menu[cat] || [];
+        let search = (adminState.search || "").toLowerCase().trim();
+        if (search) items = items.filter(i => i.name.toLowerCase().includes(search));
+
+        let container = document.getElementById("adminItemsList");
+        container.innerHTML = "";
+
+        if (items.length === 0) {
+            container.innerHTML = `<div class="admin-empty"><i class="fas fa-box-open" style="font-size:1.6rem;display:block;margin-bottom:8px;"></i>Бул категорияда тамак табылган жок</div>`;
+            return;
         }
+
+        items.forEach(item => {
+            let available = item.available !== false;
+            let row = document.createElement("div");
+            row.className = "admin-item-row" + (available ? "" : " unavailable");
+            row.innerHTML = `
+                <div class="admin-toggle-switch ${available ? "on" : ""}" title="Жеткиликтүү/Жеткиликсиз кылуу"></div>
+                <input type="text" value="${escapeHtml(item.name)}" data-role="name">
+                <input type="number" value="${item.price}" min="0" data-role="price">
+                <div class="admin-item-actions">
+                    <button class="admin-save-btn" title="Сактоо"><i class="fas fa-save"></i></button>
+                    <button class="admin-del-btn" title="Өчүрүү"><i class="fas fa-trash"></i></button>
+                </div>`;
+            row.querySelector(".admin-toggle-switch").onclick = () => toggleAvailability(cat, item.id);
+            row.querySelector(".admin-save-btn").onclick = () => updateItem(cat, item.id, row);
+            row.querySelector(".admin-del-btn").onclick = () => deleteItem(cat, item.id);
+            container.appendChild(row);
+        });
     }
-    
-    async function addItem(cat) {
+
+    async function toggleAvailability(cat, id) {
         if (!isAdminLoggedIn) return;
-        let nameInput = document.getElementById(`newName_${cat}`);
-        let priceInput = document.getElementById(`newPrice_${cat}`);
+        let idx = findItemIndex(cat, id);
+        if (idx === -1) return;
+        menu[cat][idx].available = !(menu[cat][idx].available !== false);
+        await saveMenu(true);
+        renderAdminAll();
+        toast(menu[cat][idx].available ? "✅ Жеткиликтүү кылынды" : "🚫 Убактылуу токтотулду");
+    }
+
+    async function updateItem(cat, id, row) {
+        if (!isAdminLoggedIn) return;
+        let idx = findItemIndex(cat, id);
+        if (idx === -1) return;
+        let nameInp = row.querySelector('[data-role="name"]');
+        let priceInp = row.querySelector('[data-role="price"]');
+        let newName = nameInp.value.trim();
+        let newPrice = parseInt(priceInp.value);
+        if (!newName) { toast("❌ Аты бош болбошу керек"); return; }
+        if (isNaN(newPrice) || newPrice < 0) { toast("❌ Баасы туура эмес"); return; }
+        menu[cat][idx].name = newName;
+        menu[cat][idx].price = newPrice;
+        await saveMenu(true);
+        renderAdminAll();
+        toast("✏️ Өзгөртүлдү жана сакталды");
+    }
+
+    async function deleteItem(cat, id) {
+        if (!isAdminLoggedIn) return;
+        let idx = findItemIndex(cat, id);
+        if (idx === -1) return;
+        let name = menu[cat][idx].name;
+        if (!confirm(`"${name}" өчүрүлсүнбү?`)) return;
+        menu[cat].splice(idx, 1);
+        await saveMenu(true);
+        renderAdminAll();
+        toast(`🗑️ ${name} өчүрүлдү`);
+    }
+
+    async function addItem() {
+        if (!isAdminLoggedIn) return;
+        let cat = adminState.activeCat;
+        let nameInput = document.getElementById("newItemName");
+        let priceInput = document.getElementById("newItemPrice");
         let newName = nameInput.value.trim();
         let newPrice = parseInt(priceInput.value);
-        if (!newName || isNaN(newPrice)) { toast('Аты жана баасы туура эмес'); return; }
-        let newId = cat + '_' + Date.now();
-        menu[cat].push({id: newId, name: newName, price: newPrice});
-        await saveMenu();
-        renderAdmin();
+        if (!newName) { toast("❌ Тамактын атын жазыңыз"); return; }
+        if (isNaN(newPrice) || newPrice < 0) { toast("❌ Баасын туура жазыңыз"); return; }
+        let newId = cat + "_" + Date.now();
+        menu[cat].push({ id: newId, name: newName, price: newPrice, available: true });
+        await saveMenu(true);
+        renderAdminAll();
         toast(`✅ ${newName} кошулду — бардык телефондорго көрүнөт`);
-        nameInput.value = '';
-        priceInput.value = '';
+        nameInput.value = "";
+        priceInput.value = "";
+        nameInput.focus();
     }
-    
-    async function updateItem(cat, idx) {
-        if (!isAdminLoggedIn) return;
-        let nameInp = document.getElementById(`name_${cat}_${idx}`);
-        let priceInp = document.getElementById(`price_${cat}_${idx}`);
-        if (nameInp && priceInp) {
-            menu[cat][idx].name = nameInp.value.trim();
-            menu[cat][idx].price = parseInt(priceInp.value);
-            await saveMenu();  // Бул renderMenu() да чакырат
-            renderAdmin();
-            toast('✏️ Өзгөртүлдү');
-        }
-    }
-    
-    async function deleteItem(cat, idx) {
-        if (!isAdminLoggedIn) return;
-        let name = menu[cat][idx].name;
-        if (confirm(`"${name}" өчүрүлсүнбү?`)) {
-            menu[cat].splice(idx, 1);
-            await saveMenu();
-            renderAdmin();
-            toast(`🗑️ ${name} өчүрүлдү`);
-        }
-    }
-    
+
     // ========== ЗАКАЗ ==========
     async function sendOrder(platform) {
-        if (cart.length === 0) { alert('Карзина бош!'); return; }
-        let streetInput = document.getElementById('deliveryAddress').value.trim() || 'дарек көрсөтүлгөн жок';
+        if (cart.length === 0) { alert("Карзина бош!"); return; }
+        let streetInput = document.getElementById("deliveryAddress").value.trim() || "дарек көрсөтүлгөн жок";
         let address = `${DELIVERY_ZONE}, ${streetInput}`;
-        let items = '', total = 0;
+        let items = "", total = 0;
         cart.forEach(i => { items += `${i.name} x${i.qty} = ${i.price * i.qty} сом\n`; total += i.price * i.qty; });
         let msg = `🛒 *KING FOOD HALAL* 🍔\n\n${items}\n━━━━━━━━━━━━━━\n💰 *Жалпы: ${total} сом*\n📍 *Дареги:* ${address}\n📞 +996 778 03 12 03\n📸 @king.food.halal`;
-        let url = platform === 'whatsapp' ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}` : `https://t.me/share/url?url=${encodeURIComponent('Заказ')}&text=${encodeURIComponent(msg)}`;
-        window.open(url, '_blank'); // клик учурунда токтоосуз чакырылат — попап бөгөттөлбөйт
+        let url = platform === "whatsapp"
+            ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`
+            : `https://t.me/share/url?url=${encodeURIComponent("Заказ")}&text=${encodeURIComponent(msg)}`;
+        window.open(url, "_blank"); // клик учурунда токтоосуз чакырылат — попап бөгөттөлбөйт
         cart = [];
         updateCart();
         await saveCart();
-        toast('Заказ жөнөтүлдү!');
+        toast("Заказ жөнөтүлдү!");
     }
-    
+
     function toast(msg) {
-        let t = document.createElement('div');
-        t.className = 'toast-msg';
+        let t = document.createElement("div");
+        t.className = "toast-msg";
         t.innerText = msg;
         document.body.appendChild(t);
         setTimeout(() => t.remove(), 2000);
     }
-    
+
     // ========== ПАРОЛЬ ТЕКШЕРҮҮ ==========
     function checkAdminPassword() {
-        let pass = document.getElementById('adminPassword').value;
+        let pass = document.getElementById("adminPassword").value;
         if (pass === ADMIN_PASSWORD) {
             isAdminLoggedIn = true;
-            document.getElementById('passwordModal').classList.remove('open');
-            document.getElementById('adminPanel').classList.add('open');
-            renderAdmin();
-            toast('✅ Админ режимине кирдиңиз!');
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('pwdError').innerText = '';
+            document.getElementById("passwordModal").classList.remove("open");
+            openAdminDashboard();
+            toast("✅ Админ режимине кирдиңиз!");
+            document.getElementById("adminPassword").value = "";
+            document.getElementById("pwdError").innerText = "";
         } else {
-            document.getElementById('pwdError').innerText = '❌ Пароль туура эмес!';
+            document.getElementById("pwdError").innerText = "❌ Пароль туура эмес!";
         }
     }
-    
+
     // ========== ИНТЕРФЕЙС ==========
-    let overlay = document.getElementById('cartOverlay');
-    document.getElementById('cartIconBtn').onclick = () => overlay.classList.add('open');
-    document.getElementById('closeCart').onclick = () => overlay.classList.remove('open');
-    document.getElementById('closeCartFooter').onclick = () => overlay.classList.remove('open');
-    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('open'); };
-    document.getElementById('whatsappOrder').onclick = () => sendOrder('whatsapp');
-    document.getElementById('telegramOrder').onclick = () => sendOrder('telegram');
-    
-    let adminPanel = document.getElementById('adminPanel');
-    document.getElementById('adminToggleBtn').onclick = () => {
+    let overlay = document.getElementById("cartOverlay");
+    document.getElementById("cartIconBtn").onclick = () => overlay.classList.add("open");
+    document.getElementById("closeCart").onclick = () => overlay.classList.remove("open");
+    document.getElementById("closeCartFooter").onclick = () => overlay.classList.remove("open");
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove("open"); };
+    document.getElementById("whatsappOrder").onclick = () => sendOrder("whatsapp");
+    document.getElementById("telegramOrder").onclick = () => sendOrder("telegram");
+
+    document.getElementById("adminToggleBtn").onclick = () => {
         if (isAdminLoggedIn) {
-            adminPanel.classList.toggle('open');
-            if (adminPanel.classList.contains('open')) renderAdmin();
+            openAdminDashboard();
         } else {
-            document.getElementById('passwordModal').classList.add('open');
+            document.getElementById("passwordModal").classList.add("open");
+            document.getElementById("adminPassword").focus();
         }
     };
-    document.getElementById('closeAdminPanel').onclick = () => adminPanel.classList.remove('open');
-    document.getElementById('adminPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAdminPassword(); });
-    
+    document.getElementById("closeAdminPanel").onclick = () => closeAdminDashboard();
+    document.getElementById("adminOverlay").addEventListener("click", (e) => {
+        if (e.target.id === "adminOverlay") closeAdminDashboard();
+    });
+    document.getElementById("adminLogoutBtn").onclick = () => {
+        isAdminLoggedIn = false;
+        closeAdminDashboard();
+        toast("Чыктыңыз");
+    };
+    document.getElementById("adminPassword").addEventListener("keypress", (e) => { if (e.key === "Enter") checkAdminPassword(); });
+    document.getElementById("passwordModal").addEventListener("click", (e) => {
+        if (e.target.id === "passwordModal") document.getElementById("passwordModal").classList.remove("open");
+    });
+    document.getElementById("adminSearch").addEventListener("input", (e) => {
+        adminState.search = e.target.value;
+        renderAdminItemsList();
+    });
+    document.getElementById("newItemPrice").addEventListener("keypress", (e) => { if (e.key === "Enter") addItem(); });
+    document.getElementById("newItemName").addEventListener("keypress", (e) => { if (e.key === "Enter") addItem(); });
+
     window.changeQty = changeQty;
     window.removeItem = removeItem;
     window.addItem = addItem;
-    window.updateItem = updateItem;
-    window.deleteItem = deleteItem;
     window.checkAdminPassword = checkAdminPassword;
     window.exportData = exportData;
     window.importData = importData;
-    
+
     // ========== ИШКЕ КИРГИЗҮҮ ==========
-    (async function init(){
+    (async function init() {
         await loadMenu();
         await loadCart();
         updateCart();
