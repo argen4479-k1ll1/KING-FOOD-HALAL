@@ -136,8 +136,10 @@
             </div>
         </div>
         <div class="hero">
-            <div class="combo-card"><h3>🍔 KING KOMBO 600 сом</h3><p>Шаурма уй этинен + Кинг Бургер + Фри S</p></div>
-            <div class="combo-card"><h3>🔥 03 KOMBO 500 сом</h3><p>Шаурма тоок этинен + Хот-Дог + Нагреты</p></div>
+            <h2 style="letter-spacing:2px;color:#d4af37;margin-bottom:1rem;">АШТИЗМЕ</h2>
+            <div class="combo-card"><h3>🍔 КИНГ КОМБО 650 сом</h3><p>Кинг комбо — толук топтомдо</p></div>
+            <div class="combo-card"><h3>🔥 03 КОМБО 550 сом</h3><p>03 комбо — толук топтомдо</p></div>
+            <div class="combo-card"><h3>👑 ТАШКЕНТ КОМБО 650 сом</h3><p>Ташкент комбо — толук топтомдо</p></div>
             <div class="delivery-badge"><i class="fas fa-motorcycle"></i> Баткен району боюнча АЛЫП КЕТУУ & ЖЕТКИРҮҮ</div>
         </div>
     </header>
@@ -149,7 +151,7 @@
         <div class="category"><h2>🥤 СУУСУНДУКТАР</h2><div class="menu-grid" id="drinksGrid"></div></div>
         <div class="category"><h2>🍟 ЖЕНИЛ ТАМАКТАР</h2><div class="menu-grid" id="snacksGrid"></div></div>
     </main>
-    <footer><p>©KING.FOOD.HALAL | +996 778 03 12 03 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p><p style="margin-top:6px;color:#8a7d5e;font-size:0.8rem;">Жеткирүү аймагы: Баткен району</p></footer>
+    <footer><p>©KING.FOOD.HALAL | +996 778 03 12 03 | +996 558 45 46 51 | <a href="https://instagram.com/king.food.halal" style="color:#d4af37;">@king.food.halal</a></p><p style="margin-top:6px;color:#8a7d5e;font-size:0.8rem;">Жеткирүү аймагы: Баткен району</p></footer>
 </div>
 
 <div class="admin-toggle" id="adminToggleBtn" title="Админ панель"><i class="fas fa-cog"></i></div>
@@ -257,12 +259,12 @@
 
     // ========== МЕНЮ МААЛЫМАТТАРЫ (БАШТАПКЫ) ==========
     let menu = {
-        shaurma: [{id:"sh1",name:"Шаурма тоок этинен",price:220,available:true},{id:"sh2",name:"Шаурма уй этинен",price:230,available:true},{id:"sh3",name:"Бышырылган Шаурма",price:240,available:true}],
-        burger: [{id:"bg1",name:"Кинг Бургер",price:210,available:true},{id:"bg2",name:"Кош Кинг Бургер",price:240,available:true},{id:"bg3",name:"Чизбургер",price:210,available:true},{id:"bg4",name:"Кош Чизбургер",price:240,available:true},{id:"bg5",name:"Чикен бургер",price:190,available:true},{id:"bg6",name:"Кош Чикен бургер",price:220,available:true}],
-        hotdog: [{id:"hd1",name:"Классика Хот-Дог",price:140,available:true},{id:"hd2",name:"Острый Хот-Дог",price:150,available:true},{id:"hd3",name:"Чиз Хот-Дог",price:160,available:true}],
-        combo: [{id:"cb1",name:"Кинг комбо",price:600,available:true},{id:"cb2",name:"03 комбо",price:500,available:true}],
-        drinks: [{id:"dr1",name:"Султан чай 1л",price:65,available:true},{id:"dr2",name:"Мохито 0.5л",price:85,available:true},{id:"dr3",name:"Нитро 0.5л",price:85,available:true},{id:"dr4",name:"Летс гоу 1.25л",price:100,available:true},{id:"dr5",name:"Летс гоу (груша) 0.5л",price:60,available:true},{id:"dr6",name:"Кола/Фанта/Пепси 1л",price:100,available:true},{id:"dr7",name:"Кофе 3/1",price:40,available:true},{id:"dr8",name:"Чай",price:20,available:true}],
-        snacks: [{id:"sn1",name:"Фри S 150гр",price:130,available:true},{id:"sn2",name:"Фри M 220гр",price:150,available:true},{id:"sn3",name:"Чили Чиз-Фрайс",price:200,available:true},{id:"sn4",name:"Нагреты",price:150,available:true}]
+        shaurma: [{id:"sh1",name:"Шаурма тоок этинен",price:240,available:true},{id:"sh2",name:"Шаурма уй этинен",price:260,available:true},{id:"sh3",name:"Бышырылган Шаурма",price:260,available:true},{id:"sh4",name:"Араб Шаурмасы",price:260,available:true},{id:"sh5",name:"Түрк Шаурмасы",price:260,available:true}],
+        burger: [{id:"bg1",name:"Кинг Бургер",price:230,available:true},{id:"bg2",name:"Кош Кинг Бургер",price:260,available:true},{id:"bg3",name:"Чизбургер",price:230,available:true},{id:"bg4",name:"Кош Чизбургер",price:260,available:true},{id:"bg5",name:"Чикен бургер",price:220,available:true},{id:"bg6",name:"Кош Чикен бургер",price:250,available:true},{id:"bg7",name:"Чикен Кинг бургер",price:230,available:true}],
+        hotdog: [{id:"hd1",name:"Классика Хот-Дог",price:170,available:true},{id:"hd2",name:"Острый Хот-Дог",price:180,available:true},{id:"hd3",name:"Чиз Хот-Дог",price:190,available:true},{id:"hd4",name:"Чили Хот-Дог",price:220,available:true}],
+        combo: [{id:"cb1",name:"Кинг комбо",price:650,available:true},{id:"cb2",name:"03 комбо",price:550,available:true},{id:"cb3",name:"Ташкент комбо",price:650,available:true}],
+        drinks: [{id:"dr1",name:"Султан чай 1л",price:70,available:true},{id:"dr2",name:"Мохито / Нитро 0,5л",price:85,available:true},{id:"dr3",name:"Летс гоу 1,25л",price:110,available:true},{id:"dr4",name:"Кола/Фанта/Пепси 1л",price:110,available:true},{id:"dr5",name:"Пиала 1л",price:100,available:true}],
+        snacks: [{id:"sn1",name:"Фри S 150гр",price:150,available:true},{id:"sn2",name:"Фри M 220гр",price:170,available:true},{id:"sn3",name:"Наггетсы",price:170,available:true}]
     };
 
     let cart = [];
@@ -644,7 +646,7 @@
         let address = `${DELIVERY_ZONE}, ${streetInput}`;
         let items = "", total = 0;
         cart.forEach(i => { items += `${i.name} x${i.qty} = ${i.price * i.qty} сом\n`; total += i.price * i.qty; });
-        let msg = `🛒 *KING FOOD HALAL* 🍔\n\n${items}\n━━━━━━━━━━━━━━\n💰 *Жалпы: ${total} сом*\n📍 *Дареги:* ${address}\n📞 +996 778 03 12 03\n📸 @king.food.halal`;
+        let msg = `🛒 *KING FOOD HALAL* 🍔\n\n${items}\n━━━━━━━━━━━━━━\n💰 *Жалпы: ${total} сом*\n📍 *Дареги:* ${address}\n📞 +996 778 03 12 03 / +996 558 45 46 51\n📸 @king.food.halal`;
         let url = platform === "whatsapp"
             ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`
             : `https://t.me/share/url?url=${encodeURIComponent("Заказ")}&text=${encodeURIComponent(msg)}`;
